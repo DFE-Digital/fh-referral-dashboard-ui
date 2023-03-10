@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33417.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.RequestForSupport.Web", "src\FamilyHubs.RequestForSupport.Web\FamilyHubs.RequestForSupport.Web.csproj", "{2940D2FA-E085-48BA-A5E6-8E5F591A2FB7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EABE95A1-77E8-4140-BF50-B651E2B7E5DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +20,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2940D2FA-E085-48BA-A5E6-8E5F591A2FB7} = {EABE95A1-77E8-4140-BF50-B651E2B7E5DE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9B1F2000-DD0E-4764-95FC-D768203C0EF1}
