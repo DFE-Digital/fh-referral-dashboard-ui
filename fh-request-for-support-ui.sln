@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33417.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.RequestForSupport.Web", "src\FamilyHubs.RequestForSupport.Web\FamilyHubs.RequestForSupport.Web.csproj", "{2940D2FA-E085-48BA-A5E6-8E5F591A2FB7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2940D2FA-E085-48BA-A5E6-8E5F591A2FB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2940D2FA-E085-48BA-A5E6-8E5F591A2FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2940D2FA-E085-48BA-A5E6-8E5F591A2FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2940D2FA-E085-48BA-A5E6-8E5F591A2FB7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B1F2000-DD0E-4764-95FC-D768203C0EF1}
+	EndGlobalSection
+EndGlobal
