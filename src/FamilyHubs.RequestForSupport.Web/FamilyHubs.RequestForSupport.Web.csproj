@@ -29,4 +29,8 @@
     <TypeScriptCompile Include="scripts\app.ts" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Error\" />
+  </ItemGroup>
+
 </Project>
