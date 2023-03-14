@@ -1,4 +1,6 @@
-﻿<header class="govuk-header" role="banner" data-module="govuk-header">
+﻿@model FamilyHubsUiOptions
+
+<header class="govuk-header" role="banner" data-module="govuk-header">
     <div class="govuk-header__container">
         <div class="govuk-width-container">
             <div class="govuk-header__logo">
@@ -22,7 +24,7 @@
                 <span class="govuk-header__logotype-text">|</span>
                 <a href="/" class="govuk-header__link govuk-header__link--homepage">
                     <span class="govuk-header__product-name">
-                        Find support for your family
+                        @Model.ServiceName
                     </span>
                 </a>
             </div>
