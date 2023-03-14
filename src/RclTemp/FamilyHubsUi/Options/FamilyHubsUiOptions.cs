@@ -1,5 +1,4 @@
-﻿
-using RclTemp.FamilyHubsUi.Models;
+﻿using RclTemp.FamilyHubsUi.Models;
 
 namespace RclTemp.FamilyHubsUi.Options;
 

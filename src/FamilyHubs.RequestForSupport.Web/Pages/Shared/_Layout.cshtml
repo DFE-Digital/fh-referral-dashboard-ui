@@ -1,4 +1,5 @@
-﻿@inject IOptions<FamilyHubsUiOptions> FamilyHubsUiOptions
+﻿@* we could use IOptionsSnapshot for updates without downtime, but we probably don't want the overhead for something so central*@
+@inject IOptions<FamilyHubsUiOptions> FamilyHubsUiOptions
 @{
     var familyHubsUiOptions = FamilyHubsUiOptions.Value;
 }
