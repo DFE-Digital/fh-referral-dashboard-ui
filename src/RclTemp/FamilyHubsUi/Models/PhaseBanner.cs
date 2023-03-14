@@ -8,7 +8,8 @@ namespace RclTemp.FamilyHubsUi.Models;
 public enum Phase
 {
     Alpha,
-    Beta
+    Beta,
+    Release
 }
 
 public interface IPhaseBanner
