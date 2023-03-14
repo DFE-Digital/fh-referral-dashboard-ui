@@ -1,14 +1,14 @@
-﻿@model string
+﻿@model RclTemp.Models.PhaseBanner
 
 @*todo: component with enum alpha/beta? (check gds), feedback link - get from config*@
 
 <div class="govuk-phase-banner">
     <p class="govuk-phase-banner__content">
         <strong class="govuk-tag govuk-phase-banner__content__tag">
-            beta
+            @Model.Phase
         </strong>
         <span class="govuk-phase-banner__text">
-            This is a new service, your <a href="@Model">feedback</a> will help us improve it.
+            This is a new service, your <a href="@Model.FeedbackUrl">feedback</a> will help us improve it.
         </span>
     </p>
 </div>
