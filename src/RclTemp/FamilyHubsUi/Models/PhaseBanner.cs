@@ -20,21 +20,15 @@ public interface IPhaseBanner
 
 public class PhaseBanner : IPhaseBanner
 {
-    public Phase Phase { get; init; } = Phase.Beta;
+    public Phase Phase { get; init; }
 
     public string? FeedbackUrl { get; init; }
 
-    //public string? FeedbackUrlConfigurationKey { get; init; }
-
-    public PhaseBanner(IConfigurationHelper configurationHelper, string? feedbackUrlConfigurationKey = null)
+    public PhaseBanner(Phase phase, string? feedbackUrl)
     {
-        //todo: do this outside?
-        if (feedbackUrlConfigurationKey != null)
-        {
-            FeedbackUrl = configurationHelper.GetUrl(feedbackUrlConfigurationKey);
-        }
-
-        //Debug.Assert(FeedbackUrl != null, "A feedback URL will be required before release to production.");
+        Phase = phase;
+        FeedbackUrl = feedbackUrl;
+        Debug.Assert(FeedbackUrl != null, "A feedback URL will be required before release to production.");
     }
 }
 
