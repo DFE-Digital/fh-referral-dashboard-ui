@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33417.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.RequestForSupport.Web", "src\FamilyHubs.RequestForSupport.Web\FamilyHubs.RequestForSupport.Web.csproj", "{2940D2FA-E085-48BA-A5E6-8E5F591A2FB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.RequestForSupport.Web", "src\FamilyHubs.RequestForSupport.Web\FamilyHubs.RequestForSupport.Web.csproj", "{2940D2FA-E085-48BA-A5E6-8E5F591A2FB7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EABE95A1-77E8-4140-BF50-B651E2B7E5DE}"
 EndProject
@@ -18,9 +18,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{29A699
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.RequestForSupport.Core", "src\FamilyHubs.RequestForSupport.Core\FamilyHubs.RequestForSupport.Core.csproj", "{1360BA1D-D51E-4FEE-BA27-EB101D046EAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.RequestForSupport.Core", "src\FamilyHubs.RequestForSupport.Core\FamilyHubs.RequestForSupport.Core.csproj", "{1360BA1D-D51E-4FEE-BA27-EB101D046EAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.RequestForSupport.Infrastructure", "src\FamilyHubs.RequestForSupport.Infrastructure\FamilyHubs.RequestForSupport.Infrastructure.csproj", "{755D501D-61FF-4FA2-B981-3470D34FE21C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.RequestForSupport.Infrastructure", "src\FamilyHubs.RequestForSupport.Infrastructure\FamilyHubs.RequestForSupport.Infrastructure.csproj", "{755D501D-61FF-4FA2-B981-3470D34FE21C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RclTemp", "src\RclTemp\RclTemp.csproj", "{387D616B-DA84-4458-ADD8-570DBC045429}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{755D501D-61FF-4FA2-B981-3470D34FE21C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{755D501D-61FF-4FA2-B981-3470D34FE21C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{755D501D-61FF-4FA2-B981-3470D34FE21C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{387D616B-DA84-4458-ADD8-570DBC045429}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{387D616B-DA84-4458-ADD8-570DBC045429}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{387D616B-DA84-4458-ADD8-570DBC045429}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{387D616B-DA84-4458-ADD8-570DBC045429}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{2940D2FA-E085-48BA-A5E6-8E5F591A2FB7} = {EABE95A1-77E8-4140-BF50-B651E2B7E5DE}
 		{1360BA1D-D51E-4FEE-BA27-EB101D046EAD} = {EABE95A1-77E8-4140-BF50-B651E2B7E5DE}
 		{755D501D-61FF-4FA2-B981-3470D34FE21C} = {EABE95A1-77E8-4140-BF50-B651E2B7E5DE}
+		{387D616B-DA84-4458-ADD8-570DBC045429} = {EABE95A1-77E8-4140-BF50-B651E2B7E5DE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9B1F2000-DD0E-4764-95FC-D768203C0EF1}
