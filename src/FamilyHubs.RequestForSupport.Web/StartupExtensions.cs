@@ -1,5 +1,5 @@
 ﻿using Microsoft.ApplicationInsights.Extensibility;
-using RclTemp.Models;
+using RclTemp.FamilyHubsUi.Extensions;
 using Serilog;
 using Serilog.Events;
 
@@ -43,12 +43,7 @@ public static class StartupExtensions
         services.AddHsts(o => o.ExcludedHosts.Clear());
 #endif
 
-
-        //todo: AddDfeUi() or similar helper. default FeedbackUrl config at that level, to allow manually providing the url to PhaseBanner
-        // could possibly use IOptions or similar (IOptionsSnapshot would be handy for updates without downtime, but we probably don't want the overhead for something so central?)
-        var configurationHelper = new ConfigurationHelper(configuration);
-        services.AddSingleton<IConfigurationHelper>(configurationHelper);
-        services.AddSingleton<IPhaseBanner>(new PhaseBanner(configurationHelper, "FeedbackUrl"));
+        services.AddFamilyHubsUi(configuration);
     }
 
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)

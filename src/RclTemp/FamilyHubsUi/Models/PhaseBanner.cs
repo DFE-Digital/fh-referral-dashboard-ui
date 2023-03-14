@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 
-namespace RclTemp.Models;
+namespace RclTemp.FamilyHubsUi.Models;
 
 public enum Phase
 {
@@ -64,7 +64,7 @@ public class ConfigurationHelper : IConfigurationHelper
     {
         string? url = _configuration[configurationKey];
 
-        ConfigurationException.ThrowIfNotUrl(configurationKey, url, expectedValueDescription, example, uriKind );
+        ConfigurationException.ThrowIfNotUrl(configurationKey, url, expectedValueDescription, example, uriKind);
 
         return url;
     }
