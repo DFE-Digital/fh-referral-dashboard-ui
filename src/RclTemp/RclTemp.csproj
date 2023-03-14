@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
+<!--todo: just add appropriate bits to sharedkernel and don't have a sharedkernel.razor? -->
+
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
