@@ -1,11 +1,13 @@
 ﻿
+using RclTemp.FamilyHubsUi.Models;
+
 namespace RclTemp.FamilyHubsUi.Options;
 
-internal class FamilyHubsUiOptions
+public class FamilyHubsUiOptions
 {
     public const string FamilyHubsUi = "FamilyHubsUi";
 
     public string ServiceName { get; set; } = "";
-    public string Phase { get; set; } = "";
+    public Phase Phase { get; set; }
     public string FeedbackUrl { get; set; } = "";
 }
