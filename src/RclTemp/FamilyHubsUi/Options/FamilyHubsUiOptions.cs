@@ -9,4 +9,5 @@ public class FamilyHubsUiOptions
     public string ServiceName { get; set; } = "";
     public Phase Phase { get; set; }
     public string FeedbackUrl { get; set; } = "";
+    public string AnalyticsCookieName { get; set; } = "";
 }

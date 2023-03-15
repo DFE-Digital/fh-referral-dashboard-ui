@@ -1,11 +1,12 @@
-﻿@*as we don't use session state (what GDS calls server cookies!), the banner can only be shown when js is enabled, see https://design-system.service.gov.uk/components/cookie-banner/*@
+﻿@model FamilyHubsUiOptions
 
-@*todo: name of service*@
-<div class="govuk-cookie-banner" data-nosnippet role="region" aria-label="Cookies on Find support for your family" hidden data-module="govuk-cookie-banner">
+@*as we don't use session state (what GDS calls server cookies!), the banner can only be shown when js is enabled, see https://design-system.service.gov.uk/components/cookie-banner/*@
+
+<div class="govuk-cookie-banner" data-nosnippet role="region" aria-label="Cookies on @(Model.ServiceName)" hidden data-module="govuk-cookie-banner">
     <div class="govuk-cookie-banner__message govuk-width-container js-cookie-banner-message">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies on Find support for your family</h2>
+                <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies on @(Model.ServiceName)</h2>
                 <div class="govuk-cookie-banner__content">
                     <p class="govuk-body">We use some essential cookies to make this service work.</p>
                     <p class="govuk-body">We’d also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
@@ -87,7 +88,7 @@
         // Don't show the banner on the cookies page
         if (window.location.pathname !== "/cookies/") {
             // Show the banner if there is no consent cookie or if it is outdated
-            var currentConsentCookie = document.cookie.match(new RegExp('(^| )request_for_support_cookies_policy=([^;]+)'))
+            var currentConsentCookie = document.cookie.match(new RegExp('(^| )@(Model.AnalyticsCookieName)=([^;]+)'))
 
             if (!currentConsentCookie || !isValidConsentCookie(JSON.parse(currentConsentCookie[2]))) {
                 var cookieBanner = document.querySelector("[data-module='govuk-cookie-banner']")
