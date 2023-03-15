@@ -1,13 +1,12 @@
-﻿@model string
+﻿@model FamilyHubsUiOptions
 
-@*todo: pick up service name from config*@
-
-<partial name="_GoogleAnalytics.cshtml" />
+@*todo: this*@
+@*<partial name="_GoogleAnalytics.cshtml" />*@
 
 <meta charset="utf-8" />
 @*todo: will we have our own title & description, or share one? *@
-<title>@ViewData["Title"] - @Model - GOV.UK</title>
-<meta name="description" content="@Model">
+<title>@ViewData["Title"] - @Model.ServiceName - GOV.UK</title>
+<meta name="description" content="@Model.ServiceName">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b0c0c">
 
