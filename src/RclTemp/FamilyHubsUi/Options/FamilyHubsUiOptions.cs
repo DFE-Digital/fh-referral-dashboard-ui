@@ -15,12 +15,6 @@ public class FamilyHubsUiOptions
     public AnalyticsOptions? Analytics { get; set; }
 
     public FooterOptions Footer { get; set; } = new();
-
-    public static FamilyHubsUiOptions Process(FamilyHubsUiOptions familyHubsUiOptions)
-    {
-
-        return familyHubsUiOptions;
-    }
 }
 
 public class FamilyHubsUiOptionsValidation : IValidateOptions<FamilyHubsUiOptions>
@@ -41,7 +35,21 @@ public class FamilyHubsUiOptionsValidation : IValidateOptions<FamilyHubsUiOption
 
 public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOptions>
 {
+    private readonly IConfiguration _configuration;
+
+    public FamilyHubsUiOptionsConfigure(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     public void Configure(FamilyHubsUiOptions options)
     {
+        foreach (var footerLink in options.Footer.Links)
+        {
+            if (footerLink.ConfigUrl != null)
+            {
+                footerLink.Url = _configuration[footerLink.ConfigUrl] ?? "";
+            }
+        }
     }
 }
