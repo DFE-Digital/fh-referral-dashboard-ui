@@ -36,14 +36,10 @@ public class FamilyHubsUiOptionsValidation : IValidateOptions<FamilyHubsUiOption
 public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOptions>
 {
     private readonly IConfiguration _configuration;
-    //private readonly IHttpContextAccessor _accessor;
-    //private readonly LinkGenerator _generator;
 
-    public FamilyHubsUiOptionsConfigure(IConfiguration configuration) //, IHttpContextAccessor accessor, LinkGenerator generator)
+    public FamilyHubsUiOptionsConfigure(IConfiguration configuration)
     {
         _configuration = configuration;
-        //_accessor = accessor;
-        //_generator = generator;
     }
 
     public void Configure(FamilyHubsUiOptions options)
