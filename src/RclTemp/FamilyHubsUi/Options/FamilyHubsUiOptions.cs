@@ -35,7 +35,7 @@ public class FamilyHubsUiOptionsValidation : IValidateOptions<FamilyHubsUiOption
             if (string.IsNullOrWhiteSpace(footerLink.Url)
                 || !Uri.IsWellFormedUriString(footerLink.Url, UriKind.RelativeOrAbsolute))
             {
-                validationErrors.Add($"Footer link for {footerLink.Text} has invalid Url {footerLink.Url}");
+                validationErrors.Add($"Footer link for \"{footerLink.Text}\" has invalid Url \"{footerLink.Url}\"");
             }
         }
 
