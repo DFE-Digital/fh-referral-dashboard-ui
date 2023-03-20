@@ -2,13 +2,6 @@
 
 namespace RclTemp.FamilyHubsUi.Options;
 
-public class AnalyticsOptions
-{
-    public string CookieName { get; set; } = "";
-    public string MeasurementId { get; set; } = "";
-    public string ContainerId { get; set; } = "";
-}
-
 public class FamilyHubsUiOptions
 {
     public const string FamilyHubsUi = "FamilyHubsUi";
