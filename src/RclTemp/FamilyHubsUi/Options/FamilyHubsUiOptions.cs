@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using RclTemp.FamilyHubsUi.Models;
-using System.Reflection.Emit;
 
 namespace RclTemp.FamilyHubsUi.Options;
 
@@ -61,7 +57,6 @@ public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOption
 
             if (string.IsNullOrEmpty(footerLink.Url))
             {
-                //footerLink.Url = _generator.GetUriByPage(_accessor.HttpContext!, $"/{footerLink.Text}/Index");
                 footerLink.Url = $"/{footerLink.Text.ToLowerInvariant().Replace(' ', '-')}";
             }
         }
