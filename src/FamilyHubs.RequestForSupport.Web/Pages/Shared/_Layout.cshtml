@@ -8,6 +8,7 @@
 <html lang="en" class="govuk-template">
 <head>
     @*todo: move into head?*@
+    @*todo: just pass root options for consistency?*@
     <partial name="_GoogleAnalytics.cshtml" model="familyHubsUiOptions.Analytics"/>
     <partial name="_Head.cshtml" model="familyHubsUiOptions"/>
 
@@ -37,7 +38,7 @@
         </main>
     </div>
 
-    <partial name="_Footer.cshtml" />
+    <partial name="_Footer.cshtml" model="familyHubsUiOptions" />
 
     <script src="~/js/govuk-frontend-4.5.0.min.js"></script>
     <script src="~/js/app.js" asp-append-version="true"></script>
