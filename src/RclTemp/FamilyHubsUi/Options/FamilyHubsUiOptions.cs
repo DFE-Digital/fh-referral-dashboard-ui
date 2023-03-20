@@ -1,6 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using RclTemp.FamilyHubsUi.Models;
+using System.Reflection.Emit;
 
 namespace RclTemp.FamilyHubsUi.Options;
 
@@ -36,10 +40,14 @@ public class FamilyHubsUiOptionsValidation : IValidateOptions<FamilyHubsUiOption
 public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOptions>
 {
     private readonly IConfiguration _configuration;
+    //private readonly IHttpContextAccessor _accessor;
+    //private readonly LinkGenerator _generator;
 
-    public FamilyHubsUiOptionsConfigure(IConfiguration configuration)
+    public FamilyHubsUiOptionsConfigure(IConfiguration configuration) //, IHttpContextAccessor accessor, LinkGenerator generator)
     {
         _configuration = configuration;
+        //_accessor = accessor;
+        //_generator = generator;
     }
 
     public void Configure(FamilyHubsUiOptions options)
@@ -48,7 +56,13 @@ public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOption
         {
             if (footerLink.ConfigUrl != null)
             {
-                footerLink.Url = _configuration[footerLink.ConfigUrl] ?? "";
+                footerLink.Url = _configuration[footerLink.ConfigUrl];
+            }
+
+            if (string.IsNullOrEmpty(footerLink.Url))
+            {
+                //footerLink.Url = _generator.GetUriByPage(_accessor.HttpContext!, $"/{footerLink.Text}/Index");
+                footerLink.Url = $"/{footerLink.Text.ToLowerInvariant().Replace(' ', '-')}";
             }
         }
     }
