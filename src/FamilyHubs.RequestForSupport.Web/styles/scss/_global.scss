@@ -38,6 +38,10 @@
         @include govuk-responsive-margin(2, "right");
     }
 
+    .govuk-header__link--homepage { 
+        margin-right: 0;
+    }
+
     .govuk-header__logotype-text, .govuk-header__product-name {
         line-height: 2.5rem !important;
         font-size: 1.2rem;
