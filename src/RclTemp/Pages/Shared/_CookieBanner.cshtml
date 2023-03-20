@@ -55,10 +55,13 @@
     </div>
 </div>
 
-<script>
-    @*todo: do we have our own cookie, or share?*@
+@if (!string.IsNullOrEmpty(Model.Analytics?.CookieName))
+{
+    <script>
+        @*todo: do we have our own cookie, or share?*@
+        /*todo: move script into own file?*/
 
-    @*
+        @*
         /* If cookie policy changes and/or the user preferences object format needs to
         * change, bump this version up afterwards. The user should then be shown the
         * banner again to consent to the new policy.
@@ -71,8 +74,8 @@
         *@
         window.GDS_CONSENT_COOKIE_VERSION = 1;
 
-    (function () {
-    @*
+        (function() {
+            @*
             /** Check the cookie preferences object.
             *
             * If the consent object is not present, malformed, or incorrect version,
@@ -85,15 +88,16 @@
                 return (options && options.version >= window.GDS_CONSENT_COOKIE_VERSION)
             }
 
-        // Don't show the banner on the cookies page
-        if (window.location.pathname !== "/cookies/") {
-            // Show the banner if there is no consent cookie or if it is outdated
-            var currentConsentCookie = document.cookie.match(new RegExp('(^| )@(Model.AnalyticsCookieName)=([^;]+)'))
+            // Don't show the banner on the cookies page
+            if (window.location.pathname !== "/cookies/") {
+                // Show the banner if there is no consent cookie or if it is outdated
+                var currentConsentCookie = document.cookie.match(new RegExp('(^| )@(Model.Analytics.CookieName)=([^;]+)'))
 
-            if (!currentConsentCookie || !isValidConsentCookie(JSON.parse(currentConsentCookie[2]))) {
-                var cookieBanner = document.querySelector("[data-module='govuk-cookie-banner']")
-                cookieBanner.removeAttribute('hidden')
+                if (!currentConsentCookie || !isValidConsentCookie(JSON.parse(currentConsentCookie[2]))) {
+                    var cookieBanner = document.querySelector("[data-module='govuk-cookie-banner']")
+                    cookieBanner.removeAttribute('hidden')
+                }
             }
-        }
-    })()
-</script>
+        })()
+    </script>
+}

@@ -7,10 +7,12 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
 <head>
-    <partial name="_Head.cshtml" model="@familyHubsUiOptions" />
+    @*todo: move into head?*@
+    <partial name="_GoogleAnalytics.cshtml" model="familyHubsUiOptions.Analytics"/>
+    <partial name="_Head.cshtml" model="familyHubsUiOptions"/>
 
     @*todo: probably include these in _head also*@
-    <link rel="stylesheet" href="~/css/application.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/application.css" asp-append-version="true"/>
     <!--[if IE 8]>
         <link href="~/css/govuk-frontend-ie8-4.5.0.min.css" rel="stylesheet">
     <![endif]-->

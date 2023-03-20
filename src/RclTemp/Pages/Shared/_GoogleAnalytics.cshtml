@@ -1,0 +1,9 @@
+﻿@model AnalyticsOptions?
+
+@if (!string.IsNullOrEmpty(Model?.MeasurementId))
+{
+    <script>
+        window.GA_MEASUREMENT_ID = '@Model.MeasurementId';
+        window.GA_CONTAINER_ID = '@Model.ContainerId';
+    </script>
+}
