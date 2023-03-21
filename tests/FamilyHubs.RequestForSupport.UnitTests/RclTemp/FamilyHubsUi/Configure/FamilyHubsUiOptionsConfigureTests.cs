@@ -58,6 +58,26 @@ public class FamilyHubsUiOptionsConfigureTests
         Assert.True(compareResult.AreEqual, $"Not equal: {compareResult.DifferencesString}");
     }
 
+    [Theory]
+    [InlineData("/lower", "lower")]
+    [InlineData("/mix", "MiX")]
+    [InlineData("/upper", "UPPER")]
+    [InlineData("/multi-word", "Multi word")]
+    [InlineData("/-x--y-z", " X  y z")]
+    public void Configure_Test(string expectedUrl, string text)
+    {
+        var link = FamilyHubsUiOptions.Footer.Links.First();
+        link.Url = null;
+        link.Text = text;
+
+        // act
+        FamilyHubsUiOptionsConfigure.Configure(FamilyHubsUiOptions);
+
+        var actualLink = FamilyHubsUiOptions.Footer.Links.FirstOrDefault();
+        Assert.NotNull(actualLink);
+        Assert.Equal(expectedUrl, actualLink.Url);
+    }
+
     protected static T DeepClone<T>(T obj)
     {
         string json = JsonSerializer.Serialize(obj);
