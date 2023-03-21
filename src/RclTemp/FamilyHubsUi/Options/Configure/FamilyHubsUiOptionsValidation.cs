@@ -4,7 +4,7 @@ namespace RclTemp.FamilyHubsUi.Options.Configure;
 
 public class FamilyHubsUiOptionsValidation : IValidateOptions<FamilyHubsUiOptions>
 {
-    public ValidateOptionsResult Validate(string? name, FamilyHubsUiOptions options)
+    public ValidateOptionsResult Validate(string? _, FamilyHubsUiOptions options)
     {
         var validationErrors = new List<string>();
         foreach (var footerLink in options.Footer.Links)

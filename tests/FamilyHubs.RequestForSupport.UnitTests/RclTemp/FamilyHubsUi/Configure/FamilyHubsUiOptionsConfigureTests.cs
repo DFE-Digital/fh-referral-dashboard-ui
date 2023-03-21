@@ -4,14 +4,14 @@ using RclTemp.FamilyHubsUi.Options;
 using RclTemp.FamilyHubsUi.Options.Configure;
 using System.Text.Json;
 using KellermanSoftware.CompareNetObjects;
+using FamilyHubs.RequestForSupport.UnitTests.RclTemp.FamilyHubsUi.Configure.Helpers;
 
 namespace FamilyHubs.RequestForSupport.UnitTests.RclTemp.FamilyHubsUi.Configure;
 
-public class FamilyHubsUiOptionsConfigureTests
+public class FamilyHubsUiOptionsConfigureTests : FamilyHubsUiOptionsTestBase
 {
     public FamilyHubsUiOptionsConfigure FamilyHubsUiOptionsConfigure { get; set; }
     public Mock<IConfiguration> Configuration { get; set; }
-    public FamilyHubsUiOptions FamilyHubsUiOptions { get; set; }
     public CompareLogic Compare { get; set; }
 
     public FamilyHubsUiOptionsConfigureTests()
@@ -19,31 +19,6 @@ public class FamilyHubsUiOptionsConfigureTests
         Compare = new CompareLogic();
         Configuration = new Mock<IConfiguration>();
         FamilyHubsUiOptionsConfigure = new FamilyHubsUiOptionsConfigure(Configuration.Object);
-
-        FamilyHubsUiOptions = new FamilyHubsUiOptions
-        {
-            ServiceName = "ServiceName",
-            Phase = Phase.Alpha,
-            FeedbackUrl = "FeedbackUrl",
-            Analytics = new AnalyticsOptions
-            {
-                CookieName = "CookieName",
-                MeasurementId = "MeasurementId",
-                ContainerId = "ContainerId"
-            },
-            Footer = new FooterOptions
-            {
-                Links = new[]
-                {
-                    new LinkOptions
-                    {
-                        Text = "Text",
-                        Url = "text",
-                        ConfigUrl = null
-                    }
-                }
-            }
-        };
     }
 
     [Fact]
