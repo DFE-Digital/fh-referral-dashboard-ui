@@ -20,8 +20,7 @@ public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOption
             {
                 footerLink.Url = _configuration[footerLink.ConfigUrl];
             }
-
-            if (string.IsNullOrEmpty(footerLink.Url))
+            else if (string.IsNullOrEmpty(footerLink.Url))
             {
                 footerLink.Url = $"/{footerLink.Text.ToLowerInvariant().Replace(' ', '-')}";
             }

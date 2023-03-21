@@ -10,7 +10,6 @@ public static class IServiceCollectionExtensions
 {
     public static IServiceCollection AddFamilyHubsUi(this IServiceCollection services, IConfiguration configuration)
     {
-
         services.Configure<FamilyHubsUiOptions>(configuration.GetSection(FamilyHubsUiOptions.FamilyHubsUi))
             .AddSingleton<IValidateOptions<FamilyHubsUiOptions>, FamilyHubsUiOptionsValidation>()
             .AddSingleton<IConfigureOptions<FamilyHubsUiOptions>, FamilyHubsUiOptionsConfigure>();
@@ -18,6 +17,8 @@ public static class IServiceCollectionExtensions
             //.ConfigureOptions<FamilyHubsUiOptions>();
 
         services.AddOptions<FamilyHubsUiOptions>()
+            //.Bind(configuration.GetSection(FamilyHubsUiOptions.FamilyHubsUi))
+            .ValidateDataAnnotations()
             .ValidateOnStart();
 
         return services;
