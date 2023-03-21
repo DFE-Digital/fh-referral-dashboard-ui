@@ -19,21 +19,12 @@ public class FamilyHubsUiOptions
 
 public class FamilyHubsUiOptionsValidation : IValidateOptions<FamilyHubsUiOptions>
 {
-    private readonly FamilyHubsUiOptions? _familyHubsUiOptions;
-
-    public FamilyHubsUiOptionsValidation(IConfiguration configuration)
-    {
-        _familyHubsUiOptions = configuration.GetSection(FamilyHubsUiOptions.FamilyHubsUi)
-            .Get<FamilyHubsUiOptions>();
-    }
-
     public ValidateOptionsResult Validate(string? name, FamilyHubsUiOptions options)
     {
         var validationErrors = new List<string>();
         foreach (var footerLink in options.Footer.Links)
         {
-            if (string.IsNullOrWhiteSpace(footerLink.Url)
-                || !Uri.IsWellFormedUriString(footerLink.Url, UriKind.RelativeOrAbsolute))
+            if (!Uri.IsWellFormedUriString(footerLink.Url, UriKind.RelativeOrAbsolute))
             {
                 validationErrors.Add($"Footer link for \"{footerLink.Text}\" has invalid Url \"{footerLink.Url}\"");
             }
