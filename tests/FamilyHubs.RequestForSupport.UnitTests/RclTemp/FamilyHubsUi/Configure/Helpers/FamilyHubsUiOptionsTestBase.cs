@@ -1,4 +1,4 @@
-﻿
+﻿using KellermanSoftware.CompareNetObjects;
 using RclTemp.FamilyHubsUi.Options;
 
 namespace FamilyHubs.RequestForSupport.UnitTests.RclTemp.FamilyHubsUi.Configure.Helpers;
@@ -6,9 +6,12 @@ namespace FamilyHubs.RequestForSupport.UnitTests.RclTemp.FamilyHubsUi.Configure.
 public class FamilyHubsUiOptionsTestBase
 {
     public FamilyHubsUiOptions FamilyHubsUiOptions { get; set; }
+    //public CompareLogic Compare { get; set; }
 
     public FamilyHubsUiOptionsTestBase()
     {
+        //Compare = new CompareLogic();
+
         FamilyHubsUiOptions = new FamilyHubsUiOptions
         {
             ServiceName = "ServiceName",
@@ -34,4 +37,10 @@ public class FamilyHubsUiOptionsTestBase
             }
         };
     }
+
+    //public void AssertEquivalent(object expectedObject, object actualObject)
+    //{
+    //    var compareResult = Compare.Compare(expectedObject, actualObject);
+    //    Assert.True(compareResult.AreEqual, $"Not equal: {compareResult.DifferencesString}");
+    //}
 }

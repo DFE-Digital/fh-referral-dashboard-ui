@@ -1,6 +1,8 @@
 # ToDo
 
-* stories: health check, error handling, move shared razor library into sharedkernel, spike: create npm with styles & scripts, security headers
+* stories: health check, error handling, move shared razor library into sharedkernel,
+spike: create npm with styles & scripts - add nuget package into npm??
+, security headers, 
 
 * error pages into rcl with auto routing to them
 

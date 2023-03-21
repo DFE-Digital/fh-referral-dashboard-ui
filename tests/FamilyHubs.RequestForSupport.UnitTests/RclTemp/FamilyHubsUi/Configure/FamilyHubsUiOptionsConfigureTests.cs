@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Moq;
-using RclTemp.FamilyHubsUi.Options;
 using RclTemp.FamilyHubsUi.Options.Configure;
 using System.Text.Json;
-using KellermanSoftware.CompareNetObjects;
 using FamilyHubs.RequestForSupport.UnitTests.RclTemp.FamilyHubsUi.Configure.Helpers;
+using FluentAssertions;
 
 namespace FamilyHubs.RequestForSupport.UnitTests.RclTemp.FamilyHubsUi.Configure;
 
@@ -12,11 +11,9 @@ public class FamilyHubsUiOptionsConfigureTests : FamilyHubsUiOptionsTestBase
 {
     public FamilyHubsUiOptionsConfigure FamilyHubsUiOptionsConfigure { get; set; }
     public Mock<IConfiguration> Configuration { get; set; }
-    public CompareLogic Compare { get; set; }
 
     public FamilyHubsUiOptionsConfigureTests()
     {
-        Compare = new CompareLogic();
         Configuration = new Mock<IConfiguration>();
         FamilyHubsUiOptionsConfigure = new FamilyHubsUiOptionsConfigure(Configuration.Object);
     }
@@ -29,8 +26,7 @@ public class FamilyHubsUiOptionsConfigureTests : FamilyHubsUiOptionsTestBase
         // act
         FamilyHubsUiOptionsConfigure.Configure(FamilyHubsUiOptions);
 
-        var compareResult = Compare.Compare(expectedFamilyHubsUiOptions, FamilyHubsUiOptions);
-        Assert.True(compareResult.AreEqual, $"Not equal: {compareResult.DifferencesString}");
+        FamilyHubsUiOptions.Should().BeEquivalentTo(expectedFamilyHubsUiOptions);
     }
 
     [Theory]
