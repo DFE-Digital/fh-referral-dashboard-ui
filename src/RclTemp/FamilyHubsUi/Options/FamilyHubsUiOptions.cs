@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using RclTemp.FamilyHubsUi.Models;
+﻿using RclTemp.FamilyHubsUi.Models;
 
 namespace RclTemp.FamilyHubsUi.Options;
 
@@ -15,51 +13,4 @@ public class FamilyHubsUiOptions
     public AnalyticsOptions? Analytics { get; set; }
 
     public FooterOptions Footer { get; set; } = new();
-}
-
-public class FamilyHubsUiOptionsValidation : IValidateOptions<FamilyHubsUiOptions>
-{
-    public ValidateOptionsResult Validate(string? name, FamilyHubsUiOptions options)
-    {
-        var validationErrors = new List<string>();
-        foreach (var footerLink in options.Footer.Links)
-        {
-            if (!Uri.IsWellFormedUriString(footerLink.Url, UriKind.RelativeOrAbsolute))
-            {
-                validationErrors.Add($"Footer link for \"{footerLink.Text}\" has invalid Url \"{footerLink.Url}\"");
-            }
-        }
-
-        if (validationErrors.Any())
-        {
-            return ValidateOptionsResult.Fail(validationErrors);
-        }
-        return ValidateOptionsResult.Success;
-    }
-}
-
-public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOptions>
-{
-    private readonly IConfiguration _configuration;
-
-    public FamilyHubsUiOptionsConfigure(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
-    public void Configure(FamilyHubsUiOptions options)
-    {
-        foreach (var footerLink in options.Footer.Links)
-        {
-            if (footerLink.ConfigUrl != null)
-            {
-                footerLink.Url = _configuration[footerLink.ConfigUrl];
-            }
-
-            if (string.IsNullOrEmpty(footerLink.Url))
-            {
-                footerLink.Url = $"/{footerLink.Text.ToLowerInvariant().Replace(' ', '-')}";
-            }
-        }
-    }
 }
