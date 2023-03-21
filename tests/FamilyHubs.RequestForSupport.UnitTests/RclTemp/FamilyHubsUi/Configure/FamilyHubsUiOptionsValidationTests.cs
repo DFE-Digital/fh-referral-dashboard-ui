@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace FamilyHubs.RequestForSupport.UnitTests.RclTemp.FamilyHubsUi.Configure;
 
-public class UnitTest1
+public class FamilyHubsUiOptionsValidationTests
 {
     [Fact]
-    public void Test1()
+    public void Test()
     {
-
+        throw new NotImplementedException();
     }
 }
