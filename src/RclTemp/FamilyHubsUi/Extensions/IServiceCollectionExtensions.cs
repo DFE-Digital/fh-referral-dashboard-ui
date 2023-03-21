@@ -14,17 +14,11 @@ public static class IServiceCollectionExtensions
         services.Configure<FamilyHubsUiOptions>(configuration.GetSection(FamilyHubsUiOptions.FamilyHubsUi))
             .AddSingleton<IValidateOptions<FamilyHubsUiOptions>, FamilyHubsUiOptionsValidation>()
             .AddSingleton<IConfigureOptions<FamilyHubsUiOptions>, FamilyHubsUiOptionsConfigure>();
+            //todo: should replace the above, but seems to pick up an old version of the above
             //.ConfigureOptions<FamilyHubsUiOptions>();
 
         services.AddOptions<FamilyHubsUiOptions>()
             .ValidateOnStart();
-
-        //todo: should replace the above
-        //.ConfigureOptions<FamilyHubsUiOptions>();
-
-        //dataannotations only??
-        //services.ValidateOnStart();
-        //.ValidateOnStart();
 
         return services;
     }
