@@ -2,7 +2,7 @@
 
 * stories: health check, error handling, move shared razor library into sharedkernel,
 spike: create npm with styles & scripts - add nuget package into npm??
-, security headers, app insights
+, security headers, app insights, telemetry pii redactor
 
 * error pages into rcl with auto routing to them
 

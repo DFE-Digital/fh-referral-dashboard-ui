@@ -17,7 +17,6 @@ public static class IServiceCollectionExtensions
             //.ConfigureOptions<FamilyHubsUiOptions>();
 
         services.AddOptions<FamilyHubsUiOptions>()
-            //.Bind(configuration.GetSection(FamilyHubsUiOptions.FamilyHubsUi))
             .ValidateDataAnnotations()
             .ValidateOnStart();
 

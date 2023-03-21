@@ -31,7 +31,6 @@ public static class StartupExtensions
         //services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
 
-        // Add services to the container.
         services.AddRazorPages();
 
         //todo: add health checks
