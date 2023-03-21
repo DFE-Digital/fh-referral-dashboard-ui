@@ -1,7 +1,5 @@
 # ToDo
 
-* use _content in head for assets
-
 * error pages into rcl with auto routing to them
 
 * move rcl into sharedkernel
