@@ -64,7 +64,7 @@ public class FamilyHubsUiOptionsConfigureTests
     [InlineData("/upper", "UPPER")]
     [InlineData("/multi-word", "Multi word")]
     [InlineData("/-x--y-z", " X  y z")]
-    public void Configure_Test(string expectedUrl, string text)
+    public void Configure_GeneratedUrlTests(string expectedUrl, string text)
     {
         var link = FamilyHubsUiOptions.Footer.Links.First();
         link.Url = null;
@@ -76,6 +76,25 @@ public class FamilyHubsUiOptionsConfigureTests
         var actualLink = FamilyHubsUiOptions.Footer.Links.FirstOrDefault();
         Assert.NotNull(actualLink);
         Assert.Equal(expectedUrl, actualLink.Url);
+    }
+
+    [Fact]
+    public void Configure_ConfigUrlTest()
+    {
+        const string configKey = "A:B";
+        const string configValue = "configValue";
+        Configuration.Setup(c => c[configKey]).Returns(configValue);
+
+        var link = FamilyHubsUiOptions.Footer.Links.First();
+        link.Url = null;
+        link.ConfigUrl = configKey;
+
+        // act
+        FamilyHubsUiOptionsConfigure.Configure(FamilyHubsUiOptions);
+
+        var actualLink = FamilyHubsUiOptions.Footer.Links.FirstOrDefault();
+        Assert.NotNull(actualLink);
+        Assert.Equal(configValue, actualLink.Url);
     }
 
     protected static T DeepClone<T>(T obj)
