@@ -26,6 +26,7 @@ public class FamilyHubsUiOptionsValidationTests : FamilyHubsUiOptionsTestBase
     [Theory]
     [InlineData(null)]
     [InlineData("h ttp://example.com")]
+    [InlineData("http://example.com:x")]
     public void Validate_ValidationErrorsTest(string? url)
     {
         var link = FamilyHubsUiOptions.Footer.Links.First();
@@ -38,5 +39,27 @@ public class FamilyHubsUiOptionsValidationTests : FamilyHubsUiOptionsTestBase
         var result = FamilyHubsUiOptionsValidation.Validate(null, FamilyHubsUiOptions);
 
         result.Should().BeEquivalentTo(expectedResult);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("/")]
+    [InlineData("path")]
+    [InlineData("/path")]
+    [InlineData("/longer/path")]
+    [InlineData("http://example.com")]
+    [InlineData("http://example.com:123")]
+    [InlineData("http://example.com:123/long/path")]
+    [InlineData("http://example.com:123/long/path?param=value")]
+    [InlineData("http://example.com:123/long/path?param=value#fragment")]
+    public void Validate_ValidUrlsValidateOkTest(string? url)
+    {
+        var link = FamilyHubsUiOptions.Footer.Links.First();
+        link.Url = url;
+
+        // act
+        var result = FamilyHubsUiOptionsValidation.Validate(null, FamilyHubsUiOptions);
+
+        Assert.Equal(ValidateOptionsResult.Success, result);
     }
 }
