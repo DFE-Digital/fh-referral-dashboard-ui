@@ -4,6 +4,46 @@
 
 * move rcl into sharedkernel
 
+* styles: same as ts below, or create npm package, with dependencies on govuk and moj? see https://github.com/alphagov/govuk-frontend
+
+To create an npm package that contains files for use by the consumer, you can follow these steps:
+
+Create a new directory for your project and navigate to it in your terminal.
+
+Initialize a new npm package by running the following command in your terminal:
+
+csharp
+Copy code
+npm init
+This will guide you through a series of prompts to set up your package's metadata, such as its name, version, description, etc.
+
+Create a new directory in your project directory to hold the files that you want to include in your package. For example, you could create a directory called lib or assets.
+
+Place the files that you want to include in your package in this directory.
+
+In your package's root directory, create a file called .npmignore (note the dot at the beginning of the filename). This file should contain a list of files and directories that you want to exclude from your package. For example, if you have a README.md file in your project directory that you don't want to include in your package, you can add it to your .npmignore file like this:
+
+Copy code
+README.md
+You can also use wildcards to exclude entire directories or file types. For example, if you want to exclude all .test.js files from your package, you can add this line to your .npmignore file:
+
+Copy code
+**/*.test.js
+In your package's root directory, create a file called package.json. This file should contain metadata about your package, such as its name, version, dependencies, etc. It should also contain a files array that lists the files and directories that you want to include in your package. For example, if you have a directory called lib that contains the files you want to include, you can add this to your package.json file:
+
+json
+Copy code
+"files": [
+  "lib"
+],
+Finally, to publish your package to the npm registry, you can run the following command in your terminal:
+
+Copy code
+npm publish
+This will create a new version of your package and make it available for others to install and use.
+
+That's it! Your package now contains files that can be used by the consumer.
+
 * add ts for GA etc into rcl, then...
 
 Yes, there is a Node.js package called unzipper that can be used to extract files from a NuGet package, so that the extraction can be added to the Gulpfile and done automatically as part of transpiling the TypeScript.
