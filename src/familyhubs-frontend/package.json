@@ -1,0 +1,29 @@
+{
+  "name": "familyhubs-frontend",
+  "version": "1.0.0",
+  "description": "FamilyHubs Frontend contains the code you need to start building a Family Hubs website on top of the GOVUK Design System",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DFE-Digital/fh-service-directory-shared.git"
+  },
+  "keywords": [
+    "govuk",
+    "frontend",
+    "design system",
+    "dfe",
+    "template",
+    "family hub"
+  ],
+  "author": {
+    "name": "DfE Family Hubs Team"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DFE-Digital/fh-service-directory-shared/issues"
+  },
+  "homepage": "https://github.com/DFE-Digital/fh-service-directory-shared#readme"
+}
