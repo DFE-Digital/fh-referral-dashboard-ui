@@ -25,5 +25,9 @@
   "bugs": {
     "url": "https://github.com/DFE-Digital/fh-service-directory-shared/issues"
   },
-  "homepage": "https://github.com/DFE-Digital/fh-service-directory-shared#readme"
+  "homepage": "https://github.com/DFE-Digital/fh-service-directory-shared#readme",
+  "dependencies": {
+    "govuk-frontend": "~4.5",
+    "@ministryofjustice/frontend": "~1.6"
+  } 
 }

@@ -28,9 +28,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{17D23030
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.RequestForSupport.UnitTests", "tests\FamilyHubs.RequestForSupport.UnitTests\FamilyHubs.RequestForSupport.UnitTests.csproj", "{1DDB7818-7706-4597-B47B-39B4CB194757}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "familyhubs-frontend", "familyhubs-frontend", "{01DC3930-134E-4763-AB71-1A4417764E82}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "familyhubs-frontend", "familyhubs-frontend", "{5B02CA38-C7B9-42AC-82C9-F7D7A486C0BC}"
 	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\index.js = src\familyhubs-frontend\index.js
 		src\familyhubs-frontend\package.json = src\familyhubs-frontend\package.json
+		src\familyhubs-frontend\README.md = src\familyhubs-frontend\README.md
 	EndProjectSection
 EndProject
 Global
@@ -69,7 +71,7 @@ Global
 		{755D501D-61FF-4FA2-B981-3470D34FE21C} = {EABE95A1-77E8-4140-BF50-B651E2B7E5DE}
 		{387D616B-DA84-4458-ADD8-570DBC045429} = {EABE95A1-77E8-4140-BF50-B651E2B7E5DE}
 		{1DDB7818-7706-4597-B47B-39B4CB194757} = {17D23030-50AF-44F1-A04F-E902582C6781}
-		{01DC3930-134E-4763-AB71-1A4417764E82} = {EABE95A1-77E8-4140-BF50-B651E2B7E5DE}
+		{5B02CA38-C7B9-42AC-82C9-F7D7A486C0BC} = {EABE95A1-77E8-4140-BF50-B651E2B7E5DE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9B1F2000-DD0E-4764-95FC-D768203C0EF1}
