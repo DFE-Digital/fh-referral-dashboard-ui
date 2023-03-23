@@ -1,5 +1,33 @@
 # ToDo
 
+* pick up standard gulpfile from the npm package?
+Here’s an example of a cross-platform postinstall script that uses the gently-copy library to copy selected files from an npm package to the user’s local directory :
+
+// post-install.js
+/** 
+ * Script to run after npm install 
+ * 
+ * Copy selected files to user's directory 
+ */ 
+
+'use strict' 
+
+var gentlyCopy = require('gently-copy') 
+
+var filesToCopy = ['file1', 'file2'] // Replace with the files you want to copy
+
+// User's local directory
+var userPath = process.env.INIT_CWD 
+
+// Moving files to user's local directory
+gentlyCopy(filesToCopy, userPath)
+You can add this script to your package and then reference it in your package.json file like this:
+
+"scripts": {
+  "postinstall": "node ./post-install.js"
+}
+This script will be executed automatically after your package is installed and will copy the specified files from your package to the user’s local directory.
+
 * stories: health check, error handling, move shared razor library into sharedkernel,
 spike: create npm with styles & scripts - add nuget package into npm??
 , security headers, app insights, telemetry pii redactor, google analytics, cookie banner & cookie page functionality
