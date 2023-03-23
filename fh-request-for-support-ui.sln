@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RclTemp", "src\RclTemp\RclT
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{17D23030-50AF-44F1-A04F-E902582C6781}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.RequestForSupport.UnitTests", "tests\FamilyHubs.RequestForSupport.UnitTests\FamilyHubs.RequestForSupport.UnitTests.csproj", "{1DDB7818-7706-4597-B47B-39B4CB194757}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.RequestForSupport.UnitTests", "tests\FamilyHubs.RequestForSupport.UnitTests\FamilyHubs.RequestForSupport.UnitTests.csproj", "{1DDB7818-7706-4597-B47B-39B4CB194757}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "familyhubs-frontend", "familyhubs-frontend", "{5B02CA38-C7B9-42AC-82C9-F7D7A486C0BC}"
 	ProjectSection(SolutionItems) = preProject
@@ -34,6 +34,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "familyhubs-frontend", "fami
 		src\familyhubs-frontend\package.json = src\familyhubs-frontend\package.json
 		src\familyhubs-frontend\README.md = src\familyhubs-frontend\README.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "styles", "styles", "{68DEC339-7602-4B5C-8BCD-E8165B0E276B}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\styles\all.scss = src\familyhubs-frontend\styles\all.scss
+		src\familyhubs-frontend\styles\_global.scss = src\familyhubs-frontend\styles\_global.scss
+		src\familyhubs-frontend\styles\_overrides.scss = src\familyhubs-frontend\styles\_overrides.scss
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "layout", "layout", "{28577F5B-6D14-4498-B71D-6A5CDB0A80F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,6 +81,8 @@ Global
 		{387D616B-DA84-4458-ADD8-570DBC045429} = {EABE95A1-77E8-4140-BF50-B651E2B7E5DE}
 		{1DDB7818-7706-4597-B47B-39B4CB194757} = {17D23030-50AF-44F1-A04F-E902582C6781}
 		{5B02CA38-C7B9-42AC-82C9-F7D7A486C0BC} = {EABE95A1-77E8-4140-BF50-B651E2B7E5DE}
+		{68DEC339-7602-4B5C-8BCD-E8165B0E276B} = {5B02CA38-C7B9-42AC-82C9-F7D7A486C0BC}
+		{28577F5B-6D14-4498-B71D-6A5CDB0A80F0} = {68DEC339-7602-4B5C-8BCD-E8165B0E276B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9B1F2000-DD0E-4764-95FC-D768203C0EF1}

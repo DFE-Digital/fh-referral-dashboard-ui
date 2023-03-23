@@ -34,6 +34,7 @@
   <ItemGroup>
     <Folder Include="Pages\Error\" />
     <Folder Include="Pages\Shared\" />
+    <Folder Include="styles\pages\" />
   </ItemGroup>
 
   <ItemGroup>
