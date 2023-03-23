@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <Folder Include="Pages\Error\" />
+    <Folder Include="Pages\Shared\" />
   </ItemGroup>
 
   <ItemGroup>
