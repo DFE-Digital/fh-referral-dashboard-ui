@@ -1,5 +1,6 @@
 # ToDo
 
+
 * overrides contains
 $govuk-assets-path: '/lib/govuk/assets/';
 
@@ -7,11 +8,13 @@ $moj-assets-path: '/lib/moj/assets/';
 $moj-images-path: '/lib/moj/assets/images/';
 
 either copy the files as a post install step (for example)
+or provide a script/task to copy them
 or remove them from the npm package
 
 * move header sass files into their own file
 
 * pick up standard gulpfile from the npm package?
+also tsconfig
 Here’s an example of a cross-platform postinstall script that uses the gently-copy library to copy selected files from an npm package to the user’s local directory :
 
 // post-install.js

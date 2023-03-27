@@ -1,5 +1,5 @@
 ﻿using Microsoft.ApplicationInsights.Extensibility;
-using RclTemp.FamilyHubsUi.Extensions;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Extensions;
 using Serilog;
 using Serilog.Events;
 

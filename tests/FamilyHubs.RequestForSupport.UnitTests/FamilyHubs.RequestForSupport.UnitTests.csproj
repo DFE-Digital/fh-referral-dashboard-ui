@@ -33,8 +33,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\RclTemp\RclTemp.csproj" />
-  </ItemGroup>
-
 </Project>
