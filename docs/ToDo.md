@@ -1,7 +1,7 @@
 # ToDo
 
 
-* overrides contains
+* overrides contains. either copy them as part of the npm module, or set them up to get from _content
 $govuk-assets-path: '/lib/govuk/assets/';
 
 $moj-assets-path: '/lib/moj/assets/';
