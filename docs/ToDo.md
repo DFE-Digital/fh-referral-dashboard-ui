@@ -1,7 +1,5 @@
 # ToDo
 
-* move header sass files into their own file
-
 * pick up standard gulpfile from the npm package? also tsconfig?
 
 * stories: health check, error handling, move shared razor library into sharedkernel,
