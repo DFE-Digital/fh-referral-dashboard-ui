@@ -1,0 +1,10 @@
+﻿@model FamilyHubsUiOptions
+
+
+@if (!string.IsNullOrEmpty(Model.Analytics?.MeasurementId))
+{
+    <script>
+        window.GA_MEASUREMENT_ID = '@Model.Analytics.MeasurementId';
+        window.GA_CONTAINER_ID = '@Model.Analytics.ContainerId';
+    </script>
+}

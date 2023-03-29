@@ -1,0 +1,53 @@
+﻿@* we could use IOptionsSnapshot for updates without downtime, but we probably don't want the overhead for something so central*@
+@inject IOptions<FamilyHubsUiOptions> FamilyHubsUiOptions
+@{
+    var familyHubsUiOptions = FamilyHubsUiOptions.Value;
+}
+
+<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+<head>
+    @*todo: move into head?*@
+    <partial name="_GoogleAnalytics.cshtml" model="familyHubsUiOptions"/>
+    <partial name="_Head.cshtml" model="familyHubsUiOptions"/>
+
+    @*todo: probably include these in _head also*@
+    <link rel="stylesheet" href="~/css/application.css" asp-append-version="true"/>
+    <!--[if IE 8]>
+        <link href="~/css/govuk-frontend-ie8-4.5.0.min.css" rel="stylesheet">
+    <![endif]-->
+</head>
+
+<body class="govuk-template__body">
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
+    <partial name="_CookieBanner.cshtml" model="familyHubsUiOptions" />
+
+    <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+    <partial name="_Header.cshtml" model="familyHubsUiOptions" />
+
+    <div class="govuk-width-container">
+        <partial name="_PhaseBanner.cshtml" model="familyHubsUiOptions" />
+
+        @await RenderSectionAsync("Back", required: false)
+
+        <main class="govuk-main-wrapper custom-main" id="main-content" role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <partial name="_Footer.cshtml" model="familyHubsUiOptions" />
+
+    <script src="~/js/govuk-frontend-4.5.0.min.js"></script>
+    <script src="~/js/app.js" asp-append-version="true"></script>
+
+    <script>
+        //todo: initialize just the components we use
+        window.GOVUKFrontend.initAll();
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

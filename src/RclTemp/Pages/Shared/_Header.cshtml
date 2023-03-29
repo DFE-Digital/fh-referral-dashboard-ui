@@ -1,0 +1,30 @@
+﻿@model FamilyHubsUiOptions
+
+<header class="govuk-header" role="banner" data-module="govuk-header">
+    <div class="govuk-header__container">
+        <div class="govuk-width-container">
+            <div class="govuk-header__logo">
+                <a href="https://www.gov.uk/government/organisations/department-for-education" class="govuk-header__link govuk-header__link--homepage app-header-logo-link">
+                    <span class="govuk-header__logotype">
+                        <!--[if gt IE 8]><!-->
+                        @*todo need svg*@
+                        <img src="_content/RclTemp/images/crest.png" class="govuk-header__logotype-crown-fallback-image" alt="Department for Education">
+                        <!--<![endif]-->
+                        <!--[if IE 8]>
+                            <img src="_content/RclTemp/images/crest.png" class="govuk-header__logotype-crown-fallback-image" alt="Department for Education" width="45" height="45">
+                        <![endif]-->
+                        <span class="govuk-header__logotype-text">
+                            Department for Education
+                        </span>
+                    </span>
+                </a>
+                <span class="govuk-header__logotype-text">|</span>
+                <a href="/" class="govuk-header__link govuk-header__link--homepage">
+                    <span class="govuk-header__product-name">
+                        @Model.ServiceName
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>

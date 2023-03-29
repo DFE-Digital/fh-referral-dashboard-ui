@@ -1,0 +1,49 @@
+﻿
+.js-enabled .app-js-show {
+    display: block;
+}
+
+.app-js-show {
+    display: none;
+}
+
+.govuk-header__container {
+    border-bottom: 10px solid #4c7aa8; //rgb(76, 122, 168, 0.99);
+}
+
+.govuk-header {
+    background-color: #003a69;
+    border-bottom: 10px solid #4c7aa8; //rgb(76, 122, 168, 0.99);
+
+    .govuk-header__container {
+        @include govuk-responsive-padding(5, "top");
+        @include govuk-responsive-padding(3, "bottom");
+    }
+
+    .govuk-header__logo {
+        width: 100%;
+    }
+
+    .app-header-logo-link:hover, .app-header-logo-link:active {
+        /* govuk-header__link--homepage uses a border rather than an underline, so we can't do this... */
+        /*   text-underline-offset: 10px;*/
+        /*font-weight the equivalent like this..*/
+        padding-bottom: 7px;
+    }
+
+    .govuk-header__logotype-crown-fallback-image {
+        height: 45px;
+        width: 45px;
+        float: left;
+        @include govuk-responsive-margin(2, "right");
+    }
+
+    .govuk-header__link--homepage { 
+        margin-right: 0;
+    }
+
+    .govuk-header__logotype-text, .govuk-header__product-name {
+        line-height: 2.5rem !important;
+        font-size: 1.2rem;
+    }
+}
