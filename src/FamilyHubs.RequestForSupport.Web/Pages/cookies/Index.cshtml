@@ -1,4 +1,11 @@
 ﻿@page
 @model FamilyHubs.RequestForSupport.Web.Pages.cookies.IndexModel
 @{
+    ViewData["Title"] = "Cookies";
 }
+
+@section Back {
+    <a class="govuk-back-link app-js-show app-back-link">Back</a>
+}
+
+<partial name="~/Pages/Shared/_CookiePage.cshtml" model="Model.CookiePage"/>

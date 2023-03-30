@@ -1,5 +1,5 @@
-﻿using Microsoft.ApplicationInsights.Extensibility;
-using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Extensions;
+﻿using FamilyHubs.SharedKernel.Razor.Cookies;
+using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
 
@@ -42,7 +42,7 @@ public static class StartupExtensions
         services.AddHsts(o => o.ExcludedHosts.Clear());
 #endif
 
-        services.AddFamilyHubsUi(configuration);
+        services.AddCookiePage(configuration);
     }
 
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)
