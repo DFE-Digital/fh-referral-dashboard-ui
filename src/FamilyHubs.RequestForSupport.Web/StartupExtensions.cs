@@ -54,12 +54,52 @@ public static class StartupExtensions
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-        //todo: add error pages
-        //app.UseStatusCodePagesWithReExecute("/Error/{0}");
+        // UseExceptionHandler doesn't accept a path beginning with ~, which is how you usually need to specify a path to a RCL contained view
+
+        //var errorPagePath = Path.Combine(app.Environment.ContentRootPath, "Pages\\Error.cshtml");
+
+        //        app.UseExceptionHandler(errorPagePath.Substring(2));
+
+        app.UseExceptionHandler("/Error/Index");
+
+        //PathString.FromUriComponent(new Uri())
+        //app.UseExceptionHandler(new ExceptionHandlerOptions
+        //{
+        //    ExceptionHandlingPath = new PathString()
+        //});
+        //    errorApp =>
+        //{
+        //    errorApp.Run(async context =>
+        //    {
+        //        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        //        context.Response.ContentType = "text/html";
+
+        //        // Render the custom error page directly to the response stream
+        //        var errorPage = "~/Pages/Error.cshtml";
+        //        var razorPage = app.Services.GetRequiredService<IRazorPageFactory>()
+        //            .CreatePage(errorPage, new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary()));
+
+        //        await razorPage.ExecuteAsync(new ViewContext()
+        //        {
+        //            HttpContext = context,
+        //            ViewData = razorPage.ViewData,
+        //            Writer = new StreamWriter(context.Response.Body),
+        //        });
+
+        //        //// Get the absolute path to the error page
+        //        //var errorPagePath = Path.Combine(app.Environment.ContentRootPath, "Pages\\Error.cshtml");
+
+        //        //// Render the error page
+        //        //var errorPageContent = await File.ReadAllTextAsync(errorPagePath);
+        //        //await context.Response.WriteAsync(errorPageContent, Encoding.UTF8);
+        //    });
+        //});
+
+        //app.UseExceptionHandler(errorPagePath);
+        app.UseStatusCodePagesWithReExecute("~/Pages/Error/{0}");
 
 #if use_https
         app.UseHttpsRedirection();
