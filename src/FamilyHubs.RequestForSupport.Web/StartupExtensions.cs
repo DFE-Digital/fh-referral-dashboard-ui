@@ -59,7 +59,7 @@ public static class StartupExtensions
             app.UseHsts();
         }
 
-        app.UseErrorHandling(true);
+        app.UseErrorHandling();
 
 #if use_https
         app.UseHttpsRedirection();
