@@ -8,4 +8,4 @@ spike: create npm with styles & scripts - add nuget package into npm??
 
 * error pages into rcl with auto routing to them
 
-* move rcl into sharedkernel
+* move rcl into sharedkernel?
