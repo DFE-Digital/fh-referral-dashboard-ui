@@ -1,4 +1,5 @@
-﻿using Microsoft.ApplicationInsights.Extensibility;
+﻿using FamilyHubs.RequestForSupport.Core.ApiClients;
+using Microsoft.ApplicationInsights.Extensibility;
 using RclTemp.FamilyHubsUi.Extensions;
 using Serilog;
 using Serilog.Events;
@@ -31,6 +32,9 @@ public static class StartupExtensions
         //services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
 
+        // Add services to the container.
+        services.AddHttpClients(configuration);
+
         services.AddRazorPages();
 
         //todo: add health checks
@@ -43,6 +47,14 @@ public static class StartupExtensions
 #endif
 
         services.AddFamilyHubsUi(configuration);
+    }
+
+    public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHttpClient<IReferralClientService, ReferralClientService>(client =>
+        {
+            client.BaseAddress = new Uri(configuration.GetValue<string>("ReferralUrl")!);
+        });
     }
 
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)

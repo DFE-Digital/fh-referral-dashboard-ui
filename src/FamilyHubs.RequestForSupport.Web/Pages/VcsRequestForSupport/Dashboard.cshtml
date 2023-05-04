@@ -1,0 +1,304 @@
+﻿@page
+@model FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport.DashboardModel
+@{
+    ViewData["Title"] = "Connection requests";
+}
+
+<form method="post">
+    <input asp-for="@Model.ProfessionalEmailAddress" type="hidden">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l govuk-!-margin-bottom-6">Connection requests</h1>
+                <div class="govuk-form-group govuk-!-margin-bottom-0">
+                    <label class="govuk-label govuk-label--m" for="width-20">
+                        Search by name of contact or request number
+                    </label>
+                    <input class="govuk-input govuk-input--width-20" id="SearchText" name="SearchText" value="@Model.SearchText" type="text">
+                    <button class="govuk-button" data-module="govuk-button">
+                        Search
+                    </button>
+                </div>
+        </div>
+    </div>
+
+    <table class="govuk-table" data-module="moj-sortable-table">
+
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header" style="width: 20%;">Request number</th>
+                @*<th scope="col" class="govuk-table__header" aria-sort="ascending">Date received</th>*@
+                <th scope="col" class="govuk-table__header sort-1" style="width: 24%;"><a href="date-descending-1.html">Date received</a> <b>^</b></th>
+                <th scope="col" class="govuk-table__header" style="width: 20%;">Family contact</th>
+                <th scope="col" class="govuk-table__header" style="width: 20%;">Team</th>
+                <th scope="col" class="govuk-table__header sort-1" style="width: 8%;"><a href="status-accepted-1.html">Status</a> <b>^</b></th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 8%;">Action</th>
+            </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+
+            @foreach(var item in Model.SearchResults.Items)
+            {
+                var itemStatus = item.Status?.LastOrDefault()?.Status ?? "New";
+                
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">@item.Id.ToString("X4")</td>
+
+                    <td class="govuk-table__cell">@item.Created?.ToString("dd-MMM-yyyy")</td>
+
+                    <td class="govuk-table__cell">@item.RecipientDto.Name</td>
+
+                    <td class="govuk-table__cell">Team TBC</td>
+
+                    <td class="govuk-table__cell">
+                        <partial name="_ConnectionStatus" for="@itemStatus" />
+                        @*<strong class="govuk-tag govuk-tag--blue">New</strong>*@
+                    </td>
+
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <a asp-page="/VcsRequestForSupport/ConnectDetails" asp-route-id="@item.Id" class="govuk-!-margin-right-1">View</a>
+                        @*<a class="govuk-!-margin-right-1" href="manage-requests/john-smith">View</a>*@
+                    </td>
+                </tr>
+            }
+
+            @*<tr class="govuk-table__row">
+                <td class="govuk-table__cell">0B0C0C</td>
+
+                <td class="govuk-table__cell">10 Mar 2023</td>
+
+                <td class="govuk-table__cell">Sarah Wheeler</td>
+
+                <td class="govuk-table__cell">Social work team</td>
+
+                <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--blue">New</strong>
+                </td>
+
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a class="govuk-!-margin-right-1" href="manage-requests/john-smith">View</a>
+                </td>
+            </tr>
+
+            <tr class="govuk-table__row">
+
+                <td class="govuk-table__cell">B1B4B6</td>
+
+                <td class="govuk-table__cell">10 Mar 2023</td>
+
+                <td class="govuk-table__cell">Ian Cook</td>
+
+                <td class="govuk-table__cell">Social work team</td>
+
+                <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--blue">New</strong>
+                </td>
+
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a class="govuk-!-margin-right-1" href="manage-requests-2/james-garner">View</a>
+                </td>
+
+            </tr>
+
+            <tr class="govuk-table__row">
+
+                <td class="govuk-table__cell">F28500</td>
+
+                <td class="govuk-table__cell">8 Mar 2023</td>
+
+                <td class="govuk-table__cell">Claire Roberts</td>
+
+                <td class="govuk-table__cell">North County Midwifery team</td>
+
+                <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--blue">New</strong>
+                </td>
+
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a class="govuk-!-margin-right-1" href="#">View</a>
+                </td>
+            </tr>
+
+            <tr class="govuk-table__row">
+
+                <td class="govuk-table__cell">F47738</td>
+
+                <td class="govuk-table__cell">8 Mar 2023</td>
+
+                <td class="govuk-table__cell">Ian Mckellen</td>
+
+                <td class="govuk-table__cell">County CAMHS</td>
+
+                <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--yellow">Opened</strong>
+                </td>
+
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a class="govuk-!-margin-right-1" href="#">View</a>
+                </td>
+            </tr>
+
+
+            <tr class="govuk-table__row">
+
+                <td class="govuk-table__cell">1D70B8</td>
+
+                <td class="govuk-table__cell">7 Mar 2023</td>
+
+                <td class="govuk-table__cell">Romesh Dalvi</td>
+
+                <td class="govuk-table__cell">County CAMHS</td>
+
+                <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--yellow">Opened</strong>
+                </td>
+
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a class="govuk-!-margin-right-1" href="#">View</a>
+                </td>
+            </tr>
+
+            <tr class="govuk-table__row">
+
+                <td class="govuk-table__cell">F08080</td>
+
+                <td class="govuk-table__cell">28 Feb 2023</td>
+
+                <td class="govuk-table__cell">Tom Davies</td>
+
+                <td class="govuk-table__cell">Social work team</td>
+
+                <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--yellow">Opened</strong>
+                </td>
+
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a class="govuk-!-margin-right-1" href="#">View</a>
+                </td>
+            </tr>
+
+            <tr class="govuk-table__row">
+
+                <td class="govuk-table__cell">C0C0C0</td>
+
+                <td class="govuk-table__cell">27 Feb 2023</td>
+
+                <td class="govuk-table__cell">Laura Sykes</td>
+
+                <td class="govuk-table__cell">Early help team</td>
+
+                <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--yellow">Opened</strong>
+                </td>
+
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a class="govuk-!-margin-right-1" href="#">View</a>
+                </td>
+            </tr>
+
+            <tr class="govuk-table__row">
+
+                <td class="govuk-table__cell">800000</td>
+
+                <td class="govuk-table__cell">27 Feb 2023</td>
+
+                <td class="govuk-table__cell">Marek Larwoods</td>
+
+                <td class="govuk-table__cell">County CAMHS</td>
+
+                <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">Accepted</strong>
+                </td>
+
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a class="govuk-!-margin-right-1" href="#">View</a>
+                </td>
+            </tr>
+
+            <tr class="govuk-table__row">
+
+                <td class="govuk-table__cell">808000</td>
+
+                <td class="govuk-table__cell">25 Feb 2023</td>
+
+                <td class="govuk-table__cell">Michael Palmer</td>
+
+                <td class="govuk-table__cell">Safeguarding unit</td>
+
+                <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">Accepted</strong>
+                </td>
+
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a class="govuk-!-margin-right-1" href="#">View</a>
+                </td>
+            </tr>
+
+            <tr class="govuk-table__row">
+
+                <td class="govuk-table__cell">0000FF</td>
+
+                <td class="govuk-table__cell">25 Feb 2023</td>
+
+                <td class="govuk-table__cell">Joel Casey</td>
+
+                <td class="govuk-table__cell">Safeguarding unit</td>
+
+                <td class="govuk-table__cell">
+                    <strong class="govuk-tag govuk-tag--green">Accepted</strong>
+                </td>
+
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a class="govuk-!-margin-right-1" href="#">View</a>
+                </td>
+            </tr>*@
+
+        </tbody>
+    </table>
+@if (Model.Pagination.Show)
+{
+    <nav class="govuk-pagination" role="navigation" aria-label="results">
+        @if (Model.Pagination.PreviousPage != null)
+        {
+            <div class="govuk-pagination__prev">
+                <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@(Model.Pagination.PreviousPage)" rel="next">
+                    <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+                        <path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
+                    </svg>
+                    <span class="govuk-pagination__link-title">Previous</span>
+                </button>
+            </div>
+        }
+
+        <ul class="govuk-pagination__list">
+            @foreach (var item in Model.Pagination.PaginationItems)
+            {
+                if (item.ShowSkippedPages)
+                {
+                    <li class="govuk-pagination__item govuk-pagination__item--ellipses">&ctdot;</li>
+                }
+                else
+                {
+                    <li class="govuk-pagination__item @(item.IsCurrentPage ? "govuk-pagination__item--current" : "")">
+                        <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@item.Page" aria-label="Page @(item.Page)" @(item.IsCurrentPage ? "aria-current=\"page\"" : "")>@item.Page</button>
+                    </li>
+                }
+            }
+        </ul>
+
+        @if (Model.Pagination.NextPage != null)
+        {
+            <div class="govuk-pagination__next">
+                <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@(Model.Pagination.NextPage)" rel="next">
+                    <span class="govuk-pagination__link-title">Next</span>
+                    <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+                        <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
+                    </svg>
+                </button>
+            </div>
+        }
+    </nav>
+}
+
+</form>

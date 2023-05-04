@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RclTemp", "src\RclTemp\RclT
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{17D23030-50AF-44F1-A04F-E902582C6781}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.RequestForSupport.UnitTests", "tests\FamilyHubs.RequestForSupport.UnitTests\FamilyHubs.RequestForSupport.UnitTests.csproj", "{1DDB7818-7706-4597-B47B-39B4CB194757}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.RequestForSupport.UnitTests", "tests\FamilyHubs.RequestForSupport.UnitTests\FamilyHubs.RequestForSupport.UnitTests.csproj", "{1DDB7818-7706-4597-B47B-39B4CB194757}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
