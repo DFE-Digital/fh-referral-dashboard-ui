@@ -43,6 +43,7 @@ public class DashboardModel : PageModel
 
     public async Task OnPost(string professional, string? searchText)
     {
+        ProfessionalEmailAddress = professional;
         //Check what we get
         await SearchConnections(SearchText);
     }
