@@ -43,14 +43,14 @@ public static class StartupExtensions
         services.AddHsts(o => o.ExcludedHosts.Clear());
 #endif
 
-        services.AddCookiePage(configuration);
+        services.AddFamilyHubs(configuration);
     }
 
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
 
-        //app.UseAppSecurityHeaders();
+        app.UseFamilyHubs();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
@@ -58,8 +58,6 @@ public static class StartupExtensions
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-
-        app.UseErrorHandling();
 
 #if use_https
         app.UseHttpsRedirection();
