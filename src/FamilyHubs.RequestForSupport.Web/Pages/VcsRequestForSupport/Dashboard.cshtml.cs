@@ -4,9 +4,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.RequestForSupport.Core.Models;
+using Microsoft.AspNetCore.Authorization;
+using FamilyHubs.SharedKernel.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
+[Authorize]
 public class DashboardModel : PageModel
 {
     private readonly IReferralClientService _referralClientService;
@@ -36,7 +40,15 @@ public class DashboardModel : PageModel
         ProfessionalEmailAddress = professional;
         if (currentPage != null)
             CurrentPage = currentPage.Value;
-        
+
+        //var context = this.PageContext.HttpContext;
+        var user = HttpContext.GetFamilyHubsUser();
+        System.Diagnostics.Debug.WriteLine(user.LastName);
+
+        var userFoo = HttpContext?.User;
+        //userFoo.Claims.FirstOrDefault
+        System.Diagnostics.Debug.WriteLine(userFoo?.Claims.ElementAt(0).Type.ToString());
+
         await SearchConnections(searchText);
 
     }

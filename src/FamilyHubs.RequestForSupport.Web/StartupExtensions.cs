@@ -1,8 +1,11 @@
 ﻿using FamilyHubs.RequestForSupport.Core.ApiClients;
+using FamilyHubs.SharedKernel.GovLogin.AppStart;
+using FamilyHubs.SharedKernel.Identity;
 using Microsoft.ApplicationInsights.Extensibility;
 using RclTemp.FamilyHubsUi.Extensions;
 using Serilog;
 using Serilog.Events;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FamilyHubs.RequestForSupport.Web;
 
@@ -25,6 +28,10 @@ public static class StartupExtensions
             loggerConfiguration.WriteTo.Console(
                 parsed ? logLevel : LogEventLevel.Warning);
         });
+
+        // *****  REQUIRED SECTION START
+        builder.Services.AddAndConfigureGovUkAuthentication(builder.Configuration);
+        // *****  REQUIRED SECTION END
     }
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
@@ -51,10 +58,34 @@ public static class StartupExtensions
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient<IReferralClientService, ReferralClientService>(client =>
+        //services.AddHttpClient<IReferralClientService, ReferralClientService>(client =>
+        //{
+        //    client.BaseAddress = new Uri(configuration.GetValue<string>("ReferralUrl")!);
+        //});
+
+        services.AddSecuredTypedHttpClient<IReferralClientService, ReferralClientService>((serviceProvider, httpClient) =>
         {
-            client.BaseAddress = new Uri(configuration.GetValue<string>("ReferralUrl")!);
+            httpClient.BaseAddress = new Uri(configuration.GetValue<string>("ReferralUrl")!);
         });
+    }
+
+    public static IServiceCollection AddSecuredTypedHttpClient<TClient, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TImplementation>(
+            this IServiceCollection services, Action<IServiceProvider, HttpClient> configureClient)
+            where TClient : class
+            where TImplementation : class, TClient
+    {
+        services.AddHttpClient<TClient, TImplementation>((serviceProvider, httpClient) =>
+        {
+            configureClient(serviceProvider, httpClient);
+            var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+            if (httpContextAccessor == null)
+                throw new ArgumentException($"IHttpContextAccessor required for {nameof(AddSecuredTypedHttpClient)}");
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {httpContextAccessor.HttpContext!.GetBearerToken()}");
+
+        });
+
+        return services;
     }
 
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)
@@ -80,7 +111,11 @@ public static class StartupExtensions
 
         app.UseRouting();
 
-        app.UseAuthorization();
+        //app.UseAuthorization();
+
+        // *****  REQUIRED SECTION START
+        app.UseGovLoginAuthentication();
+        // *****  REQUIRED SECTION END
 
         app.MapRazorPages();
 
