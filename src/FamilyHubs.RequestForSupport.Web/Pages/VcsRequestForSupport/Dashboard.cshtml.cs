@@ -19,11 +19,8 @@ public class DashboardModel : PageModel
 
     public IPagination Pagination { get; set; }
 
-    [BindProperty] 
-    public string? SearchText { get; set;}
-
     [BindProperty]
-    public string ProfessionalEmailAddress { get; set; } = string.Empty;
+    public string OrganisationId { get; set; } = string.Empty;
 
     [BindProperty]
     public int CurrentPage { get; set; } = 1;
@@ -35,15 +32,15 @@ public class DashboardModel : PageModel
         _referralClientService = referralClientService;
         Pagination = new DontShowPagination();
     }
-    public async Task OnGet(string professional, string? searchText, int? currentPage)
+    public async Task OnGet(string? referralOrderBy, bool? isAssending, int? currentPage)
     {
-        ProfessionalEmailAddress = professional;
         if (currentPage != null)
             CurrentPage = currentPage.Value;
 
         //var context = this.PageContext.HttpContext;
         var user = HttpContext.GetFamilyHubsUser();
         System.Diagnostics.Debug.WriteLine(user.LastName);
+        OrganisationId = user.OrganisationId;
 
         var userFoo = HttpContext?.User;
         var team = HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "Team");
@@ -51,20 +48,25 @@ public class DashboardModel : PageModel
         System.Diagnostics.Debug.WriteLine(userFoo?.Claims.ElementAt(0).Type.ToString());
         System.Diagnostics.Debug.WriteLine(team?.Value);
 
-        await SearchConnections(searchText);
+        await GetConnections(OrganisationId, referralOrderBy, isAssending);
 
     }
 
-    public async Task OnPost(string professional, string? searchText)
+    public async Task OnPost(string organisationId, string? referralOrderBy, bool? isAssending, int? currentPage)
     {
-        ProfessionalEmailAddress = professional;
+        
         //Check what we get
-        await SearchConnections(SearchText);
+        await GetConnections(organisationId, referralOrderBy, isAssending);
     }
 
-    private async Task SearchConnections(string? searchText)
+    private async Task GetConnections(string organisationId, string? referralOrderBy, bool? isAssending)
     {
-        SearchResults = await _referralClientService.GetRequestsForConnectionByProfessional(ProfessionalEmailAddress, CurrentPage, PageSize, searchText);
+        if (!Enum.TryParse<ReferralOrderBy>(referralOrderBy, true, out ReferralOrderBy referralOrder))
+        {
+            referralOrder = ReferralOrderBy.NotSet;
+        }
+
+        SearchResults = await _referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, referralOrder, isAssending, CurrentPage, PageSize);
 
         Pagination = new LargeSetPagination(SearchResults.TotalPages, CurrentPage);
 

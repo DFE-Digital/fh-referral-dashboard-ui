@@ -1,11 +1,9 @@
-﻿using Moq;
-using FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
-using FamilyHubs.RequestForSupport.Core.ApiClients;
-using FamilyHubs.ReferralService.Shared.Dto;
+﻿using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Models;
-using System.Collections.Generic;
-using Xunit.Abstractions;
+using FamilyHubs.RequestForSupport.Core.ApiClients;
+using FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 using FluentAssertions;
+using Moq;
 
 namespace FamilyHubs.RequestForSupport.UnitTests;
 
@@ -19,7 +17,7 @@ public class WhenUsingTheVcsDashboard
         _mockReferralClientService = new Mock<IReferralClientService>();
         List<ReferralDto> list = new() { GetReferralDto() };
         PaginatedList<ReferralDto> pagelist = new PaginatedList<ReferralDto>(list, 1, 1, 1);
-        _mockReferralClientService.Setup(x => x.GetRequestsForConnectionByProfessional(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(pagelist);
+        _mockReferralClientService.Setup(x => x.GetRequestsForConnectionByOrganisationId(It.IsAny<string>(), It.IsAny<ReferralOrderBy>(), It.IsAny<bool?>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(pagelist);
 
         _pageModel = new DashboardModel(_mockReferralClientService.Object);
     }
@@ -28,10 +26,10 @@ public class WhenUsingTheVcsDashboard
     public async Task ThenOnGetVcsDashboard()
     {
         //Act & Arrange
-        await _pageModel.OnGet("Joe.Professional@email.com", null, 1);
+        await _pageModel.OnGet(ReferralOrderBy.NotSet.ToString(), null, 1);
 
         //Assert
-        _pageModel.ProfessionalEmailAddress.Should().Be("Joe.Professional@email.com");
+        _pageModel.OrganisationId.Should().Be("1");
         _pageModel.SearchResults.TotalCount.Should().Be(1);
     }
 
@@ -39,10 +37,10 @@ public class WhenUsingTheVcsDashboard
     public async Task ThenOnPostVcsDashboard()
     {
         //Act & Arrange
-        await _pageModel.OnPost("Joe.Professional@email.com", "Joe Blogs");
+        await _pageModel.OnPost("1", ReferralOrderBy.NotSet.ToString(), null, 1);
 
         //Assert
-        _pageModel.ProfessionalEmailAddress.Should().Be("Joe.Professional@email.com");
+        _pageModel.OrganisationId.Should().Be("1");
         _pageModel.SearchResults.TotalCount.Should().Be(1);
     }
 
@@ -71,13 +69,11 @@ public class WhenUsingTheVcsDashboard
                 Id = 2,
                 EmailAddress = "Bob.Referrer@email.com",
             },
-            Status = new List<ReferralStatusDto>
-                {
-                    new ReferralStatusDto
-                    {
-                        Status = "New"
-                    }
-                },
+            Status = new ReferralStatusDto
+            {
+                Name = "New",
+                SortOrder = 0
+            },
             ReferralServiceDto = new ReferralServiceDto
             {
                 Id = 2,

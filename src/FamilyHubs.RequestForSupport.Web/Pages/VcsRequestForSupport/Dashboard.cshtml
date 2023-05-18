@@ -1,38 +1,26 @@
 ﻿@page
 @model FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport.DashboardModel
 @{
-    ViewData["Title"] = "Connection requests";
+    ViewData["Title"] = "Received requests";
 }
 
-<form method="post">
-    <input asp-for="@Model.ProfessionalEmailAddress" type="hidden">
+<div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-6">Received requests</h1>
+</div>
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <h1 class="govuk-heading-l govuk-!-margin-bottom-6">Connection requests</h1>
-                <div class="govuk-form-group govuk-!-margin-bottom-0">
-                    <label class="govuk-label govuk-label--m" for="width-20">
-                        Search by name of contact or request number
-                    </label>
-                    <input class="govuk-input govuk-input--width-20" id="SearchText" name="SearchText" value="@Model.SearchText" type="text">
-                    <button class="govuk-button" data-module="govuk-button">
-                        Search
-                    </button>
-                </div>
-        </div>
-    </div>
+<form method="post">
+    <input asp-for="@Model.OrganisationId" type="hidden">
 
     <table class="govuk-table" data-module="moj-sortable-table">
 
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header" style="width: 20%;">Request number</th>
-                @*<th scope="col" class="govuk-table__header sort-1" style="width: 24%;" aria-sort="ascending">Date received</th>*@
-                <th scope="col" class="govuk-table__header sort-1" style="width: 24%;"><a href="date-descending-1.html">Date received</a> <b>^</b></th>
-                <th scope="col" class="govuk-table__header" style="width: 20%;">Family contact</th>
-                <th scope="col" class="govuk-table__header" style="width: 20%;">Team</th>
+                <th scope="col" class="govuk-table__header" style="width: 20%;">Contact in family</th>
+                <th scope="col" class="govuk-table__header sort-1" style="width: 25%;"><a href="date-descending-1.html">Team</a> <b>^</b></th>
+                <th scope="col" class="govuk-table__header sort-1" style="width: 17%;"><a href="date-descending-1.html">Date Received</a> <b>^</b></th>
+                <th scope="col" class="govuk-table__header" style="width: 8%;">Request number</th>
                 <th scope="col" class="govuk-table__header sort-1" style="width: 10%;"><a href="status-accepted-1.html">Status</a> <b>^</b></th>
-                <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 8%;">Action</th>
+                
             </tr>
         </thead>
 
@@ -40,25 +28,22 @@
 
             @foreach(var item in Model.SearchResults.Items)
             {
-                var itemStatus = item.Status?.LastOrDefault()?.Status ?? "New";
+                var itemStatus = item.Status.Name ?? "New";
                 
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">@item.Id.ToString("X4")</td>
+
+                    <td class="govuk-table__cell">
+                        <a asp-page="/VcsRequestForSupport/ConnectDetails" asp-route-id="@item.Id" class="govuk-!-margin-right-1">@item.RecipientDto.Name</a>
+                    </td>
+
+                    <td class="govuk-table__cell">@item.ReferrerDto.Team</td>
 
                     <td class="govuk-table__cell">@item.Created?.ToString("dd-MMM-yyyy")</td>
 
-                    <td class="govuk-table__cell">@item.RecipientDto.Name</td>
-
-                    <td class="govuk-table__cell">Team TBC</td>
+                    <td class="govuk-table__cell">@item.Id.ToString("X4")</td>
 
                     <td class="govuk-table__cell">
                         <partial name="_ConnectionStatus" for="@itemStatus" />
-                        @*<strong class="govuk-tag govuk-tag--blue">New</strong>*@
-                    </td>
-
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <a asp-page="/VcsRequestForSupport/ConnectDetails" asp-route-id="@item.Id" class="govuk-!-margin-right-1">View</a>
-                        @*<a class="govuk-!-margin-right-1" href="manage-requests/john-smith">View</a>*@
                     </td>
                 </tr>
             }
