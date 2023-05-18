@@ -35,7 +35,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\FamilyHubs.RequestForSupport.Web\FamilyHubs.RequestForSupport.Web.csproj" />
-    <ProjectReference Include="..\..\src\RclTemp\RclTemp.csproj" />
   </ItemGroup>
 
 </Project>
