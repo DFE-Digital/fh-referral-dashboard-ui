@@ -7,13 +7,16 @@ using FamilyHubs.RequestForSupport.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ReferralService.Shared.Enums;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
 [Authorize]
-public class DashboardModel : PageModel
+public class DashboardModel : PageModel, IFamilyHubsHeader
 {
     private readonly IReferralClientService _referralClientService;
+
+    public bool ShowNavigationMenu => true;
 
     public PaginatedList<ReferralDto> SearchResults { get; set; } = new PaginatedList<ReferralDto>();
 
@@ -77,5 +80,10 @@ public class DashboardModel : PageModel
         Pagination = new LargeSetPagination(SearchResults.TotalPages, CurrentPage);
 
         TotalResults = SearchResults.TotalCount;
+    }
+
+    public bool IsActive(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
+    {
+        return false;
     }
 }
