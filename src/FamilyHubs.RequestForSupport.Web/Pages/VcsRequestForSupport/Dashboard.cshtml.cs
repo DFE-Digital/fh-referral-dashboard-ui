@@ -6,7 +6,7 @@ using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.RequestForSupport.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.SharedKernel.Identity;
-using Microsoft.AspNetCore.Http;
+using FamilyHubs.ReferralService.Shared.Enums;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
@@ -49,17 +49,11 @@ public class DashboardModel : PageModel
             ColumnSort[referralOrderBy] = !isAssending;
         }
 
-        //var context = this.PageContext.HttpContext;
+        
         var user = HttpContext.GetFamilyHubsUser();
-        System.Diagnostics.Debug.WriteLine(user.LastName);
         OrganisationId = user.OrganisationId;
-
-        var userFoo = HttpContext?.User;
-        var team = HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "Team");
-        //userFoo.Claims.FirstOrDefault
-        System.Diagnostics.Debug.WriteLine(userFoo?.Claims.ElementAt(0).Type.ToString());
-        System.Diagnostics.Debug.WriteLine(team?.Value);
-
+        //var team = HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "Team");
+        
         await GetConnections(OrganisationId, referralOrderBy, !isAssending); 
 
     }

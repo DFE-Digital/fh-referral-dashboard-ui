@@ -1,17 +1,9 @@
 ﻿using FamilyHubs.ReferralService.Shared.Dto;
+using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.ReferralService.Shared.Models;
 using System.Text.Json;
 
 namespace FamilyHubs.RequestForSupport.Core.ApiClients;
-
-public enum ReferralOrderBy
-{
-    NotSet,
-    DateSent,
-    Status,
-    RecipientName,
-    Team
-}
 
 public interface IReferralClientService
 {
