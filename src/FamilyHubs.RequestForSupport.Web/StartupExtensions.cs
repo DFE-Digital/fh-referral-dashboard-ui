@@ -2,7 +2,6 @@
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
 using FamilyHubs.SharedKernel.Identity;
 using Microsoft.ApplicationInsights.Extensibility;
-using RclTemp.FamilyHubsUi.Extensions;
 using Serilog;
 using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
@@ -53,7 +52,7 @@ public static class StartupExtensions
         services.AddHsts(o => o.ExcludedHosts.Clear());
 #endif
 
-        services.AddFamilyHubsUi(configuration);
+        services.AddFamilyHubs(configuration);
     }
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
@@ -92,17 +91,14 @@ public static class StartupExtensions
     {
         app.UseSerilogRequestLogging();
 
-        //app.UseAppSecurityHeaders();
+        app.UseFamilyHubs();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-        //todo: add error pages
-        //app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 #if use_https
         app.UseHttpsRedirection();

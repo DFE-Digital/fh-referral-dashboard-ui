@@ -15,7 +15,7 @@ var gulp = require("gulp"),
     del = require('del');
 
 gulp.task('sass-to-min-css', async function () {
-    return gulp.src('./styles/scss/application.scss')
+    return gulp.src('./styles/application.scss')
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
         .pipe(csso())
