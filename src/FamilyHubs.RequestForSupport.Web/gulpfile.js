@@ -72,7 +72,7 @@ gulp.task('transpile-ts', function () {
 //});
 
 gulp.task('bundle-and-minify-js', () => {
-//    return gulp.src('./tmp/js/bundle.js')
+    //    return gulp.src('./tmp/js/bundle.js')
     return gulp.src('./tmp/js/app.js')
         .pipe(sourcemaps.init())
         .pipe(rollup({}, 'es'))
