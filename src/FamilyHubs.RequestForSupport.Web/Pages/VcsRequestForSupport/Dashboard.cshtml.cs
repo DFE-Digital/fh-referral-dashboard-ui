@@ -46,8 +46,10 @@ public class DashboardModel : PageModel
         System.Diagnostics.Debug.WriteLine(user.LastName);
 
         var userFoo = HttpContext?.User;
+        var team = HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "Team");
         //userFoo.Claims.FirstOrDefault
         System.Diagnostics.Debug.WriteLine(userFoo?.Claims.ElementAt(0).Type.ToString());
+        System.Diagnostics.Debug.WriteLine(team?.Value);
 
         await SearchConnections(searchText);
 
