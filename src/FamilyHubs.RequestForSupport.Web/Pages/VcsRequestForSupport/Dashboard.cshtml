@@ -16,10 +16,10 @@
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header" style="width: 20%;">Contact in family</th>
-                <th scope="col" class="govuk-table__header sort-1" style="width: 25%;"><a href="date-descending-1.html">Team</a> <b>^</b></th>
-                <th scope="col" class="govuk-table__header sort-1" style="width: 17%;"><a href="date-descending-1.html">Date Received</a> <b>^</b></th>
+                <th scope="col" class="govuk-table__header sort-1" style="width: 25%;"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Team" asp-route-isAssending="@Model.ColumnSort["Team"]">Team</a> <partial name="_SortDirection" for="@Model.ColumnSort["Team"]" /></th>
+                <th scope="col" class="govuk-table__header sort-1" style="width: 17%;"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="DateSent" asp-route-isAssending="@Model.ColumnSort["DateSent"]">Date Received</a><partial name="_SortDirection" for="@Model.ColumnSort["DateSent"]" /></th>
                 <th scope="col" class="govuk-table__header" style="width: 8%;">Request number</th>
-                <th scope="col" class="govuk-table__header sort-1" style="width: 10%;"><a href="status-accepted-1.html">Status</a> <b>^</b></th>
+                <th scope="col" class="govuk-table__header sort-1" style="width: 10%;"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Status" asp-route-isAssending="@Model.ColumnSort["Status"]">Status</a> <partial name="_SortDirection" for="@Model.ColumnSort["Status"]" /></th>
                 
             </tr>
         </thead>

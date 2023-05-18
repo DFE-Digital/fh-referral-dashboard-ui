@@ -27,15 +27,27 @@ public class DashboardModel : PageModel
     public int PageSize { get; set; } = 10;
     public int TotalResults { get; set; }
 
+    public Dictionary<string, bool> ColumnSort { get; set; } = new Dictionary<string, bool>()
+    {
+        { "Team", true },
+        { "DateSent", true },
+        { "Status", true }
+    };
+
     public DashboardModel(IReferralClientService referralClientService)
     {
         _referralClientService = referralClientService;
         Pagination = new DontShowPagination();
     }
-    public async Task OnGet(string? referralOrderBy, bool? isAssending, int? currentPage)
+    public async Task OnGet(string? referralOrderBy, bool isAssending, int? currentPage)
     {
         if (currentPage != null)
             CurrentPage = currentPage.Value;
+
+        if (referralOrderBy != null)
+        {
+            ColumnSort[referralOrderBy] = !isAssending;
+        }
 
         //var context = this.PageContext.HttpContext;
         var user = HttpContext.GetFamilyHubsUser();
@@ -48,7 +60,7 @@ public class DashboardModel : PageModel
         System.Diagnostics.Debug.WriteLine(userFoo?.Claims.ElementAt(0).Type.ToString());
         System.Diagnostics.Debug.WriteLine(team?.Value);
 
-        await GetConnections(OrganisationId, referralOrderBy, isAssending);
+        await GetConnections(OrganisationId, referralOrderBy, !isAssending); 
 
     }
 

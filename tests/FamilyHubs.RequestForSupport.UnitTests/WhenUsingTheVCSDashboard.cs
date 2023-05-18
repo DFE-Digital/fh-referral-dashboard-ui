@@ -26,7 +26,7 @@ public class WhenUsingTheVcsDashboard
     public async Task ThenOnGetVcsDashboard()
     {
         //Act & Arrange
-        await _pageModel.OnGet(ReferralOrderBy.NotSet.ToString(), null, 1);
+        await _pageModel.OnGet(ReferralOrderBy.NotSet.ToString(), false, 1);
 
         //Assert
         _pageModel.OrganisationId.Should().Be("1");

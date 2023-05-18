@@ -351,3 +351,6 @@ MigrationBackup/
 
 # Gulp tasks temporary folder
 tmp/
+
+#appsetting
+appsettings.*.json
