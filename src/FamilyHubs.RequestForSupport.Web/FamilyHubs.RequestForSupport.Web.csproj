@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Error\402.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="scripts\app.ts" />
   </ItemGroup>
 
@@ -32,10 +36,6 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="scripts\app.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\Error\" />
   </ItemGroup>
 
   <ItemGroup>

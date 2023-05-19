@@ -1,15 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FamilyHubs.SharedKernel.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages;
 
+[Authorize]
 public class IndexModel : PageModel
 {
     public IActionResult OnGet()
     {
-        return RedirectToPage("/VcsRequestForSupport/Dashboard", new
+        var user = HttpContext.GetFamilyHubsUser();
+        if(user.Role == "VcsAdmin")
         {
-            
+            return RedirectToPage("/VcsRequestForSupport/Dashboard", new
+            {
+
+            });
+        }
+
+        return RedirectToPage("/Error/401", new
+        {
+
         });
+
     }
 }
