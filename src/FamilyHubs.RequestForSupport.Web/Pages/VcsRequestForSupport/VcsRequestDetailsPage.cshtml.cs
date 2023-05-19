@@ -1,5 +1,7 @@
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -25,12 +27,12 @@ public class VcsRequestDetailsPageModel : PageModel
 
     public async Task OnGet(long referralId)
     {
-        Referral = await _referralClientService.GetRefrralById(referralId);
+        Referral = await _referralClientService.GetReferralById(referralId);
     }
 
     public async Task OnPost(long referralId)
     {
-        var referral = await _referralClientService.GetRefrralById(referralId);
+        var referral = await _referralClientService.GetReferralById(referralId);
 
         List<ReferralStatusDto> statuses = await _referralClientService.GetReferralStatuses();
 

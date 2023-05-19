@@ -1,6 +1,9 @@
 ﻿using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.ReferralService.Shared.Models;
+using Microsoft.Extensions.Configuration;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -10,15 +13,17 @@ public interface IReferralClientService
 {
     Task<PaginatedList<ReferralDto>> GetRequestsForConnectionByProfessional(string professionalEmailAddress, ReferralOrderBy? orderBy, bool? isAssending, int pageNumber = 1, int pageSize = 10);
     Task<PaginatedList<ReferralDto>> GetRequestsForConnectionByOrganisationId(string organisationId, ReferralOrderBy? orderBy, bool? isAssending, int pageNumber = 1, int pageSize = 10);
-    Task<ReferralDto> GetRefrralById(long referralId);
+    Task<ReferralDto> GetReferralById(long referralId);
     Task<List<ReferralStatusDto>> GetReferralStatuses();
     Task<string> UpdateReferral(ReferralDto referralDto);
 }
 
 public class ReferralClientService : ApiService, IReferralClientService
 {
+    
     public ReferralClientService(HttpClient client) : base(client)
     {
+        
     }
 
     public async Task<PaginatedList<ReferralDto>> GetRequestsForConnectionByProfessional(string professionalEmailAddress, ReferralOrderBy? orderBy, bool? isAssending, int pageNumber=1, int pageSize=10)
@@ -60,7 +65,7 @@ public class ReferralClientService : ApiService, IReferralClientService
             Method = HttpMethod.Get,
             RequestUri = new Uri(Client.BaseAddress + url),
         };
-
+       
         using var response = await Client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
@@ -69,7 +74,7 @@ public class ReferralClientService : ApiService, IReferralClientService
                ?? new PaginatedList<ReferralDto>();
     }
 
-    public async Task<ReferralDto> GetRefrralById(long referralId)
+    public async Task<ReferralDto> GetReferralById(long referralId)
     {
         var url = $"api/referral/{referralId}";
 

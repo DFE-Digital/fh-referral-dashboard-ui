@@ -48,7 +48,7 @@ public class WhenUsingTheVcsDetailsPage
             },
         };
         _mockReferralClientService = new Mock<IReferralClientService>();
-        _mockReferralClientService.Setup(x => x.GetRefrralById(It.IsAny<long>())).ReturnsAsync(WhenUsingTheVcsDashboard.GetReferralDto());
+        _mockReferralClientService.Setup(x => x.GetReferralById(It.IsAny<long>())).ReturnsAsync(WhenUsingTheVcsDashboard.GetReferralDto());
         _mockReferralClientService.Setup(x => x.GetReferralStatuses()).ReturnsAsync(listStatus);
         
 
@@ -57,8 +57,7 @@ public class WhenUsingTheVcsDetailsPage
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.Role, "Professional"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.OrganisationId, "1"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.AccountStatus, "active"));
-        identity.AddClaim(new Claim(FamilyHubsClaimTypes.FirstName, "Test"));
-        identity.AddClaim(new Claim(FamilyHubsClaimTypes.LastName, "User"));
+        identity.AddClaim(new Claim(FamilyHubsClaimTypes.FullName, "Test User"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.LoginTime, DateTime.UtcNow.ToString()));
         identity.AddClaim(new Claim(ClaimTypes.Email, "Joe.Professional@email.com"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.PhoneNumber, "012345678"));
