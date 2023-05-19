@@ -34,8 +34,7 @@ public class WhenUsingTheVcsDashboard
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.Role, "Professional"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.OrganisationId, "1"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.AccountStatus, "active"));
-        identity.AddClaim(new Claim(FamilyHubsClaimTypes.FirstName, "Test"));
-        identity.AddClaim(new Claim(FamilyHubsClaimTypes.LastName, "User"));
+        identity.AddClaim(new Claim(FamilyHubsClaimTypes.FullName, "Test User"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.LoginTime, DateTime.UtcNow.ToString()));
         identity.AddClaim(new Claim(ClaimTypes.Email, "Joe.Professional@email.com"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.PhoneNumber, "012345678"));
