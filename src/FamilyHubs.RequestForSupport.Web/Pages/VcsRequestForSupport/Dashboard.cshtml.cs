@@ -44,6 +44,15 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
     }
     public async Task OnGet(string? referralOrderBy, bool isAssending, int? currentPage)
     {
+        var user = HttpContext.GetFamilyHubsUser();
+        if (user.Role != "VcsAdmin")
+        {
+            RedirectToPage("/Error/401", new
+            {
+
+            });
+        }
+
         if (currentPage != null)
             CurrentPage = currentPage.Value;
 
@@ -53,7 +62,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
         }
 
         
-        var user = HttpContext.GetFamilyHubsUser();
+        
         OrganisationId = user.OrganisationId;
         //var team = HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "Team");
         
@@ -84,6 +93,6 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
 
     public bool IsActive(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
     {
-        return false;
+        return link.Text == "Received requests";
     }
 }
