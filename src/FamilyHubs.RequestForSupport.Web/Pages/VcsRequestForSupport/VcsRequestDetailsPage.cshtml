@@ -1,0 +1,102 @@
+﻿@page
+@model FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport.VcsRequestDetailsPageModel
+@{
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">Request @Model.Referral.Id.ToString("X4")</h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <dl class="govuk-summary-list govuk-!-margin-bottom-6">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Date received
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.Referral.Created?.ToString("dd MMM yyyyy");
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Status
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <partial name="_ConnectionStatus" for="@Model.Referral.Status.Name" />
+                </dd>
+            </div>
+
+        </dl>
+    </div>
+</div>
+
+<div class="govuk-grid-row govuk-!-margin-top-2">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">Reason for the connection request</h2>
+        <p>@Model.Referral.ReasonForSupport</p>
+    </div>
+</div>
+
+<partial name="_RecipientContactDetails" for="@Model.Referral.RecipientDto" />
+
+<div class="govuk-grid-row govuk-!-margin-top-2">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">How the service can engage with @Model.Referral.RecipientDto.Name</h2>
+        <p> @Model.Referral.EngageWithFamily</p>
+    </div>
+</div>
+
+<partial name="_ProfessionalContactDetails" for="@Model.Referral.ReferrerDto" />
+
+<form method="post" novalidate data-validate='my-form-validation'>
+    <input asp-for="@Model.Referral.Id" type="hidden">
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                <h2 class="govuk-fieldset__heading">
+                    Your response
+                </h2>
+            </legend>
+            <div id="contact-hint" class="govuk-hint">
+                Select one option.
+            </div>
+            <div class="govuk-radios" data-module="govuk-radios">
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="ServiceRequestResponse" name="ServiceRequestResponse" type="radio" value="Accepted" @(Model.ServiceRequestResponse != null && Model.ServiceRequestResponse == "Accepted" ? "checked" : "") >
+                    <label class="govuk-label govuk-radios__label" for="accept-request">
+                        Accept - our service will contact this person to offer support
+                    </label>
+                </div>
+
+                <div class="govuk-radios__item">
+                    <input class="govuk-radios__input" id="ServiceRequestResponse-2" name="ServiceRequestResponse" type="radio" value="Declined" @(Model.ServiceRequestResponse != null && Model.ServiceRequestResponse == "Declined" ? "checked" : "") data-aria-controls="conditional-contact">
+                    <label class="govuk-label govuk-radios__label" for="decline-request">
+                        Decline - our service will not offer support
+                    </label>
+                </div>
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-contact">
+                    <div class="govuk-form-group">
+                        <h1 class="govuk-label-wrapper">
+                            <label class="govuk-label govuk-label--l" for="more-detail">
+                                Reason for declining
+                            </label>
+                        </h1>
+                        <div id="more-detail-hint" class="govuk-hint">
+                            You will no longer have access to this request.
+                        </div>
+                        <textarea class="govuk-textarea" asp-for"ReasonForRejection" id="ReasonForRejection" name="ReasonForRejection" rows="5" aria-describedby="more-detail-hint"></textarea>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <div class="govuk-button-group">
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Send response
+            </button>
+            <a asp-page="/VcsRequestForSupport/Dashboard">Return later</a>
+        </div>
+    </div>
+</form>

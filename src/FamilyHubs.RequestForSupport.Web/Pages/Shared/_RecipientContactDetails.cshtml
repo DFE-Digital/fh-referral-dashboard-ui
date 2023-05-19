@@ -1,0 +1,92 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model FamilyHubs.ReferralService.Shared.Dto.RecipientDto
+@{
+
+}
+
+<h2 class="govuk-heading-m">Person in family to contact</h2>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <dl class="govuk-summary-list govuk-!-margin-bottom-6">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Name
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.Name
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                </dd>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.Email))
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                    Email
+                </dt>
+                <dd class="govuk-summary-list__value">
+                   <a href=$"mailto:{@Model.Email}">@Model.Email</a>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                </dd>
+            </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.Telephone))
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Phone
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        <a href=$"tel:{@Model.Telephone}">@Model.Telephone</a>
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                    </dd>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.TextPhone))
+            {
+             <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                    Text message
+                </dt>
+                <dd class="govuk-summary-list__value">
+                  <a href=$"tel:{@Model.TextPhone}">@Model.TextPhone</a>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                </dd>
+            </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.PostCode))
+            {
+             <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                    Address
+                </dt>
+                <dd class="govuk-summary-list__value">
+                        @if (!string.IsNullOrEmpty(Model.AddressLine1))
+                        {
+                            <span>@Model.AddressLine1<br></span>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.AddressLine2))
+                        {
+                            <span>@Model.AddressLine1<br></span>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.TownOrCity))
+                        {
+                            <span>@Model.TownOrCity<br></span>
+                        }
+                        @Model.PostCode <br>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                </dd>
+            </div>
+            }
+        </dl>
+    </div>
+</div>
+
+

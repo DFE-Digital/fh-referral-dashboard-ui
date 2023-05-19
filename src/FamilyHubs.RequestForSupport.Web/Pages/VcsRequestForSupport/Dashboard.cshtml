@@ -33,7 +33,7 @@
                 <tr class="govuk-table__row">
 
                     <td class="govuk-table__cell">
-                        <a asp-page="/VcsRequestForSupport/ConnectDetails" asp-route-id="@item.Id" class="govuk-!-margin-right-1">@item.RecipientDto.Name</a>
+                        <a asp-page="/VcsRequestForSupport/VcsRequestDetailsPage" asp-route-referralId="@item.Id" class="govuk-!-margin-right-1">@item.RecipientDto.Name</a>
                     </td>
 
                     <td class="govuk-table__cell">@item.ReferrerDto.Team</td>
