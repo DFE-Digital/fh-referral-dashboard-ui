@@ -98,7 +98,7 @@ public class WhenUsingTheVcsDashboard
                 AddressLine1 = "Address Line 1",
                 AddressLine2 = "Address Line 2",
                 TownOrCity = "Town or City",
-                Country = "Country",
+                County = "County",
                 PostCode = "B30 2TV"
             },
             ReferrerDto = new ReferrerDto
