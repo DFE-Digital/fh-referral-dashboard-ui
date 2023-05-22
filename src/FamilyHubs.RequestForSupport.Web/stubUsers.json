@@ -21,12 +21,8 @@
               "Value": "Active"
             },
             {
-              "Name": "FirstName",
-              "Value": "dfeAdmin"
-            },
-            {
-              "Name": "LastName",
-              "Value": "User"
+              "Name": "FullName",
+              "Value": "dfeAdmin user"
             },
             {
               "Name": "PhoneNumber",
@@ -53,12 +49,8 @@
               "Value": "Active"
             },
             {
-              "Name": "FirstName",
-              "Value": "dfeAdmin"
-            },
-            {
-              "Name": "LastName",
-              "Value": "User"
+              "Name": "FullName",
+              "Value": "dfeAdmin User"
             },
             {
               "Name": "PhoneNumber",
@@ -89,15 +81,11 @@
               "Value": "Active"
             },
             {
-              "Name": "FirstName",
-              "Value": "vcsAdmin2"
+              "Name": "FullName",
+              "Value": "vcsAdmin2 User"
             },
             {
-              "Name": "LastName",
-              "Value": "User"
-            },
-            {
-              "Name": "PhoneNumber",
+              "Name": "PhoneNumber ",
               "Value": "0121 121 1236"
             },
             {
@@ -129,12 +117,8 @@
               "Value": "Active"
             },
             {
-              "Name": "FirstName",
-              "Value": "joe"
-            },
-            {
-              "Name": "LastName",
-              "Value": "professional"
+              "Name": "FullName",
+              "Value": "joe professional"
             },
             {
               "Name": "PhoneNumber",
