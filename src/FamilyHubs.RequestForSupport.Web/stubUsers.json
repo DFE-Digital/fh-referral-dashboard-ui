@@ -85,11 +85,11 @@
               "Value": "vcsAdmin2 User"
             },
             {
-              "Name": "PhoneNumber ",
+              "Name": "PhoneNumber",
               "Value": "0121 121 1236"
             },
             {
-              "Name": "Email ",
+              "Name": "Email",
               "Value": "vcs.user@email.com"
             }
           ]
