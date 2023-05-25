@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -28,6 +29,15 @@ public class WhenUsingTheVcsDashboard
         List<ReferralDto> list = new() { GetReferralDto() };
         PaginatedList<ReferralDto> pagelist = new PaginatedList<ReferralDto>(list, 1, 1, 1);
         _mockReferralClientService.Setup(x => x.GetRequestsForConnectionByOrganisationId(It.IsAny<string>(), It.IsAny<ReferralOrderBy>(), It.IsAny<bool?>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(pagelist);
+
+        var settings = new Dictionary<string, string?>
+        {
+            {"ShowTeam", "False"}
+        };
+
+        var cfgBuilder = new ConfigurationBuilder();
+        cfgBuilder.AddInMemoryCollection(settings);
+        IConfiguration configuration = cfgBuilder.Build();
 
         var displayName = "User name";
         var identity = new GenericIdentity(displayName);
@@ -56,7 +66,7 @@ public class WhenUsingTheVcsDashboard
             ViewData = viewData
         };
 
-        _pageModel = new DashboardModel(_mockReferralClientService.Object);
+        _pageModel = new DashboardModel(_mockReferralClientService.Object, configuration);
         _pageModel.PageContext = pageContext;
     }
 
