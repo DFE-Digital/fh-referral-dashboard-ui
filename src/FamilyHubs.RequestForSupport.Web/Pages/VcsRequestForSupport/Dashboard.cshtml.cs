@@ -20,6 +20,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
     private readonly IReferralClientService _referralClientService;
 
     public bool ShowNavigationMenu => true;
+    public bool ShowTeam { get; private set; }
 
     public PaginatedList<ReferralDto> SearchResults { get; set; } = new PaginatedList<ReferralDto>();
 
@@ -40,9 +41,10 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
         { "Status", true }
     };
 
-    public DashboardModel(IReferralClientService referralClientService)
+    public DashboardModel(IReferralClientService referralClientService, IConfiguration configuration)
     {
         _referralClientService = referralClientService;
+        ShowTeam = configuration.GetValue<bool>("ShowTeam");
         Pagination = new DontShowPagination();
     }
     public async Task OnGet(string? referralOrderBy, bool isAssending, int? currentPage)

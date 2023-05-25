@@ -1,16 +1,10 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@model FamilyHubs.ReferralService.Shared.Dto.ReferrerDto
+@model FamilyHubs.RequestForSupport.Core.Models.ReferrerDtoEx
 @{
 
 }
-
-@*<div class="govuk-grid-row govuk-!-margin-top-2">
-    <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-m">Professional who has made this connection request</h2>
-    </div>
-</div>*@
 
 <h2 class="govuk-heading-m">Professional who has made this connection request</h2>
 
@@ -55,16 +49,19 @@
         <dd class="govuk-summary-list__actions">
         </dd>
     </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            Team
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @Model.Team
-        </dd>
-        <dd class="govuk-summary-list__actions">
-        </dd>
-    </div>
+    @if (Model.ShowTeam)
+    {
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Team
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.Team
+            </dd>
+            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+    }
 </dl>
 
 
