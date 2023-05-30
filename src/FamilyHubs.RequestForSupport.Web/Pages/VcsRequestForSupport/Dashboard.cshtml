@@ -19,14 +19,15 @@
         @* todo: missing aria-sort *@
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Contact in family</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">Contact in family</th>
                 @if(Model.ShowTeam)
                 {
-                    <th scope="col" class="govuk-table__header sort-1"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Team" asp-route-isAssending="@Model.ColumnSort["Team"]">Team</a> <partial name="_SortDirection" for="@Model.ColumnSort["Team"]" /></th>
+                    <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Team" asp-route-isAssending="@Model.ColumnSort["Team"]">Team</a> @* <partial name="_SortDirection" for="@Model.ColumnSort["Team"]" /> *@</th>
                 }
-                <th scope="col" class="govuk-table__header sort-1"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="DateSent" asp-route-isAssending="@Model.ColumnSort["DateSent"]">Date Received</a><partial name="_SortDirection" for="@Model.ColumnSort["DateSent"]" /></th>
+                <th scope="col" class="govuk-table__header" aria-sort="descending"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="DateSent" asp-route-isAssending="@Model.ColumnSort["DateSent"]">Date Received</a>@* <partial name="_SortDirection" for="@Model.ColumnSort["DateSent"]" /> *@</th>
+                @* todo: check with cases about right alignment as is numeric (hex). add govuk-table__header--numeric if so *@
                 <th scope="col" class="govuk-table__header">Request number</th>
-                <th scope="col" class="govuk-table__header sort-1"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Status" asp-route-isAssending="@Model.ColumnSort["Status"]">Status</a> <partial name="_SortDirection" for="@Model.ColumnSort["Status"]" /></th>
+                <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Status" asp-route-isAssending="@Model.ColumnSort["Status"]">Status</a> @* <partial name="_SortDirection" for="@Model.ColumnSort["Status"]" /> *@</th>
             </tr>
         </thead>
 
