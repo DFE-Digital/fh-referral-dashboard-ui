@@ -24,10 +24,11 @@
                 {
                     <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Team" asp-route-isAssending="@Model.ColumnSort["Team"]">Team</a> @* <partial name="_SortDirection" for="@Model.ColumnSort["Team"]" /> *@</th>
                 }
-                <th scope="col" class="govuk-table__header" aria-sort="descending"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="DateSent" asp-route-isAssending="@Model.ColumnSort["DateSent"]">Date Received</a>@* <partial name="_SortDirection" for="@Model.ColumnSort["DateSent"]" /> *@</th>
-                @* todo: check with cases about right alignment as is numeric (hex). add govuk-table__header--numeric if so *@
+@*                 <th scope="col" class="govuk-table__header" aria-sort="descending"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="DateSent" asp-route-isAssending="@Model.ColumnSort["DateSent"]">Date Received</a></th>*@                @* todo: check with cases about right alignment as is numeric (hex). add govuk-table__header--numeric if so *@
+                <th scope="col" class="govuk-table__header" aria-sort="descending">Date Received</th>
                 <th scope="col" class="govuk-table__header">Request number</th>
-                <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Status" asp-route-isAssending="@Model.ColumnSort["Status"]">Status</a> @* <partial name="_SortDirection" for="@Model.ColumnSort["Status"]" /> *@</th>
+                @*                 <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Status" asp-route-isAssending="@Model.ColumnSort["Status"]">Status</a> </th> *@
+                <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
             </tr>
         </thead>
 

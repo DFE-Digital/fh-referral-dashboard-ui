@@ -1,15 +1,7 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model string
-@{
-}
+﻿@model string
 
-@switch (@Model)
+@switch (Model)
 {
-    default:
-        <strong class="govuk-tag govuk-tag--blue">New</strong>
-        break;
     case "Opened":
         <strong class="govuk-tag govuk-tag--yellow">Opened</strong>
         break;
@@ -18,5 +10,8 @@
         break;
     case "Declined":
         <strong class="govuk-tag govuk-tag--red">Declined</strong>
+        break;
+    default:
+        <strong class="govuk-tag govuk-tag--blue">New</strong>
         break;
 }
