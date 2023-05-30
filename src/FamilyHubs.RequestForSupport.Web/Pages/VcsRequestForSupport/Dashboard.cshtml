@@ -6,8 +6,16 @@
 
 @* prototype uses a single row with 2 full width columns, but really they are 2 separate rows *@
 
+@* todo: the moj sortable table doesn't work without js (really?), so we can't use it as is. 
+
+we can use the styling though. we'll just have to not use moj-sortable-table, and create the markup it generates in its js code.
+we might have to borrow its js for the status box (for accessibility), or perhaps do without the status box?
+*@
+
 @* todo: highlight on selected header is slightly too short*@
 @* todo: add css to replicate the prototype's custom widths. any support from the component for that?*@
+@* todo: disable initialiseSortedColumn *@
+@* todo: ensure status box is correct (see createStatusBox) *@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
