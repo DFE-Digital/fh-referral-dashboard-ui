@@ -11,6 +11,7 @@
 we can use the styling though. we'll just have to not use moj-sortable-table, and create the markup it generates in its js code.
 we might have to borrow its js for the status box (for accessibility), or perhaps do without the status box?
 *@
+@* alternatively, we could use moj js to allow sorting when there is only a single page, but even then we'd have to override their sorting as it has issues (ascii sorting, rather than case insensitive, so even if we support front-end sorting, probably better to implement it ourselves and borrow any code we need) *@
 
 @* todo: highlight on selected header is slightly too short*@
 @* todo: add css to replicate the prototype's custom widths. any support from the component for that?*@
@@ -29,22 +30,22 @@ we might have to borrow its js for the status box (for accessibility), or perhap
         <form method="post">
             <input asp-for="@Model.OrganisationId" type="hidden">
 
-            <table class="govuk-table" data-module="moj-sortable-table">
-        
+@*             <table class="govuk-table" data-module="moj-sortable-table"> *@
+            <table class="govuk-table">
                 @* todo: disable front-end column sorting, and do in the back end *@
                 @* todo: scrolling on mobile *@
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header" aria-sort="none">Contact in family</th>
+                    <th scope="col" class="govuk-table__header" aria-sort="none"><button type="submit">Contact in family</button></th>
                     @if(Model.ShowTeam)
                     {
                         <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Team" asp-route-isAssending="@Model.ColumnSort["Team"]">Team</a> @* <partial name="_SortDirection" for="@Model.ColumnSort["Team"]" /> *@</th>
                     }
                     @*                 <th scope="col" class="govuk-table__header" aria-sort="descending"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="DateSent" asp-route-isAssending="@Model.ColumnSort["DateSent"]">Date Received</a></th>*@                @* todo: check with cases about right alignment as is numeric (hex). add govuk-table__header--numeric if so *@
-                    <th scope="col" class="govuk-table__header" aria-sort="descending">Date Received</th>
+                        <th scope="col" class="govuk-table__header" aria-sort="descending"><button type="submit">Date Received</button></th>
                     <th scope="col" class="govuk-table__header">Request number</th>
                     @*                 <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Status" asp-route-isAssending="@Model.ColumnSort["Status"]">Status</a> </th> *@
-                    <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
+                        <th scope="col" class="govuk-table__header" aria-sort="none"><button>Status</button></th>
                 </tr>
                 </thead>
 
