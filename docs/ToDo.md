@@ -1,5 +1,9 @@
 # ToDo
 
+* if signed in as someone without permissions, can't sign out
+
+* clicking column header should sort by that column
+
 * pick up standard gulpfile from the npm package? also tsconfig?
 
 * stories: health check, error handling, move shared razor library into sharedkernel,

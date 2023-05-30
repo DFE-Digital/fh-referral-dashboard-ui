@@ -67,20 +67,20 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
         await GetConnections(OrganisationId, referralOrderBy, !isAscending); 
     }
 
-    public async Task OnPost(string organisationId, string? referralOrderBy, bool? isAssending, int? currentPage)
+    public async Task OnPost(string organisationId, string? referralOrderBy, bool? isAscending, int? currentPage)
     {
         //Check what we get
-        await GetConnections(organisationId, referralOrderBy, isAssending);
+        await GetConnections(organisationId, referralOrderBy, isAscending);
     }
 
-    private async Task GetConnections(string organisationId, string? referralOrderBy, bool? isAssending)
+    private async Task GetConnections(string organisationId, string? referralOrderBy, bool? isAscending)
     {
         if (!Enum.TryParse(referralOrderBy, true, out ReferralOrderBy referralOrder))
         {
             referralOrder = ReferralOrderBy.NotSet;
         }
 
-        SearchResults = await _referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, referralOrder, isAssending, CurrentPage, PageSize);
+        SearchResults = await _referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, referralOrder, isAscending, CurrentPage, PageSize);
 
         Pagination = new LargeSetPagination(SearchResults.TotalPages, CurrentPage);
 
