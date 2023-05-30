@@ -7,6 +7,10 @@
 	<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NoWarn>1701;1702;S1135</NoWarn>
+  </PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.6" />
 		<PackageReference Include="FamilyHubs.SharedKernel" Version="2.0.11" />

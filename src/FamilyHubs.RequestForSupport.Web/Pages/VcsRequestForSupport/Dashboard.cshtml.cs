@@ -41,6 +41,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
     public DashboardModel(IReferralClientService referralClientService, IConfiguration configuration)
     {
         _referralClientService = referralClientService;
+        //todo: don't want this as a config, comment out with searchable tag instead
         ShowTeam = configuration.GetValue<bool>("ShowTeam");
         Pagination = new DontShowPagination();
     }
