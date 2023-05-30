@@ -19,11 +19,9 @@ public class ReferralClientService : ApiService, IReferralClientService
 
     public async Task<PaginatedList<ReferralDto>> GetRequestsForConnectionByProfessional(string professionalEmailAddress, ReferralOrderBy? orderBy, bool? isAscending, int pageNumber=1, int pageSize=10)
     {
-        if (orderBy == null)
-            orderBy = ReferralOrderBy.NotSet;
+        orderBy ??= ReferralOrderBy.NotSet;
 
-        if (isAscending == null)
-            isAscending = true;
+        isAscending ??= true;
 
         //todo: fix spelling in url
         var url = $"api/referrals/{professionalEmailAddress}?orderBy={orderBy}&isAssending={isAscending}pageNumber={pageNumber}&pageSize={pageSize}";
@@ -44,12 +42,11 @@ public class ReferralClientService : ApiService, IReferralClientService
 
     public async Task<PaginatedList<ReferralDto>> GetRequestsForConnectionByOrganisationId(string organisationId, ReferralOrderBy? orderBy, bool? isAscending, int pageNumber = 1, int pageSize = 10)
     {
-        if (orderBy == null)
-            orderBy = ReferralOrderBy.NotSet;
+        orderBy ??= ReferralOrderBy.NotSet;
 
-        if (isAscending == null)
-            isAscending = true;
+        isAscending ??= true;
 
+        //todo: fix spelling in url
         var url = $"api/organisationreferrals/{organisationId}?orderBy={orderBy}&isAssending={isAscending}&pageNumber={pageNumber}&pageSize={pageSize}";
 
         var request = new HttpRequestMessage
