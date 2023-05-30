@@ -4,101 +4,111 @@
     ViewData["Title"] = "Received requests";
 }
 
-<div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-l govuk-!-margin-bottom-6">Received requests</h1>
+@* prototype uses a single row with 2 full width columns, but really they are 2 separate rows *@
+
+@* todo: highlight on selected header is slightly too short*@
+@* todo: add css to replicate the prototype's custom widths. any support from the component for that?*@
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-6">Received requests</h1>
+    </div>
 </div>
 
-<form method="post">
-    <input asp-for="@Model.OrganisationId" type="hidden">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @* todo: move down, if don't use submit on the headers *@
+        <form method="post">
+            <input asp-for="@Model.OrganisationId" type="hidden">
 
-    <table class="govuk-table" data-module="moj-sortable-table">
+            <table class="govuk-table" data-module="moj-sortable-table">
         
-        @* todo: use classes, rather than styles on elements*@
-        @* todo: column sort icons showing 'column is sorted' for all sortable columns, instead of 'sortable column' for columns that aren't sorted*@
-        @* todo: column sorting not working *@
-        @* todo: missing aria-sort *@
-        <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header" aria-sort="none">Contact in family</th>
-                @if(Model.ShowTeam)
-                {
-                    <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Team" asp-route-isAssending="@Model.ColumnSort["Team"]">Team</a> @* <partial name="_SortDirection" for="@Model.ColumnSort["Team"]" /> *@</th>
-                }
-@*                 <th scope="col" class="govuk-table__header" aria-sort="descending"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="DateSent" asp-route-isAssending="@Model.ColumnSort["DateSent"]">Date Received</a></th>*@                @* todo: check with cases about right alignment as is numeric (hex). add govuk-table__header--numeric if so *@
-                <th scope="col" class="govuk-table__header" aria-sort="descending">Date Received</th>
-                <th scope="col" class="govuk-table__header">Request number</th>
-                @*                 <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Status" asp-route-isAssending="@Model.ColumnSort["Status"]">Status</a> </th> *@
-                <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
-            </tr>
-        </thead>
-
-        <tbody class="govuk-table__body">
-            @foreach(var item in Model.SearchResults.Items)
-            {
-                var itemStatus = item.Status.Name;
-                
+                @* todo: disable front-end column sorting, and do in the back end *@
+                @* todo: scrolling on mobile *@
+                <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        <a asp-page="/VcsRequestForSupport/ConnectDetails" asp-route-id="@item.Id" class="govuk-!-margin-right-1">@item.RecipientDto.Name</a>
-                    </td>
-                    @if (Model.ShowTeam)
+                    <th scope="col" class="govuk-table__header" aria-sort="none">Contact in family</th>
+                    @if(Model.ShowTeam)
                     {
-                        <td class="govuk-table__cell">@item.ReferrerDto.Team</td>
+                        <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Team" asp-route-isAssending="@Model.ColumnSort["Team"]">Team</a> @* <partial name="_SortDirection" for="@Model.ColumnSort["Team"]" /> *@</th>
                     }
-                    <td class="govuk-table__cell">@item.Created?.ToString("dd-MMM-yyyy")</td>
-
-                    <td class="govuk-table__cell">@item.Id.ToString("X4")</td>
-
-                    <td class="govuk-table__cell">
-                        <partial name="_ConnectionStatus" for="@itemStatus" />
-                    </td>
+                    @*                 <th scope="col" class="govuk-table__header" aria-sort="descending"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="DateSent" asp-route-isAssending="@Model.ColumnSort["DateSent"]">Date Received</a></th>*@                @* todo: check with cases about right alignment as is numeric (hex). add govuk-table__header--numeric if so *@
+                    <th scope="col" class="govuk-table__header" aria-sort="descending">Date Received</th>
+                    <th scope="col" class="govuk-table__header">Request number</th>
+                    @*                 <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Status" asp-route-isAssending="@Model.ColumnSort["Status"]">Status</a> </th> *@
+                    <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-@if (Model.Pagination.Show)
-{
-    <nav class="govuk-pagination" role="navigation" aria-label="results">
-        @if (Model.Pagination.PreviousPage != null)
-        {
-            <div class="govuk-pagination__prev">
-                <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@(Model.Pagination.PreviousPage)" rel="next">
-                    <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
-                        <path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
-                    </svg>
-                    <span class="govuk-pagination__link-title">Previous</span>
-                </button>
-            </div>
-        }
+                </thead>
 
-        <ul class="govuk-pagination__list">
-            @foreach (var item in Model.Pagination.PaginationItems)
+                <tbody class="govuk-table__body">
+                @foreach(var item in Model.SearchResults.Items)
+                {
+                    var itemStatus = item.Status.Name;
+                
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <a asp-page="/VcsRequestForSupport/ConnectDetails" asp-route-id="@item.Id" class="govuk-!-margin-right-1">@item.RecipientDto.Name</a>
+                        </td>
+                        @if (Model.ShowTeam)
+                        {
+                            <td class="govuk-table__cell">@item.ReferrerDto.Team</td>
+                        }
+                        <td class="govuk-table__cell">@item.Created?.ToString("dd-MMM-yyyy")</td>
+
+                        <td class="govuk-table__cell">@item.Id.ToString("X4")</td>
+
+                        <td class="govuk-table__cell">
+                            <partial name="_ConnectionStatus" for="@itemStatus" />
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            @if (Model.Pagination.Show)
             {
-                if (item.ShowSkippedPages)
-                {
-                    <li class="govuk-pagination__item govuk-pagination__item--ellipses">&ctdot;</li>
-                }
-                else
-                {
-                    <li class="govuk-pagination__item @(item.IsCurrentPage ? "govuk-pagination__item--current" : "")">
-                        <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@item.Page" aria-label="Page @(item.Page)" @(item.IsCurrentPage ? "aria-current=\"page\"" : "")>@item.Page</button>
-                    </li>
-                }
+                <nav class="govuk-pagination" role="navigation" aria-label="results">
+                    @if (Model.Pagination.PreviousPage != null)
+                    {
+                        <div class="govuk-pagination__prev">
+                            <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@(Model.Pagination.PreviousPage)" rel="next">
+                                <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+                                    <path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
+                                </svg>
+                                <span class="govuk-pagination__link-title">Previous</span>
+                            </button>
+                        </div>
+                    }
+
+                    <ul class="govuk-pagination__list">
+                        @foreach (var item in Model.Pagination.PaginationItems)
+                        {
+                            if (item.ShowSkippedPages)
+                            {
+                                <li class="govuk-pagination__item govuk-pagination__item--ellipses">&ctdot;</li>
+                            }
+                            else
+                            {
+                                <li class="govuk-pagination__item @(item.IsCurrentPage ? "govuk-pagination__item--current" : "")">
+                                    <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@item.Page" aria-label="Page @(item.Page)" @(item.IsCurrentPage ? "aria-current=\"page\"" : "")>@item.Page</button>
+                                </li>
+                            }
+                        }
+                    </ul>
+
+                    @if (Model.Pagination.NextPage != null)
+                    {
+                        <div class="govuk-pagination__next">
+                            <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@(Model.Pagination.NextPage)" rel="next">
+                                <span class="govuk-pagination__link-title">Next</span>
+                                <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+                                    <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    }
+                </nav>
             }
-        </ul>
 
-        @if (Model.Pagination.NextPage != null)
-        {
-            <div class="govuk-pagination__next">
-                <button type="submit" class="govuk-link govuk-pagination__link" name="CurrentPage" value="@(Model.Pagination.NextPage)" rel="next">
-                    <span class="govuk-pagination__link-title">Next</span>
-                    <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
-                        <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
-                    </svg>
-                </button>
-            </div>
-        }
-    </nav>
-}
-
-</form>
+        </form>
+    </div>
+</div>
