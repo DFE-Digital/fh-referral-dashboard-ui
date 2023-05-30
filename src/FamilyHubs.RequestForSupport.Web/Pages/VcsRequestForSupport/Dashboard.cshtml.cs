@@ -19,7 +19,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
     public bool ShowNavigationMenu => true;
     public bool ShowTeam { get; private set; }
 
-    public PaginatedList<ReferralDto> SearchResults { get; set; } = new PaginatedList<ReferralDto>();
+    public PaginatedList<ReferralDto> SearchResults { get; set; } = new ();
 
     public IPagination Pagination { get; set; }
 
@@ -31,7 +31,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
     public int PageSize { get; set; } = 10;
     public int TotalResults { get; set; }
 
-    public Dictionary<string, bool> ColumnSort { get; set; } = new Dictionary<string, bool>()
+    public Dictionary<string, bool> ColumnSort { get; set; } = new()
     {
         { "Team", true },
         { "DateSent", true },
@@ -44,15 +44,13 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
         ShowTeam = configuration.GetValue<bool>("ShowTeam");
         Pagination = new DontShowPagination();
     }
-    public async Task OnGet(string? referralOrderBy, bool isAssending, int? currentPage)
+
+    public async Task OnGet(string? referralOrderBy, bool isAscending, int? currentPage)
     {
         var user = HttpContext.GetFamilyHubsUser();
         if (user.Role != "VcsAdmin")
         {
-            RedirectToPage("/Error/401", new
-            {
-
-            });
+            RedirectToPage("/Error/401");
         }
 
         if (currentPage != null)
@@ -60,28 +58,24 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
 
         if (referralOrderBy != null)
         {
-            ColumnSort[referralOrderBy] = !isAssending;
+            ColumnSort[referralOrderBy] = !isAscending;
         }
 
-        
-        
         OrganisationId = user.OrganisationId;
         //var team = HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "Team");
         
-        await GetConnections(OrganisationId, referralOrderBy, !isAssending); 
-
+        await GetConnections(OrganisationId, referralOrderBy, !isAscending); 
     }
 
     public async Task OnPost(string organisationId, string? referralOrderBy, bool? isAssending, int? currentPage)
     {
-        
         //Check what we get
         await GetConnections(organisationId, referralOrderBy, isAssending);
     }
 
     private async Task GetConnections(string organisationId, string? referralOrderBy, bool? isAssending)
     {
-        if (!Enum.TryParse<ReferralOrderBy>(referralOrderBy, true, out ReferralOrderBy referralOrder))
+        if (!Enum.TryParse(referralOrderBy, true, out ReferralOrderBy referralOrder))
         {
             referralOrder = ReferralOrderBy.NotSet;
         }

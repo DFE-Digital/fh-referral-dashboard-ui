@@ -13,16 +13,9 @@ public class IndexModel : PageModel
         var user = HttpContext.GetFamilyHubsUser();
         if(user.Role == "VcsAdmin")
         {
-            return RedirectToPage("/VcsRequestForSupport/Dashboard", new
-            {
-
-            });
+            return RedirectToPage("/VcsRequestForSupport/Dashboard");
         }
 
-        return RedirectToPage("/Error/401", new
-        {
-
-        });
-
+        return RedirectToPage("/Error/401");
     }
 }
