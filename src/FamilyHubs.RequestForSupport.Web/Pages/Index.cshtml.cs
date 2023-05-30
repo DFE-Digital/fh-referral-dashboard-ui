@@ -11,6 +11,7 @@ public class IndexModel : PageModel
     public IActionResult OnGet()
     {
         var user = HttpContext.GetFamilyHubsUser();
+        //todo: vcs admin or pro
         if(user.Role == "VcsAdmin")
         {
             return RedirectToPage("/VcsRequestForSupport/Dashboard");
