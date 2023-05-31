@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
+using System.Collections.Generic;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
@@ -17,6 +18,7 @@ public enum Column
     RecipientName,
     DateReceived,
     Status
+    //Last = Status
 }
 
 // matches aria-sort values
@@ -47,15 +49,13 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
     public int PageSize { get; set; } = 10;
     public int TotalResults { get; set; }
 
-    private static readonly Column[] Columns =
-    {
-        Column.RecipientName,
-        Column.DateReceived,
-        Column.Status
-    };
-
     //todo: swap to array, rather than dictionary
     public Sort[]? ColumnSort { get; set; }
+
+    private static readonly Column[] Columns =
+        Enum.GetValues(typeof(Column))
+        .Cast<Column>()
+        .ToArray();
 
     public DashboardModel(IReferralClientService referralClientService)
     {
@@ -96,7 +96,14 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
             columnNewSort = Sort.descending;
         }
 
-        ColumnSort = Columns.Select(col => col == column ? columnNewSort : Sort.none).ToArray();
+        // which is best? or create array and use index?
+        //ColumnSort = Enumerable.Range(0, (int)Column.Last)
+        //    .Select(col => (Column)col == column ? columnNewSort : Sort.none)
+        //    .ToArray();
+
+        ColumnSort = Columns
+            .Select(col => col == column ? columnNewSort : Sort.none)
+            .ToArray();
 
         OrganisationId = user.OrganisationId;
         //var team = HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "Team");
