@@ -118,7 +118,7 @@ we might have to borrow its js for the status box (for accessibility), or perhap
                 </thead>
 
                 <tbody class="govuk-table__body">
-                @foreach(var item in Model.SearchResults.Items)
+                @foreach(var item in Model.SearchResults!.Items)
                 {
                     var itemStatus = item.Status.Name;
                 
@@ -194,7 +194,7 @@ we might have to borrow its js for the status box (for accessibility), or perhap
 {
     private string TableHeader(string displayName, Column column)
     {
-        Sort sort = Model.ColumnSort![column];
+        Sort sort = Model.ColumnSort![(int)column];
         return $@"<th scope=""col"" class=""govuk-table__header"" aria-sort=""{sort}""><a href=""/VcsRequestForSupport/Dashboard?columnName={column}&sort={sort}"">{displayName}</a ></th>";
     }
 }

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
-using System.Data.Common;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
@@ -36,7 +35,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
     public bool ShowNavigationMenu => true;
     public bool ShowTeam { get; private set; }
 
-    public PaginatedList<ReferralDto> SearchResults { get; set; } = new ();
+    public PaginatedList<ReferralDto>? SearchResults { get; set; }
 
     public IPagination Pagination { get; set; }
 
@@ -56,7 +55,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
     };
 
     //todo: swap to array, rather than dictionary
-    public Dictionary<Column, Sort>? ColumnSort { get; set; }
+    public Sort[]? ColumnSort { get; set; }
 
     public DashboardModel(IReferralClientService referralClientService)
     {
@@ -97,7 +96,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
             columnNewSort = Sort.descending;
         }
 
-        ColumnSort = _columns.ToDictionary(col => col, col => col == column ? columnNewSort : Sort.none);
+        ColumnSort = _columns.Select(col => col == column ? columnNewSort : Sort.none).ToArray();
 
         OrganisationId = user.OrganisationId;
         //var team = HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "Team");
