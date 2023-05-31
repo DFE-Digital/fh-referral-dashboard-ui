@@ -47,7 +47,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
     public int PageSize { get; set; } = 10;
     public int TotalResults { get; set; }
 
-    private static Column[] _columns =
+    private static readonly Column[] Columns =
     {
         Column.RecipientName,
         Column.DateReceived,
@@ -96,7 +96,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
             columnNewSort = Sort.descending;
         }
 
-        ColumnSort = _columns.Select(col => col == column ? columnNewSort : Sort.none).ToArray();
+        ColumnSort = Columns.Select(col => col == column ? columnNewSort : Sort.none).ToArray();
 
         OrganisationId = user.OrganisationId;
         //var team = HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "Team");
@@ -128,7 +128,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
             _ => ReferralOrderBy.NotSet
         };
 
-        //todo: assert/throw is Sort is None?
+        //todo: assert/throw if Sort is None?
 
         SearchResults = await _referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, referralOrderBy, sort == Sort.ascending, CurrentPage, PageSize);
 
