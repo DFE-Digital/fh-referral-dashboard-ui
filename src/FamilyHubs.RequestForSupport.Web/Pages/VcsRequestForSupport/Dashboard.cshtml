@@ -18,6 +18,75 @@ we might have to borrow its js for the status box (for accessibility), or perhap
 @* todo: disable initialiseSortedColumn *@
 @* todo: ensure status box is correct (see createStatusBox) *@
 
+<style>
+    [aria-sort] a,
+    [aria-sort] a:hover {
+        background-color: transparent;
+        border-width: 0;
+        -webkit-box-shadow: 0 0 0 0;
+        -moz-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+        color: #005ea5;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        padding: 0 10px 0 0;
+        position: relative;
+        text-align: inherit;
+        font-size: 1em;
+        margin: 0;
+    }
+
+        [aria-sort] a:focus {
+            background-color: $govuk-focus-colour;
+            color: $govuk-focus-text-colour;
+            box-shadow: 0 -2px $govuk-focus-colour, 0 4px $govuk-focus-text-colour;
+            outline: none;
+        }
+
+    [aria-sort]:first-child a {
+        right: auto;
+    }
+
+    [aria-sort] a:before {
+        content: " \25bc";
+        position: absolute;
+        right: -1px;
+        top: 9px;
+        font-size: 0.5em;
+    }
+
+    [aria-sort] a:after {
+        content: " \25b2";
+        position: absolute;
+        right: -1px;
+        top: 1px;
+        font-size: 0.5em;
+    }
+
+    [aria-sort="ascending"] a:before,
+    [aria-sort="descending"] a:before {
+        content: none;
+    }
+
+    [aria-sort="ascending"] a:after {
+        content: " \25b2";
+        font-size: .8em;
+        position: absolute;
+        right: -5px;
+        top: 2px;
+    }
+
+    [aria-sort="descending"] a:after {
+        content: " \25bc";
+        font-size: .8em;
+        position: absolute;
+        right: -5px;
+        top: 2px;
+    }
+</style>
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-l govuk-!-margin-bottom-6">Received requests</h1>
@@ -31,21 +100,20 @@ we might have to borrow its js for the status box (for accessibility), or perhap
             <input asp-for="@Model.OrganisationId" type="hidden">
 
 @*             <table class="govuk-table" data-module="moj-sortable-table"> *@
-            <table class="govuk-table">
+            <table class="govuk-table"> 
                 @* todo: disable front-end column sorting, and do in the back end *@
+                @* moj builds this...
+                <th scope="col" class="govuk-table__header" aria-sort="@columnSort"><button type="submit" name="date-received">Date Received</button></th>
+                *@
                 @* todo: scrolling on mobile *@
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header" aria-sort="none"><button type="submit">Contact in family</button></th>
-                    @if(Model.ShowTeam)
-                    {
-                        <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Team" asp-route-isAssending="@Model.ColumnSort["Team"]">Team</a> @* <partial name="_SortDirection" for="@Model.ColumnSort["Team"]" /> *@</th>
-                    }
-                    @*                 <th scope="col" class="govuk-table__header" aria-sort="descending"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="DateSent" asp-route-isAssending="@Model.ColumnSort["DateSent"]">Date Received</a></th>*@                @* todo: check with cases about right alignment as is numeric (hex). add govuk-table__header--numeric if so *@
-                        <th scope="col" class="govuk-table__header" aria-sort="descending"><button type="submit">Date Received</button></th>
+                        @Html.Raw(TableHeader("Contact in family", Column.RecipientName))
+                    @* todo: for order, either have hidden with sort, or combine column & order in submit name *@
+                    @* todo: or have anchor and recreate (borrow) component's css? *@
+                    @Html.Raw(TableHeader("Date received", Column.DateReceived))
                     <th scope="col" class="govuk-table__header">Request number</th>
-                    @*                 <th scope="col" class="govuk-table__header" aria-sort="none"><a asp-page="/VcsRequestForSupport/Dashboard" asp-route-referralOrderBy="Status" asp-route-isAssending="@Model.ColumnSort["Status"]">Status</a> </th> *@
-                        <th scope="col" class="govuk-table__header" aria-sort="none"><button>Status</button></th>
+                    @Html.Raw(TableHeader("Status", Column.Status))
                 </tr>
                 </thead>
 
@@ -121,3 +189,12 @@ we might have to borrow its js for the status box (for accessibility), or perhap
         </form>
     </div>
 </div>
+
+@functions
+{
+    private string TableHeader(string displayName, Column column)
+    {
+        Sort sort = Model.ColumnSort![column];
+        return $@"<th scope=""col"" class=""govuk-table__header"" aria-sort=""{sort}""><a href=""/VcsRequestForSupport/Dashboard?columnName={column}&sort={sort}"">{displayName}</a ></th>";
+    }
+}

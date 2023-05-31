@@ -8,8 +8,25 @@ using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
+using System.Data.Common;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
+
+//todo: use ReferralOrderBy directly?
+public enum Column
+{
+    RecipientName,
+    DateReceived,
+    Status
+}
+
+// matches aria-sort values
+public enum Sort
+{
+    none,
+    ascending,
+    descending
+}
 
 [Authorize]
 public class DashboardModel : PageModel, IFamilyHubsHeader
@@ -31,22 +48,23 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
     public int PageSize { get; set; } = 10;
     public int TotalResults { get; set; }
 
-    public Dictionary<string, bool> ColumnSort { get; set; } = new()
+    private static Column[] _columns =
     {
-        { "Team", true },
-        { "DateSent", true },
-        { "Status", true }
+        Column.RecipientName,
+        Column.DateReceived,
+        Column.Status
     };
 
-    public DashboardModel(IReferralClientService referralClientService, IConfiguration configuration)
+    //todo: swap to array, rather than dictionary
+    public Dictionary<Column, Sort>? ColumnSort { get; set; }
+
+    public DashboardModel(IReferralClientService referralClientService)
     {
         _referralClientService = referralClientService;
-        //todo: don't want this as a config, comment out with searchable tag instead
-        ShowTeam = configuration.GetValue<bool>("ShowTeam");
         Pagination = new DontShowPagination();
     }
 
-    public async Task OnGet(string? referralOrderBy, bool isAscending, int? currentPage)
+    public async Task OnGet(string? columnName, Sort sort, int? currentPage)
     {
         var user = HttpContext.GetFamilyHubsUser();
         if (user.Role != "VcsAdmin")
@@ -57,31 +75,63 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
         if (currentPage != null)
             CurrentPage = currentPage.Value;
 
-        if (referralOrderBy != null)
+        Column column;
+        Sort columnNewSort;
+        if (columnName != null)
         {
-            ColumnSort[referralOrderBy] = !isAscending;
+            if (!Enum.TryParse(columnName, true, out column))
+            {
+                //todo: throw? default? someone's been messing with the url!
+            }
+
+            columnNewSort = sort switch
+            {
+                Sort.ascending => Sort.descending,
+                _ => Sort.ascending
+            };
         }
+        else
+        {
+            // default when first load the page
+            column = Column.DateReceived;
+            columnNewSort = Sort.descending;
+        }
+
+        ColumnSort = _columns.ToDictionary(col => col, col => col == column ? columnNewSort : Sort.none);
 
         OrganisationId = user.OrganisationId;
         //var team = HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "Team");
         
-        await GetConnections(OrganisationId, referralOrderBy, !isAscending); 
+        await GetConnections(OrganisationId, column, columnNewSort); 
     }
 
-    public async Task OnPost(string organisationId, string? referralOrderBy, bool? isAscending, int? currentPage)
+    //todo: need to add columnname and sort as hidden
+    public async Task OnPost(string organisationId, string? columnName, Sort sort, int? currentPage)
     {
-        //Check what we get
-        await GetConnections(organisationId, referralOrderBy, isAscending);
-    }
-
-    private async Task GetConnections(string organisationId, string? referralOrderBy, bool? isAscending)
-    {
-        if (!Enum.TryParse(referralOrderBy, true, out ReferralOrderBy referralOrder))
+        if (!Enum.TryParse(columnName, true, out Column column))
         {
-            referralOrder = ReferralOrderBy.NotSet;
+            //todo: throw? default? someone's been messing with the url!
         }
 
-        SearchResults = await _referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, referralOrder, isAscending, CurrentPage, PageSize);
+        //todo: currentpage
+        await GetConnections(organisationId, column, sort);
+    }
+
+    private async Task GetConnections(string organisationId, Column column, Sort sort)
+    {
+        var referralOrderBy = column switch
+        {
+            Column.RecipientName => ReferralOrderBy.RecipientName,
+            //todo: check sent == received
+            Column.DateReceived => ReferralOrderBy.DateSent,
+            Column.Status => ReferralOrderBy.Status,
+            //todo: throw instead?
+            _ => ReferralOrderBy.NotSet
+        };
+
+        //todo: assert/throw is Sort is None?
+
+        SearchResults = await _referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, referralOrderBy, sort == Sort.ascending, CurrentPage, PageSize);
 
         Pagination = new LargeSetPagination(SearchResults.TotalPages, CurrentPage);
 
