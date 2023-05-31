@@ -18,6 +18,7 @@ we might have to borrow its js for the status box (for accessibility), or perhap
 @* todo: disable initialiseSortedColumn *@
 @* todo: ensure status box is correct (see createStatusBox) *@
 
+@* todo: move to sass & make links look like proto*@
 <style>
     [aria-sort] a,
     [aria-sort] a:hover {
@@ -99,9 +100,7 @@ we might have to borrow its js for the status box (for accessibility), or perhap
         <form method="post">
             <input asp-for="@Model.OrganisationId" type="hidden">
 
-@*             <table class="govuk-table" data-module="moj-sortable-table"> *@
             <table class="govuk-table"> 
-                @* todo: disable front-end column sorting, and do in the back end *@
                 @* moj builds this...
                 <th scope="col" class="govuk-table__header" aria-sort="@columnSort"><button type="submit" name="date-received">Date Received</button></th>
                 *@
