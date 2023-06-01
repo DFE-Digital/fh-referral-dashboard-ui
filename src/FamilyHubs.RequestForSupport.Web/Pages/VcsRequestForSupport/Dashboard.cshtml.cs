@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
-using System.Collections.Generic;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
-//todo: use ReferralOrderBy directly?
+//todo: support get/link and post/submit modes in pagination component
+
 public enum Column
 {
     RecipientName,
