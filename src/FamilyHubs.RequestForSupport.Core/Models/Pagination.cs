@@ -1,5 +1,7 @@
 ﻿namespace FamilyHubs.RequestForSupport.Core.Models;
 
+//todo: rename get => "" (or link) and post => submit or form
+
 public interface IPagination
 {
     IEnumerable<PaginationItem> PaginationItems { get; }
@@ -8,6 +10,11 @@ public interface IPagination
     int? CurrentPage { get; }
     int? PreviousPage { get; }
     int? NextPage { get; }
+}
+
+public interface ILinkPagination : IPagination
+{
+    string GetUrl(int page);
 }
 
 public class LargeSetPagination : IPagination

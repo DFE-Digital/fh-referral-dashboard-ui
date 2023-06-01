@@ -27,8 +27,8 @@ we might have to borrow its js for the status box (for accessibility), or perhap
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         @* todo: move down, if don't use submit on the headers *@
-        <form method="post">
-            <input asp-for="@Model.OrganisationId" type="hidden">
+@*         <form method="post">
+            <input asp-for="@Model.OrganisationId" type="hidden"> *@
 
             <table class="govuk-table"> 
                 @* moj builds this...
@@ -70,7 +70,7 @@ we might have to borrow its js for the status box (for accessibility), or perhap
                 </tbody>
             </table>
             <partial name="_LargeSetPaginationGet" model='Model.Pagination'/>
-        </form>
+@*         </form> *@
     </div>
 </div>
 

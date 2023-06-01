@@ -31,6 +31,29 @@ public enum Sort
     // ReSharper enable InconsistentNaming
 }
 
+public class DashboardPagination : LargeSetPagination, ILinkPagination
+{
+    private readonly Column _column;
+    private readonly Sort _sort;
+
+    public DashboardPagination(
+        int totalPages,
+        int currentPage,
+        Column column,
+        Sort sort)
+        : base(totalPages, currentPage)
+    {
+        _column = column;
+        _sort = sort;
+    }
+
+    public string GetUrl(int page)
+    {
+        return $"/VcsRequestForSupport/Dashboard?columnName={_column}&sort={_sort}&currentPage={page}";
+    }
+}
+
+
 [Authorize]
 public class DashboardModel : PageModel, IFamilyHubsHeader
 {
@@ -79,11 +102,13 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
                 //todo: throw? default? someone's been messing with the url!
             }
 
-            columnNewSort = sort switch
-            {
-                Sort.ascending => Sort.descending,
-                _ => Sort.ascending
-            };
+            //todo: rename
+            columnNewSort = sort;
+            //columnNewSort = sort switch
+            //{
+            //    Sort.ascending => Sort.descending,
+            //    _ => Sort.ascending
+            //};
         }
         else
         {
@@ -95,26 +120,34 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
         ColumnSort = new Sort[(int)Column.Last+1];
         for (Column i = 0; i <= Column.Last; ++i)
         {
-            ColumnSort[(int)i] = i == column ? columnNewSort : Sort.none;
+            //todo: tidy up
+            ColumnSort[(int)i] = i == column ? columnNewSort switch
+            {
+                Sort.ascending => Sort.descending,
+                _ => Sort.ascending
+            } : Sort.none;
         }
 
         OrganisationId = user.OrganisationId;
         //var team = Http   Context?.User.Claims.FirstOrDefault(x => x.Type == "Team");
-        
-        await GetConnections(OrganisationId, column, columnNewSort); 
+
+        await GetConnections(OrganisationId, column, columnNewSort);
+
+        //todo: no pagination
+        Pagination = new DashboardPagination(SearchResults!.TotalPages, CurrentPage, column, columnNewSort);
     }
 
     //todo: need to add columnname and sort as hidden
-    public async Task OnPost(string organisationId, string? columnName, Sort sort, int? currentPage)
-    {
-        if (!Enum.TryParse(columnName, true, out Column column))
-        {
-            //todo: throw? default? someone's been messing with the url!
-        }
+    //public async Task OnPost(string organisationId, string? columnName, Sort sort, int? currentPage)
+    //{
+    //    if (!Enum.TryParse(columnName, true, out Column column))
+    //    {
+    //        //todo: throw? default? someone's been messing with the url!
+    //    }
 
-        //todo: currentpage
-        await GetConnections(organisationId, column, sort);
-    }
+    //    //todo: currentpage
+    //    await GetConnections(organisationId, column, sort);
+    //}
 
     private async Task GetConnections(string organisationId, Column column, Sort sort)
     {
@@ -132,7 +165,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
 
         SearchResults = await _referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, referralOrderBy, sort == Sort.ascending, CurrentPage, PageSize);
 
-        Pagination = new LargeSetPagination(SearchResults.TotalPages, CurrentPage);
+        //Pagination = new LargeSetPagination(SearchResults.TotalPages, CurrentPage);
         //Pagination = new LargeSetPagination(2, CurrentPage);
 
         TotalResults = SearchResults.TotalCount;
