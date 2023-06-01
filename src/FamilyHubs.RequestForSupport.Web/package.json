@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "license": "MIT",
   "dependencies": {
-    "familyhubs-frontend": "1.0.54-alpha"
+    "familyhubs-frontend": "1.0.55-alpha"
   }
 }
