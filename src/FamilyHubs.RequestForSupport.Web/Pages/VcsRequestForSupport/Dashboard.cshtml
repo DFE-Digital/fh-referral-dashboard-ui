@@ -6,19 +6,11 @@
     ViewData["Title"] = "Received requests";
 }
 
-@* prototype uses a single row with 2 full width columns, but really they are 2 separate rows *@
-
-@* todo: the moj sortable table doesn't work without js (really?), so we can't use it as is. 
-
-we can use the styling though. we'll just have to not use moj-sortable-table, and create the markup it generates in its js code.
-we might have to borrow its js for the status box (for accessibility), or perhaps do without the status box?
-*@
-@* alternatively, we could use moj js to allow sorting when there is only a single page, but even then we'd have to override their sorting as it has issues (ascii sorting, rather than case insensitive, so even if we support front-end sorting, probably better to implement it ourselves and borrow any code we need) *@
-
+@* todo: borrow the status box (for accessibility) from the moj component (or perhaps do without the status box?) (see createStatusBox) *@
+@* todo: borrow some of the moj js code and sort in the front end if there is only a single page (sort would have to be case insensitive) *@
 @* todo: highlight on selected header is slightly too short*@
 @* todo: add css to replicate the prototype's custom widths. any support from the component for that?*@
-@* todo: disable initialiseSortedColumn *@
-@* todo: ensure status box is correct (see createStatusBox) *@
+@* todo: scrolling on mobile *@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -28,51 +20,42 @@ we might have to borrow its js for the status box (for accessibility), or perhap
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        @* todo: move down, if don't use submit on the headers *@
-@*         <form method="post">
-            <input asp-for="@Model.OrganisationId" type="hidden"> *@
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                @* todo: componentise*@
+                @Html.Raw(TableHeader("Contact in family", Column.RecipientName))
+                @Html.Raw(TableHeader("Date received", Column.DateReceived))
+                <th scope="col" class="govuk-table__header">Request number</th>
+                @Html.Raw(TableHeader("Status", Column.Status))
+            </tr>
+            </thead>
 
-            <table class="govuk-table"> 
-                @* moj builds this...
-                <th scope="col" class="govuk-table__header" aria-sort="@columnSort"><button type="submit" name="date-received">Date Received</button></th>
-                *@
-                @* todo: scrolling on mobile *@
-                <thead class="govuk-table__head">
+            <tbody class="govuk-table__body">
+            @foreach (var item in Model.SearchResults!.Items)
+            {
+                var itemStatus = item.Status.Name;
+
                 <tr class="govuk-table__row">
-                    @* todo: componentise*@
-                    @Html.Raw(TableHeader("Contact in family", Column.RecipientName))
-                    @Html.Raw(TableHeader("Date received", Column.DateReceived))
-                    <th scope="col" class="govuk-table__header">Request number</th>
-                    @Html.Raw(TableHeader("Status", Column.Status))
+                    <td class="govuk-table__cell">
+                        <a asp-page="/VcsRequestForSupport/ConnectDetails" asp-route-id="@item.Id" class="govuk-!-margin-right-1">@item.RecipientDto.Name</a>
+                    </td>
+                    @if (Model.ShowTeam)
+                    {
+                        <td class="govuk-table__cell">@item.ReferrerDto.Team</td>
+                    }
+                    <td class="govuk-table__cell">@item.Created?.ToString("dd-MMM-yyyy")</td>
+
+                    <td class="govuk-table__cell">@item.Id.ToString("X4")</td>
+
+                    <td class="govuk-table__cell">
+                        <partial name="_ConnectionStatus" for="@itemStatus"/>
+                    </td>
                 </tr>
-                </thead>
-
-                <tbody class="govuk-table__body">
-                @foreach(var item in Model.SearchResults!.Items)
-                {
-                    var itemStatus = item.Status.Name;
-                
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">
-                            <a asp-page="/VcsRequestForSupport/ConnectDetails" asp-route-id="@item.Id" class="govuk-!-margin-right-1">@item.RecipientDto.Name</a>
-                        </td>
-                        @if (Model.ShowTeam)
-                        {
-                            <td class="govuk-table__cell">@item.ReferrerDto.Team</td>
-                        }
-                        <td class="govuk-table__cell">@item.Created?.ToString("dd-MMM-yyyy")</td>
-
-                        <td class="govuk-table__cell">@item.Id.ToString("X4")</td>
-
-                        <td class="govuk-table__cell">
-                            <partial name="_ConnectionStatus" for="@itemStatus" />
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-            <partial name="_LargeSetPagination" model='Model.Pagination'/>
-@*         </form> *@
+            }
+            </tbody>
+        </table>
+        <partial name="_LargeSetPagination" model='Model.Pagination'/>
     </div>
 </div>
 

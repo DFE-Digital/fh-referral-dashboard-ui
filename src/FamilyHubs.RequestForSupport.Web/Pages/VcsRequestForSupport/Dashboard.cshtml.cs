@@ -36,9 +36,6 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
     public IPagination Pagination { get; set; }
 
     [BindProperty]
-    public string OrganisationId { get; set; } = string.Empty;
-
-    [BindProperty]
     public int CurrentPage { get; set; } = 1;
     public int PageSize { get; set; } = 10;
     public int TotalResults { get; set; }
@@ -88,10 +85,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
             } : Sort.none;
         }
 
-        OrganisationId = user.OrganisationId;
-        //var team = Http   Context?.User.Claims.FirstOrDefault(x => x.Type == "Team");
-
-        SearchResults = await GetConnections(OrganisationId, column, sort);
+        SearchResults = await GetConnections(user.OrganisationId, column, sort);
         TotalResults = SearchResults.TotalCount;
 
         //todo: no pagination
