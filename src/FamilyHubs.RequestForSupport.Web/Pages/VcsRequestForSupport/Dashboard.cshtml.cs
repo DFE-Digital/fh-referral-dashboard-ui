@@ -122,13 +122,14 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
         OrganisationId = user.OrganisationId;
         //var team = Http   Context?.User.Claims.FirstOrDefault(x => x.Type == "Team");
 
-        await GetConnections(OrganisationId, column, sort);
+        SearchResults = await GetConnections(OrganisationId, column, sort);
+        TotalResults = SearchResults.TotalCount;
 
         //todo: no pagination
         Pagination = new DashboardPagination(SearchResults!.TotalPages, CurrentPage, column, sort);
     }
 
-    private async Task GetConnections(string organisationId, Column column, Sort sort)
+    private async Task<PaginatedList<ReferralDto>> GetConnections(string organisationId, Column column, Sort sort)
     {
         var referralOrderBy = column switch
         {
@@ -142,12 +143,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
 
         //todo: assert/throw if Sort is None?
 
-        SearchResults = await _referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, referralOrderBy, sort == Sort.ascending, CurrentPage, PageSize);
-
-        //Pagination = new LargeSetPagination(SearchResults.TotalPages, CurrentPage);
-        //Pagination = new LargeSetPagination(2, CurrentPage);
-
-        TotalResults = SearchResults.TotalCount;
+        return await _referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, referralOrderBy, sort == Sort.ascending, CurrentPage, PageSize);
     }
 
     public bool IsActive(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
