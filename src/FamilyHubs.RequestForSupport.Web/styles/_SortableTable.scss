@@ -2,6 +2,8 @@
 /*todo: move to shared once componentised */
 /*todo: at some point, could support get/post versions of the table */
 
+
+
 [aria-sort] a,
 [aria-sort] a:hover {
     background-color: transparent;
@@ -19,6 +21,9 @@
     text-align: inherit;
     font-size: 1em;
     margin: 0;
+    //todo: have mixin (and class) for fh-link-as-button (and fh-button-as-link)
+    line-height: normal;
+    text-decoration: none;
 }
 
 [aria-sort] a:focus {
