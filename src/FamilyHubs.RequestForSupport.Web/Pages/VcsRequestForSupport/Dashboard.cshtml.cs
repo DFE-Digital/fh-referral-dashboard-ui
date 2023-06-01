@@ -94,34 +94,25 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
             CurrentPage = currentPage.Value;
 
         Column column;
-        Sort columnNewSort;
         if (columnName != null)
         {
             if (!Enum.TryParse(columnName, true, out column))
             {
                 //todo: throw? default? someone's been messing with the url!
             }
-
-            //todo: rename
-            columnNewSort = sort;
-            //columnNewSort = sort switch
-            //{
-            //    Sort.ascending => Sort.descending,
-            //    _ => Sort.ascending
-            //};
         }
         else
         {
             // default when first load the page
             column = Column.DateReceived;
-            columnNewSort = Sort.descending;
+            sort = Sort.descending;
         }
 
         ColumnSort = new Sort[(int)Column.Last+1];
         for (Column i = 0; i <= Column.Last; ++i)
         {
             //todo: tidy up
-            ColumnSort[(int)i] = i == column ? columnNewSort switch
+            ColumnSort[(int)i] = i == column ? sort switch
             {
                 Sort.ascending => Sort.descending,
                 _ => Sort.ascending
@@ -131,23 +122,11 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
         OrganisationId = user.OrganisationId;
         //var team = Http   Context?.User.Claims.FirstOrDefault(x => x.Type == "Team");
 
-        await GetConnections(OrganisationId, column, columnNewSort);
+        await GetConnections(OrganisationId, column, sort);
 
         //todo: no pagination
-        Pagination = new DashboardPagination(SearchResults!.TotalPages, CurrentPage, column, columnNewSort);
+        Pagination = new DashboardPagination(SearchResults!.TotalPages, CurrentPage, column, sort);
     }
-
-    //todo: need to add columnname and sort as hidden
-    //public async Task OnPost(string organisationId, string? columnName, Sort sort, int? currentPage)
-    //{
-    //    if (!Enum.TryParse(columnName, true, out Column column))
-    //    {
-    //        //todo: throw? default? someone's been messing with the url!
-    //    }
-
-    //    //todo: currentpage
-    //    await GetConnections(organisationId, column, sort);
-    //}
 
     private async Task GetConnections(string organisationId, Column column, Sort sort)
     {
