@@ -12,8 +12,6 @@ using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
-//todo: support get/link and post/submit modes in pagination component
-
 //todo: move to shared
 // matches aria-sort values
 public enum Sort
