@@ -2,8 +2,8 @@
 
 public interface IPagination
 {
-    IEnumerable<PaginationItem> PaginationItems => Enumerable.Empty<PaginationItem>();
-    bool Show => false;
+    IEnumerable<PaginationItem> PaginationItems { get; }
+    bool Show { get; }
     int? TotalPages { get; }
     int? CurrentPage { get; }
     int? PreviousPage { get; }
@@ -40,7 +40,7 @@ public class LargeSetPagination : IPagination
     {
         var uniquePageNumbers = pages.Distinct().Where(p => p > 0 && p <= totalPages);
 
-        var lastPageNumber = 1;
+        int lastPageNumber = 1;
         foreach (var uniquePage in uniquePageNumbers)
         {
             if (uniquePage > lastPageNumber + 1)
@@ -58,8 +58,8 @@ public class DontShowPagination : IPagination
 {
     public IEnumerable<PaginationItem> PaginationItems => Enumerable.Empty<PaginationItem>();
     public bool Show => false;
-    public int? TotalPages => 1;
-    public int? CurrentPage => 1;
-    public int? PreviousPage => 1;
-    public int? NextPage => 1;
+    public int? TotalPages { get; }
+    public int? CurrentPage { get; }
+    public int? PreviousPage { get; }
+    public int? NextPage { get; }
 }

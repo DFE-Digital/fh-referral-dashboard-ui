@@ -133,6 +133,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
         SearchResults = await _referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, referralOrderBy, sort == Sort.ascending, CurrentPage, PageSize);
 
         Pagination = new LargeSetPagination(SearchResults.TotalPages, CurrentPage);
+        //Pagination = new LargeSetPagination(2, CurrentPage);
 
         TotalResults = SearchResults.TotalCount;
     }
