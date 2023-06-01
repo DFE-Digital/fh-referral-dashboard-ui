@@ -24,9 +24,11 @@ public enum Column
 // matches aria-sort values
 public enum Sort
 {
+    // ReSharper disable InconsistentNaming
     none,
     ascending,
     descending
+    // ReSharper enable InconsistentNaming
 }
 
 [Authorize]

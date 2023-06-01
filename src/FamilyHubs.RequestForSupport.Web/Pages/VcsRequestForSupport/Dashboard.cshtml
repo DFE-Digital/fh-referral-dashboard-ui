@@ -18,76 +18,6 @@ we might have to borrow its js for the status box (for accessibility), or perhap
 @* todo: disable initialiseSortedColumn *@
 @* todo: ensure status box is correct (see createStatusBox) *@
 
-@* todo: move to sass & make links look like proto*@
-<style>
-    [aria-sort] a,
-    [aria-sort] a:hover {
-        background-color: transparent;
-        border-width: 0;
-        -webkit-box-shadow: 0 0 0 0;
-        -moz-box-shadow: 0 0 0 0;
-        box-shadow: 0 0 0 0;
-        color: #005ea5;
-        cursor: pointer;
-        font-family: inherit;
-        font-size: inherit;
-        font-weight: inherit;
-        padding: 0 10px 0 0;
-        position: relative;
-        text-align: inherit;
-        font-size: 1em;
-        margin: 0;
-    }
-
-        [aria-sort] a:focus {
-            background-color: $govuk-focus-colour;
-            color: $govuk-focus-text-colour;
-            box-shadow: 0 -2px $govuk-focus-colour, 0 4px $govuk-focus-text-colour;
-            outline: none;
-        }
-
-    [aria-sort]:first-child a {
-        right: auto;
-    }
-
-    [aria-sort] a:before {
-        content: " \25bc";
-        position: absolute;
-        right: -1px;
-        top: 9px;
-        font-size: 0.5em;
-    }
-
-    [aria-sort] a:after {
-        content: " \25b2";
-        position: absolute;
-        right: -1px;
-        top: 1px;
-        font-size: 0.5em;
-    }
-
-    [aria-sort="ascending"] a:before,
-    [aria-sort="descending"] a:before {
-        content: none;
-    }
-
-    [aria-sort="ascending"] a:after {
-        content: " \25b2";
-        font-size: .8em;
-        position: absolute;
-        right: -5px;
-        top: 2px;
-    }
-
-    [aria-sort="descending"] a:after {
-        content: " \25bc";
-        font-size: .8em;
-        position: absolute;
-        right: -5px;
-        top: 2px;
-    }
-</style>
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-l govuk-!-margin-bottom-6">Received requests</h1>
@@ -107,9 +37,8 @@ we might have to borrow its js for the status box (for accessibility), or perhap
                 @* todo: scrolling on mobile *@
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                        @Html.Raw(TableHeader("Contact in family", Column.RecipientName))
-                    @* todo: for order, either have hidden with sort, or combine column & order in submit name *@
-                    @* todo: or have anchor and recreate (borrow) component's css? *@
+                    @* todo: componentise*@
+                    @Html.Raw(TableHeader("Contact in family", Column.RecipientName))
                     @Html.Raw(TableHeader("Date received", Column.DateReceived))
                     <th scope="col" class="govuk-table__header">Request number</th>
                     @Html.Raw(TableHeader("Status", Column.Status))
