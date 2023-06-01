@@ -7,20 +7,14 @@ using FamilyHubs.RequestForSupport.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ReferralService.Shared.Enums;
+using FamilyHubs.RequestForSupport.Web.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
 //todo: support get/link and post/submit modes in pagination component
 
-public enum Column
-{
-    RecipientName,
-    DateReceived,
-    Status,
-    Last = Status
-}
-
+//todo: move to shared
 // matches aria-sort values
 public enum Sort
 {
@@ -30,29 +24,6 @@ public enum Sort
     descending
     // ReSharper enable InconsistentNaming
 }
-
-public class DashboardPagination : LargeSetPagination, ILinkPagination
-{
-    private readonly Column _column;
-    private readonly Sort _sort;
-
-    public DashboardPagination(
-        int totalPages,
-        int currentPage,
-        Column column,
-        Sort sort)
-        : base(totalPages, currentPage)
-    {
-        _column = column;
-        _sort = sort;
-    }
-
-    public string GetUrl(int page)
-    {
-        return $"/VcsRequestForSupport/Dashboard?columnName={_column}&sort={_sort}&currentPage={page}";
-    }
-}
-
 
 [Authorize]
 public class DashboardModel : PageModel, IFamilyHubsHeader
@@ -146,8 +117,8 @@ public class DashboardModel : PageModel, IFamilyHubsHeader
         return await _referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, referralOrderBy, sort == Sort.ascending, CurrentPage, PageSize);
     }
 
-    public bool IsActive(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
+    LinkStatus IFamilyHubsHeader.GetStatus(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
     {
-        return link.Text == "Received requests";
+        return link.Text == "Received requests" ? LinkStatus.Active : LinkStatus.Visible;
     }
 }
