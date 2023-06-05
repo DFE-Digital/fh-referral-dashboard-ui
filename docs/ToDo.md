@@ -1,5 +1,7 @@
 # ToDo
 
+* update connect site with latest shared and swap pagination for new one
+
 * sign-in expiry doesn't work
 
 * 404 page throws this error:
