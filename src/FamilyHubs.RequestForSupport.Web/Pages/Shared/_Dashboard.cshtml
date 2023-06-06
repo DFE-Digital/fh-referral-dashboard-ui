@@ -1,5 +1,4 @@
-﻿@using FamilyHubs.RequestForSupport.Web.Dashboard
-@using FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport
+﻿@using FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport
 
 @model IDashboard
 
@@ -16,16 +15,22 @@
                             @Html.Raw(columnHeader.ContentAsHtml)
                         </th>
                     }
-                    @* todo: componentise*@
-@*                     @Html.Raw(TableHeader("Contact in family", Column.RecipientName))
-                    @Html.Raw(TableHeader("Date received", Column.DateReceived))
-                    <th scope="col" class="govuk-table__header">Request number</th>
-                    @Html.Raw(TableHeader("Status", Column.Status)) *@
                 </tr>
                 </thead>
 
                 <tbody class="govuk-table__body">
-@*                     @foreach (var item in Model.SearchResults!.Items)
+                    @foreach (var row in Model.Rows)
+                    {
+                        <tr class="govuk-table__row">
+                            @foreach (string valueAsHtml in row.ValuesAsHtml)
+                            {
+                                <td class="govuk-table__cell">
+                                    @Html.Raw(valueAsHtml)
+                                </td>
+                            }
+                        </tr>
+                    })
+                @*                     @foreach (var item in Model.SearchResults!.Items)
                     {
                         var itemStatus = item.Status.Name;
 
@@ -42,7 +47,8 @@
                             </td>
                         </tr>
                     }
- *@                </tbody>
+ *@
+                </tbody>
             </table>
         </div>
         <partial name="_LargeSetPagination" model='Model.Pagination' />

@@ -9,6 +9,7 @@ using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.RequestForSupport.Web.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.Pagination;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
@@ -109,6 +110,36 @@ public interface IDashboardRow
     IEnumerable<string> ValuesAsHtml { get; }
 }
 
+public class VcsDashboardRow : IDashboardRow
+{
+    //var itemStatus = item.Status.Name;
+
+    //    <tr class="govuk-table__row">
+    //<td class="govuk-table__cell">
+    //<a asp-page="/VcsRequestForSupport/ConnectDetails" asp-route-id="@item.Id" class="govuk-!-margin-right-1">@item.RecipientDto.Name</a>
+    //</td>
+    //<td class="govuk-table__cell">@item.Created?.ToString("dd-MMM-yyyy")</td>
+
+    //<td class="govuk-table__cell">@item.item.Id.ToString("X4")</td>
+
+    //<td class="govuk-table__cell">
+    //<partial name = "_ConnectionStatus" for="@itemStatus" />
+
+
+    public VcsDashboardRow(ReferralDto referral)
+    {
+        ValuesAsHtml = new string[]
+        {
+            $"<a href=\"/VcsRequestForSupport/ConnectDetails?id={referral.Id}\" class=\"govuk-!-margin-right-1\">{referral.RecipientDto.Name}</a>",
+            referral.Created?.ToString("dd-MMM-yyyy") ?? "",
+            referral.Id.ToString("X4"),
+            ""
+        };
+    }
+
+    public IEnumerable<string> ValuesAsHtml { get; }
+}
+
 public interface IDashboard
 {
     IEnumerable<IDashboardColumnHeader> ColumnHeaders => Enumerable.Empty<IDashboardColumnHeader>();
@@ -154,7 +185,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard
     public SortOrder[]? Sort { get; set; }
 
     private IEnumerable<IDashboardColumnHeader> _columnHeaders = Enumerable.Empty<IDashboardColumnHeader>();
-    private readonly IEnumerable<IDashboardRow> _rows = Enumerable.Empty<IDashboardRow>();
+    private IEnumerable<IDashboardRow> _rows = Enumerable.Empty<IDashboardRow>();
     IEnumerable<IDashboardColumnHeader> IDashboard.ColumnHeaders => _columnHeaders;
     IEnumerable<IDashboardRow> IDashboard.Rows => _rows;
 
@@ -192,19 +223,10 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard
 
         _columnHeaders = new VcsDashboardColumnHeaderFactory(column, sort).CreateAll(_columnImmutables);
 
-        //ColumnSort = new Sort[(int)Column.Last+1];
-        //for (Column i = 0; i <= Column.Last; ++i)
-        //{
-        //    //todo: tidy up
-        //    ColumnSort[(int)i] = i == column ? sort switch
-        //    {
-        //        Sort.ascending => Sort.descending,
-        //        _ => Sort.ascending
-        //    } : Sort.none;
-        //}
-
         SearchResults = await GetConnections(user.OrganisationId, column, sort);
         TotalResults = SearchResults.TotalCount;
+
+        _rows = SearchResults.Items.Select(r => new VcsDashboardRow(r));
 
         //todo: no pagination
         Pagination = new DashboardPagination(SearchResults!.TotalPages, CurrentPage, column, sort);
