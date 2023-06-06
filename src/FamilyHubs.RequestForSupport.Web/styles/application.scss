@@ -2,3 +2,7 @@
 @import "../node_modules/familyhubs-frontend/styles/all";
 @import "_SortableTable";
 @import "_VcsDashboard";
+
+.dfe-width-container {
+    max-width: 960px;
+}
