@@ -36,24 +36,6 @@
                         }
                     </tr>
                 }
-                @*                     @foreach (var item in Model.SearchResults!.Items)
-                    {
-                        var itemStatus = item.Status.Name;
-
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
-                                <a asp-page="/VcsRequestForSupport/ConnectDetails" asp-route-id="@item.Id" class="govuk-!-margin-right-1">@item.RecipientDto.Name</a>
-                            </td>
-                            <td class="govuk-table__cell">@item.Created?.ToString("dd-MMM-yyyy")</td>
-
-                            <td class="govuk-table__cell">@item.Id.ToString("X4")</td>
-
-                            <td class="govuk-table__cell">
-                                <partial name="_ConnectionStatus" for="@itemStatus" />
-                            </td>
-                        </tr>
-                    }
- *@
                 </tbody>
             </table>
         </div>
