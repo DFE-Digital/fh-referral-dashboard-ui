@@ -1,0 +1,61 @@
+﻿@using FamilyHubs.RequestForSupport.Web.Dashboard
+@using FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport
+
+@model IDashboard
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="moj-scrollable-pane">
+            @* todo: class as param *@
+            <table class="govuk-table app-vcs-dashboard">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    @foreach (var columnHeader in Model.ColumnHeaders)
+                    {
+                        <th scope="col" class="govuk-table__header" @(columnHeader.Sort.HasValue ? $"aria-sort={columnHeader.Sort.Value}" : "")>
+                            @Html.Raw(columnHeader.ContentAsHtml)
+                        </th>
+                    }
+                    @* todo: componentise*@
+@*                     @Html.Raw(TableHeader("Contact in family", Column.RecipientName))
+                    @Html.Raw(TableHeader("Date received", Column.DateReceived))
+                    <th scope="col" class="govuk-table__header">Request number</th>
+                    @Html.Raw(TableHeader("Status", Column.Status)) *@
+                </tr>
+                </thead>
+
+                <tbody class="govuk-table__body">
+@*                     @foreach (var item in Model.SearchResults!.Items)
+                    {
+                        var itemStatus = item.Status.Name;
+
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                <a asp-page="/VcsRequestForSupport/ConnectDetails" asp-route-id="@item.Id" class="govuk-!-margin-right-1">@item.RecipientDto.Name</a>
+                            </td>
+                            <td class="govuk-table__cell">@item.Created?.ToString("dd-MMM-yyyy")</td>
+
+                            <td class="govuk-table__cell">@item.Id.ToString("X4")</td>
+
+                            <td class="govuk-table__cell">
+                                <partial name="_ConnectionStatus" for="@itemStatus" />
+                            </td>
+                        </tr>
+                    }
+ *@                </tbody>
+            </table>
+        </div>
+        <partial name="_LargeSetPagination" model='Model.Pagination' />
+    </div>
+</div>
+
+@* @functions
+{
+    private string TableHeader(string displayName, Column column)
+    {
+        //todo: two different sorts need to be different
+        Sort sort = Model.ColumnSort![(int)column];
+        return $@"<th scope=""col"" class=""govuk-table__header"" aria-sort=""{sort}""><a href=""/VcsRequestForSupport/Dashboard?columnName={column}&sort={sort}"">{displayName}</a ></th>";
+    }
+}
+ *@

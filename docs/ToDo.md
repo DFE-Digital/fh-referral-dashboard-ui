@@ -1,5 +1,7 @@
 # ToDo
 
+* header too wide
+
 * update connect site with latest shared and swap pagination for new one
 
 * sign-in expiry doesn't work
