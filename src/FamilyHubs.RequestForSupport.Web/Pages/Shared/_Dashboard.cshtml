@@ -1,6 +1,6 @@
 ﻿@using FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport
 
-@model IDashboard
+@model IDashboard<FamilyHubs.ReferralService.Shared.Dto.ReferralDto>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -20,10 +20,18 @@
                 @foreach (var row in Model.Rows)
                 {
                     <tr class="govuk-table__row">
-                        @foreach (string valueAsHtml in row.ValuesAsHtml)
+                        @foreach (var cell in row.Cells)
                         {
                             <td class="govuk-table__cell">
-                                @Html.Raw(valueAsHtml)
+                                @* todo: render partial in Model instead, if can't get past generic model *@
+                                @if (cell.PartialName != null)
+                                {
+                                    <partial name="@cell.PartialName" model="row.Item"/>
+                                }
+                                else
+                                {
+                                    @Html.Raw(cell.ContentAsHtml)
+                                }
                             </td>
                         }
                     </tr>

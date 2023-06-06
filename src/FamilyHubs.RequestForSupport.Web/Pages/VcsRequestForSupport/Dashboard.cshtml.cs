@@ -105,46 +105,57 @@ public interface IDashboardColumnHeader
     string ContentAsHtml { get; }
 }
 
-public interface IDashboardRow
+public interface IDashboardCell
 {
-    IEnumerable<string> ValuesAsHtml { get; }
+    string? PartialName { get; }
+    string? ContentAsHtml { get; }
 }
 
-public class VcsDashboardRow : IDashboardRow
+public record DashboardCell(string? ContentAsHtml, string? PartialName = null) : IDashboardCell;
+
+public interface IDashboardRow<out T>
 {
-    //var itemStatus = item.Status.Name;
+    IEnumerable<IDashboardCell> Cells { get; }
+    T Item { get; }
+}
 
-    //    <tr class="govuk-table__row">
-    //<td class="govuk-table__cell">
-    //<a asp-page="/VcsRequestForSupport/ConnectDetails" asp-route-id="@item.Id" class="govuk-!-margin-right-1">@item.RecipientDto.Name</a>
-    //</td>
-    //<td class="govuk-table__cell">@item.Created?.ToString("dd-MMM-yyyy")</td>
-
-    //<td class="govuk-table__cell">@item.item.Id.ToString("X4")</td>
-
-    //<td class="govuk-table__cell">
-    //<partial name = "_ConnectionStatus" for="@itemStatus" />
-
+public class VcsDashboardRow : IDashboardRow<ReferralDto>
+{
+    public ReferralDto Item { get; }
 
     public VcsDashboardRow(ReferralDto referral)
     {
-        ValuesAsHtml = new string[]
-        {
-            $"<a href=\"/VcsRequestForSupport/ConnectDetails?id={referral.Id}\" class=\"govuk-!-margin-right-1\">{referral.RecipientDto.Name}</a>",
-            referral.Created?.ToString("dd-MMM-yyyy") ?? "",
-            referral.Id.ToString("X4"),
-            ""
-        };
+        Item = referral;
+        //Cells = new DashboardCell[]
+        //{
+        //    new($"<a href=\"/VcsRequestForSupport/ConnectDetails?id={referral.Id}\" class=\"govuk-!-margin-right-1\">{referral.RecipientDto.Name}</a>"),
+        //    new(referral.Created?.ToString("dd-MMM-yyyy") ?? ""),
+        //    new(referral.Id.ToString("X4")),
+        //    //todo: don't repeat partial name for each row??
+        //    new(null, "_ConnectionStatus")
+        //};
     }
 
-    public IEnumerable<string> ValuesAsHtml { get; }
+    public IEnumerable<IDashboardCell> Cells
+    {
+        get
+        {
+            yield return new DashboardCell(
+                $"<a href=\"/VcsRequestForSupport/ConnectDetails?id={Item.Id}\" class=\"govuk-!-margin-right-1\">{Item.RecipientDto.Name}</a>");
+            yield return new DashboardCell(Item.Created?.ToString("dd-MMM-yyyy") ?? "");
+            yield return new DashboardCell(Item.Id.ToString("X4"));
+            yield return new DashboardCell(null, "_ConnectionStatus");
+        }
+    }
+
+    //public IEnumerable<IDashboardCell> Cells { get; }
 }
 
-public interface IDashboard
+public interface IDashboard<out T>
 {
     string? TableClass { get; }
     IEnumerable<IDashboardColumnHeader> ColumnHeaders => Enumerable.Empty<IDashboardColumnHeader>();
-    IEnumerable<IDashboardRow> Rows => Enumerable.Empty<IDashboardRow>();
+    IEnumerable<IDashboardRow<T>> Rows => Enumerable.Empty<IDashboardRow<T>>();
     IPagination Pagination { get; set; }
 }
 
@@ -160,7 +171,7 @@ public enum SortOrder
 }
 
 [Authorize]
-public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard
+public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
 {
     private static VcsColumnImmutable[] _columnImmutables = 
     {
@@ -172,7 +183,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard
 
     private readonly IReferralClientService _referralClientService;
 
-    string? IDashboard.TableClass => "app-vcs-dashboard";
+    string? IDashboard<ReferralDto>.TableClass => "app-vcs-dashboard";
     public bool ShowNavigationMenu => true;
 
     public PaginatedList<ReferralDto>? SearchResults { get; set; }
@@ -187,9 +198,9 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard
     public SortOrder[]? Sort { get; set; }
 
     private IEnumerable<IDashboardColumnHeader> _columnHeaders = Enumerable.Empty<IDashboardColumnHeader>();
-    private IEnumerable<IDashboardRow> _rows = Enumerable.Empty<IDashboardRow>();
-    IEnumerable<IDashboardColumnHeader> IDashboard.ColumnHeaders => _columnHeaders;
-    IEnumerable<IDashboardRow> IDashboard.Rows => _rows;
+    private IEnumerable<IDashboardRow<ReferralDto>> _rows = Enumerable.Empty<IDashboardRow<ReferralDto>>();
+    IEnumerable<IDashboardColumnHeader> IDashboard<ReferralDto>.ColumnHeaders => _columnHeaders;
+    IEnumerable<IDashboardRow<ReferralDto>> IDashboard<ReferralDto>.Rows => _rows;
 
     public DashboardModel(IReferralClientService referralClientService)
     {

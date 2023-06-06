@@ -1,6 +1,10 @@
-﻿@model string
+﻿@* @model string
 
-@switch (Model)
+@switch (Model) *@
+
+@model FamilyHubs.ReferralService.Shared.Dto.ReferralDto
+
+@switch (Model.Status.Name)
 {
     case "Opened":
         <strong class="govuk-tag govuk-tag--yellow">Opened</strong>
