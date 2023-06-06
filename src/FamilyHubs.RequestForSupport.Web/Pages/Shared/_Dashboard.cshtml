@@ -4,9 +4,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <div class="moj-scrollable-pane">
-            @* todo: class as param *@
-            <table class="govuk-table app-vcs-dashboard">
+        <div class="moj-scrollable-pane"><table class="govuk-table @Model.TableClass">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     @foreach (var columnHeader in Model.ColumnHeaders)
@@ -19,17 +17,17 @@
                 </thead>
 
                 <tbody class="govuk-table__body">
-                    @foreach (var row in Model.Rows)
-                    {
-                        <tr class="govuk-table__row">
-                            @foreach (string valueAsHtml in row.ValuesAsHtml)
-                            {
-                                <td class="govuk-table__cell">
-                                    @Html.Raw(valueAsHtml)
-                                </td>
-                            }
-                        </tr>
-                    })
+                @foreach (var row in Model.Rows)
+                {
+                    <tr class="govuk-table__row">
+                        @foreach (string valueAsHtml in row.ValuesAsHtml)
+                        {
+                            <td class="govuk-table__cell">
+                                @Html.Raw(valueAsHtml)
+                            </td>
+                        }
+                    </tr>
+                }
                 @*                     @foreach (var item in Model.SearchResults!.Items)
                     {
                         var itemStatus = item.Status.Name;
@@ -54,14 +52,3 @@
         <partial name="_LargeSetPagination" model='Model.Pagination' />
     </div>
 </div>
-
-@* @functions
-{
-    private string TableHeader(string displayName, Column column)
-    {
-        //todo: two different sorts need to be different
-        Sort sort = Model.ColumnSort![(int)column];
-        return $@"<th scope=""col"" class=""govuk-table__header"" aria-sort=""{sort}""><a href=""/VcsRequestForSupport/Dashboard?columnName={column}&sort={sort}"">{displayName}</a ></th>";
-    }
-}
- *@

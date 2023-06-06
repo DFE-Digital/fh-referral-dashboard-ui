@@ -142,6 +142,7 @@ public class VcsDashboardRow : IDashboardRow
 
 public interface IDashboard
 {
+    string? TableClass { get; }
     IEnumerable<IDashboardColumnHeader> ColumnHeaders => Enumerable.Empty<IDashboardColumnHeader>();
     IEnumerable<IDashboardRow> Rows => Enumerable.Empty<IDashboardRow>();
     IPagination Pagination { get; set; }
@@ -171,6 +172,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard
 
     private readonly IReferralClientService _referralClientService;
 
+    string? IDashboard.TableClass => "app-vcs-dashboard";
     public bool ShowNavigationMenu => true;
 
     public PaginatedList<ReferralDto>? SearchResults { get; set; }
