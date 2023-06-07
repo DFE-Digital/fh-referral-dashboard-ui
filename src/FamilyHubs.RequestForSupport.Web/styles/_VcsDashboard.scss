@@ -4,7 +4,7 @@
 /* but even then the last two columns aren't of equal actual width, due to box-sizing and padding */
 
 /*todo: part of shared*/
-.moj-scrollable-pane {
+.fh-dashboard {
     // move the table padding to after the scrollable pane
     @include govuk-responsive-margin(6, "bottom");
 }
