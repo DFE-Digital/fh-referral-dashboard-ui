@@ -9,65 +9,56 @@ using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.RequestForSupport.Web.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.Pagination;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
-public class VcsColumnImmutable
+public class ColumnImmutable
 {
     public string DisplayName { get; }
-    public string? Name { get; }
-    public Column? Column { get; }
+    public string? SortName { get; }
 
-    public VcsColumnImmutable(string displayName, Column? column)
+    public ColumnImmutable(string displayName, string? sortName = null)
     {
         DisplayName = displayName;
-        Name = column?.ToString();
-        Column = column;
+        SortName = sortName;
     }
 }
 
-//todo: inject
-//public interface IVcsDashboardColumnHeaderFactory
-//{
-//    IDashboardColumnHeader Create(string displayName, Column column);
-//}
-
-public class VcsDashboardColumnHeaderFactory //: IVcsDashboardColumnHeaderFactory
+public class DashboardColumnHeaderFactory
 {
-    private readonly Column _sortedColumn;
+    private readonly string _sortedColumnName;
     private readonly SortOrder _sort;
 
-    public VcsDashboardColumnHeaderFactory(Column sortedColumn, SortOrder sort)
+    public DashboardColumnHeaderFactory(string sortedColumnName, SortOrder sort)
     {
-        _sortedColumn = sortedColumn;
+        _sortedColumnName = sortedColumnName;
         _sort = sort;
     }
 
-    public IDashboardColumnHeader Create(VcsColumnImmutable columnImmutable)
+    public IDashboardColumnHeader Create(ColumnImmutable columnImmutable)
     {
         //todo: here, or in ctor?
 
         SortOrder? sort = null;
-        if (columnImmutable.Column != null)
+        if (columnImmutable.SortName != null)
         {
-            sort = columnImmutable.Column == _sortedColumn ? _sort : SortOrder.none;
+            sort = columnImmutable.SortName == _sortedColumnName ? _sort : SortOrder.none;
         }
 
-        return new VcsDashboardColumnHeader(columnImmutable, sort);
+        return new DashboardColumnHeader(columnImmutable, sort);
     }
 
-    public IDashboardColumnHeader[] CreateAll(IEnumerable<VcsColumnImmutable> columnsImmutable)
+    public IDashboardColumnHeader[] CreateAll(IEnumerable<ColumnImmutable> columnsImmutable)
     {
         return columnsImmutable.Select(Create).ToArray();
     }
 }
 
-public class VcsDashboardColumnHeader : IDashboardColumnHeader
+public class DashboardColumnHeader : IDashboardColumnHeader
 {
-    private readonly VcsColumnImmutable _columnImmutable;
+    private readonly ColumnImmutable _columnImmutable;
 
-    public VcsDashboardColumnHeader(VcsColumnImmutable columnImmutable, SortOrder? sort)
+    public DashboardColumnHeader(ColumnImmutable columnImmutable, SortOrder? sort)
     {
         Sort = sort;
         _columnImmutable = columnImmutable;
@@ -88,19 +79,16 @@ public class VcsDashboardColumnHeader : IDashboardColumnHeader
                 _ => SortOrder.ascending
             };
 
-            return $"<a href = \"/VcsRequestForSupport/Dashboard?columnName={_columnImmutable.Name}&sort={clickSort}\">{_columnImmutable.DisplayName}</a>";
+            //todo: need current page or passed in
+            return $"<a href = \"/VcsRequestForSupport/Dashboard?columnName={_columnImmutable.SortName}&sort={clickSort}\">{_columnImmutable.DisplayName}</a>";
         }
     }
 
-    //public string DisplayName => _columnImmutable.DisplayName;
-    //public string? Name => _columnImmutable.Name;
     public SortOrder? Sort { get; }
 }
 
 public interface IDashboardColumnHeader
 {
-    //string DisplayName { get; }
-    //string? Name { get; }
     SortOrder? Sort { get; }
     string ContentAsHtml { get; }
 }
@@ -126,14 +114,6 @@ public class VcsDashboardRow : IDashboardRow<ReferralDto>
     public VcsDashboardRow(ReferralDto referral)
     {
         Item = referral;
-        //Cells = new DashboardCell[]
-        //{
-        //    new($"<a href=\"/VcsRequestForSupport/ConnectDetails?id={referral.Id}\" class=\"govuk-!-margin-right-1\">{referral.RecipientDto.Name}</a>"),
-        //    new(referral.Created?.ToString("dd-MMM-yyyy") ?? ""),
-        //    new(referral.Id.ToString("X4")),
-        //    //todo: don't repeat partial name for each row??
-        //    new(null, "_ConnectionStatus")
-        //};
     }
 
     public IEnumerable<IDashboardCell> Cells
@@ -147,8 +127,6 @@ public class VcsDashboardRow : IDashboardRow<ReferralDto>
             yield return new DashboardCell(null, "_ConnectionStatus");
         }
     }
-
-    //public IEnumerable<IDashboardCell> Cells { get; }
 }
 
 public interface IDashboard<out T>
@@ -159,7 +137,6 @@ public interface IDashboard<out T>
     IPagination Pagination { get; set; }
 }
 
-//todo: move to shared
 // matches aria-sort values
 public enum SortOrder
 {
@@ -173,12 +150,12 @@ public enum SortOrder
 [Authorize]
 public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
 {
-    private static VcsColumnImmutable[] _columnImmutables = 
+    private static ColumnImmutable[] _columnImmutables = 
     {
-        new("Recipient name", Column.RecipientName),
-        new("Date received", Column.DateReceived),
-        new("Request number", null),
-        new("Status", Column.Status)
+        new("Recipient name", Column.RecipientName.ToString()),
+        new("Date received", Column.DateReceived.ToString()),
+        new("Request number"),
+        new("Status", Column.Status.ToString())
     };
 
     private readonly IReferralClientService _referralClientService;
@@ -234,7 +211,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             sort = SortOrder.descending;
         }
 
-        _columnHeaders = new VcsDashboardColumnHeaderFactory(column, sort).CreateAll(_columnImmutables);
+        _columnHeaders = new DashboardColumnHeaderFactory(column.ToString(), sort).CreateAll(_columnImmutables);
 
         SearchResults = await GetConnections(user.OrganisationId, column, sort);
         TotalResults = SearchResults.TotalCount;
