@@ -172,8 +172,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 
     [BindProperty]
     public int CurrentPage { get; set; } = 1;
-    public int PageSize { get; set; } = 10;
-    public int TotalResults { get; set; }
+    public const int PageSize = 10;
 
     public SortOrder[]? Sort { get; set; }
 
@@ -217,11 +216,9 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
         _columnHeaders = new DashboardColumnHeaderFactory(column.ToString(), sort, "/VcsRequestForSupport/Dashboard").CreateAll(_columnImmutables);
 
         SearchResults = await GetConnections(user.OrganisationId, column, sort);
-        TotalResults = SearchResults.TotalCount;
 
         _rows = SearchResults.Items.Select(r => new VcsDashboardRow(r));
 
-        //todo: no pagination
         Pagination = new DashboardPagination(SearchResults!.TotalPages, CurrentPage, column, sort);
     }
 
