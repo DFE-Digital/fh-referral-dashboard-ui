@@ -28,11 +28,13 @@ public class DashboardColumnHeaderFactory
 {
     private readonly string _sortedColumnName;
     private readonly SortOrder _sort;
+    private readonly string _pagePath;
 
-    public DashboardColumnHeaderFactory(string sortedColumnName, SortOrder sort)
+    public DashboardColumnHeaderFactory(string sortedColumnName, SortOrder sort, string pagePath)
     {
         _sortedColumnName = sortedColumnName;
         _sort = sort;
+        _pagePath = pagePath;
     }
 
     public IDashboardColumnHeader Create(ColumnImmutable columnImmutable)
@@ -45,7 +47,7 @@ public class DashboardColumnHeaderFactory
             sort = columnImmutable.SortName == _sortedColumnName ? _sort : SortOrder.none;
         }
 
-        return new DashboardColumnHeader(columnImmutable, sort);
+        return new DashboardColumnHeader(columnImmutable, sort, _pagePath);
     }
 
     public IDashboardColumnHeader[] CreateAll(IEnumerable<ColumnImmutable> columnsImmutable)
@@ -57,11 +59,13 @@ public class DashboardColumnHeaderFactory
 public class DashboardColumnHeader : IDashboardColumnHeader
 {
     private readonly ColumnImmutable _columnImmutable;
+    private readonly string _pagePath;
 
-    public DashboardColumnHeader(ColumnImmutable columnImmutable, SortOrder? sort)
+    public DashboardColumnHeader(ColumnImmutable columnImmutable, SortOrder? sort, string pagePath)
     {
         Sort = sort;
         _columnImmutable = columnImmutable;
+        _pagePath = pagePath;
     }
 
     public string ContentAsHtml
@@ -79,8 +83,7 @@ public class DashboardColumnHeader : IDashboardColumnHeader
                 _ => SortOrder.ascending
             };
 
-            //todo: need current page or passed in
-            return $"<a href = \"/VcsRequestForSupport/Dashboard?columnName={_columnImmutable.SortName}&sort={clickSort}\">{_columnImmutable.DisplayName}</a>";
+            return $"<a href = \"{_pagePath}?columnName={_columnImmutable.SortName}&sort={clickSort}\">{_columnImmutable.DisplayName}</a>";
         }
     }
 
@@ -211,7 +214,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             sort = SortOrder.descending;
         }
 
-        _columnHeaders = new DashboardColumnHeaderFactory(column.ToString(), sort).CreateAll(_columnImmutables);
+        _columnHeaders = new DashboardColumnHeaderFactory(column.ToString(), sort, "/VcsRequestForSupport/Dashboard").CreateAll(_columnImmutables);
 
         SearchResults = await GetConnections(user.OrganisationId, column, sort);
         TotalResults = SearchResults.TotalCount;
