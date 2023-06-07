@@ -12,6 +12,7 @@ using FamilyHubs.SharedKernel.Razor.Pagination;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
+//todo: make some of these internal when move to shared
 public class ColumnImmutable
 {
     public string DisplayName { get; }
@@ -26,18 +27,24 @@ public class ColumnImmutable
 
 public class DashboardColumnHeaderFactory
 {
+    private readonly IEnumerable<ColumnImmutable> _columnsImmutable;
     private readonly string _sortedColumnName;
     private readonly SortOrder _sort;
     private readonly string _pagePath;
 
-    public DashboardColumnHeaderFactory(string sortedColumnName, SortOrder sort, string pagePath)
+    public DashboardColumnHeaderFactory(
+        IEnumerable<ColumnImmutable> columnsImmutable,
+        string pagePath,
+        string sortedColumnName,
+        SortOrder sort)
     {
+        _columnsImmutable = columnsImmutable;
         _sortedColumnName = sortedColumnName;
         _sort = sort;
         _pagePath = pagePath;
     }
 
-    public IDashboardColumnHeader Create(ColumnImmutable columnImmutable)
+    private IDashboardColumnHeader Create(ColumnImmutable columnImmutable)
     {
         //todo: here, or in ctor?
 
@@ -50,9 +57,9 @@ public class DashboardColumnHeaderFactory
         return new DashboardColumnHeader(columnImmutable, sort, _pagePath);
     }
 
-    public IDashboardColumnHeader[] CreateAll(IEnumerable<ColumnImmutable> columnsImmutable)
+    public IDashboardColumnHeader[] CreateAll()
     {
-        return columnsImmutable.Select(Create).ToArray();
+        return _columnsImmutable.Select(Create).ToArray();
     }
 }
 
@@ -213,7 +220,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             sort = SortOrder.descending;
         }
 
-        _columnHeaders = new DashboardColumnHeaderFactory(column.ToString(), sort, "/VcsRequestForSupport/Dashboard").CreateAll(_columnImmutables);
+        _columnHeaders = new DashboardColumnHeaderFactory(_columnImmutables, "/VcsRequestForSupport/Dashboard", column.ToString(), sort).CreateAll();
 
         SearchResults = await GetConnections(user.OrganisationId, column, sort);
 
