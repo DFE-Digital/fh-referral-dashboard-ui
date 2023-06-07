@@ -1,4 +1,5 @@
-﻿using FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
+﻿using FamilyHubs.RequestForSupport.Web.VcsDashboard;
+using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 
 namespace FamilyHubs.RequestForSupport.Web.Dashboard;

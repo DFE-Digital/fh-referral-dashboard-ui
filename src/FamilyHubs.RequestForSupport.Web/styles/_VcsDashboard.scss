@@ -3,12 +3,6 @@
 /* the commented out widths are the equivalent ratio widths that add up to 100%, */
 /* but even then the last two columns aren't of equal actual width, due to box-sizing and padding */
 
-/*todo: part of shared*/
-.fh-dashboard {
-    // move the table padding to after the scrollable pane
-    @include govuk-responsive-margin(6, "bottom");
-}
-
 table.app-vcs-dashboard {
 
     // move the table padding to after the scrollable pane

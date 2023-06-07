@@ -1,4 +1,4 @@
-﻿namespace FamilyHubs.RequestForSupport.Web.Dashboard;
+﻿namespace FamilyHubs.RequestForSupport.Web.VcsDashboard;
 
 public enum Column
 {
