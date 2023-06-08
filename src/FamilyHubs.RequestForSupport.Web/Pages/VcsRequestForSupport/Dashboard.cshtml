@@ -1,0 +1,18 @@
+﻿@page
+
+@model DashboardModel
+@{
+    ViewData["Title"] = "Received requests";
+}
+
+@* todo: borrow the status box (for accessibility) from the moj component (or perhaps do without the status box?) (see createStatusBox) *@
+@* todo: borrow some of the moj js code and sort in the front end if there is only a single page (sort would have to be case insensitive) *@
+@* todo: highlight on selected header is slightly too short*@
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-6">Received requests</h1>
+    </div>
+</div>
+
+<partial name="_Dashboard" model='Model' />

@@ -1,0 +1,136 @@
+{
+  "GovUkOidcConfiguration": {
+    "StubAuthentication": {
+      "StubUsers": [
+        {
+          "User": {
+            "Email": "dfeAdmin.user@stub.com",
+            "Sub": "dfeAdmin.user@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "DfeAdmin"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "-1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "FullName",
+              "Value": "dfeAdmin user"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1234"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "laOrgOne.LaAdmin@stub.com",
+            "Sub": "laOrgOne.LaAdmin@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "LaAdmin"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "FullName",
+              "Value": "dfeAdmin User"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1235"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "vcsAdmin2.VcsAdmin@stub.com",
+            "Sub": "vcsAdmin2.VcsAdmin@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "Team",
+              "Value": "VCS Admin"
+            },
+            {
+              "Name": "role",
+              "Value": "VcsAdmin"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "97"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "FullName",
+              "Value": "vcsAdmin2 User"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1236"
+            },
+            {
+              "Name": "Email",
+              "Value": "vcs.user@email.com"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "joe.professional@stub.com",
+            "Sub": "joe.professional@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "Team",
+              "Value": "Social Worker"
+            },
+            {
+              "Name": "role",
+              "Value": "Professional"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "FullName",
+              "Value": "joe professional"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            },
+            {
+              "Name": "Email ",
+              "Value": "joe.professional@stub.com"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

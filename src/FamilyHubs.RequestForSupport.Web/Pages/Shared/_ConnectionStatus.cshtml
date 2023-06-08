@@ -1,0 +1,18 @@
+﻿
+@model FamilyHubs.ReferralService.Shared.Dto.ReferralDto
+
+@switch (Model.Status.Name)
+{
+    case "Opened":
+        <strong class="govuk-tag govuk-tag--yellow">Opened</strong>
+        break;
+    case "Accepted":
+        <strong class="govuk-tag govuk-tag--green">Accepted</strong>
+        break;
+    case "Declined":
+        <strong class="govuk-tag govuk-tag--red">Declined</strong>
+        break;
+    default:
+        <strong class="govuk-tag govuk-tag--blue">New</strong>
+        break;
+}
