@@ -34,8 +34,6 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 
     public IPagination Pagination { get; set; }
 
-    [BindProperty]
-    public int CurrentPage { get; set; } = 1;
     public const int PageSize = 10;
 
     public SortOrder[]? Sort { get; set; }
@@ -59,9 +57,6 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             RedirectToPage("/Error/401");
         }
 
-        if (currentPage != null)
-            CurrentPage = currentPage.Value;
-
         Column column;
         if (columnName != null)
         {
@@ -79,14 +74,16 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 
         _columnHeaders = new DashboardColumnHeaderFactory(_columnImmutables, "/VcsRequestForSupport/Dashboard", column.ToString(), sort).CreateAll();
 
-        SearchResults = await GetConnections(user.OrganisationId, column, sort);
+        currentPage ??= 1;
+
+        SearchResults = await GetConnections(user.OrganisationId, currentPage.Value, column, sort);
 
         _rows = SearchResults.Items.Select(r => new VcsDashboardRow(r));
 
-        Pagination = new DashboardPagination(SearchResults!.TotalPages, CurrentPage, column, sort);
+        Pagination = new DashboardPagination(SearchResults!.TotalPages, currentPage.Value, column, sort);
     }
 
-    private async Task<PaginatedList<ReferralDto>> GetConnections(string organisationId, Column column, SortOrder sort)
+    private async Task<PaginatedList<ReferralDto>> GetConnections(string organisationId, int currentPage, Column column, SortOrder sort)
     {
         var referralOrderBy = column switch
         {
@@ -101,7 +98,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
         //todo: assert/throw if Sort is None?
 
         return await _referralClientService.GetRequestsForConnectionByOrganisationId(
-            organisationId, referralOrderBy, sort == SortOrder.ascending, CurrentPage, PageSize);
+            organisationId, referralOrderBy, sort == SortOrder.ascending, currentPage, PageSize);
     }
 
     LinkStatus IFamilyHubsHeader.GetStatus(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
