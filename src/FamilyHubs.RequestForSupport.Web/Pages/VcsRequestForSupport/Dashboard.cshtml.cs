@@ -33,10 +33,10 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 
     public const int PageSize = 10;
 
-    private IEnumerable<IDashboardColumnHeader> _columnHeaders = Enumerable.Empty<IDashboardColumnHeader>();
-    private IEnumerable<IDashboardRow<ReferralDto>> _rows = Enumerable.Empty<IDashboardRow<ReferralDto>>();
-    IEnumerable<IDashboardColumnHeader> IDashboard<ReferralDto>.ColumnHeaders => _columnHeaders;
-    IEnumerable<IDashboardRow<ReferralDto>> IDashboard<ReferralDto>.Rows => _rows;
+    private IEnumerable<IColumnHeader> _columnHeaders = Enumerable.Empty<IColumnHeader>();
+    private IEnumerable<IRow<ReferralDto>> _rows = Enumerable.Empty<IRow<ReferralDto>>();
+    IEnumerable<IColumnHeader> IDashboard<ReferralDto>.ColumnHeaders => _columnHeaders;
+    IEnumerable<IRow<ReferralDto>> IDashboard<ReferralDto>.Rows => _rows;
 
     public DashboardModel(IReferralClientService referralClientService)
     {
@@ -60,7 +60,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             sort = SortOrder.descending;
         }
 
-        _columnHeaders = new DashboardColumnHeaderFactory(_columnImmutables, "/VcsRequestForSupport/Dashboard", column.ToString(), sort)
+        _columnHeaders = new ColumnHeaderFactory(_columnImmutables, "/VcsRequestForSupport/Dashboard", column.ToString(), sort)
             .CreateAll();
 
         var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
