@@ -28,9 +28,7 @@ public static class StartupExtensions
                 parsed ? logLevel : LogEventLevel.Warning);
         });
 
-        // *****  REQUIRED SECTION START
         builder.Services.AddAndConfigureGovUkAuthentication(builder.Configuration);
-        // *****  REQUIRED SECTION END
     }
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
@@ -102,11 +100,7 @@ public static class StartupExtensions
 
         app.UseRouting();
 
-        //app.UseAuthorization();
-
-        // *****  REQUIRED SECTION START
         app.UseGovLoginAuthentication();
-        // *****  REQUIRED SECTION END
 
         app.MapRazorPages();
 
