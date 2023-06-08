@@ -1,8 +1,7 @@
-﻿using FamilyHubs.RequestForSupport.Web.VcsDashboard;
-using FamilyHubs.SharedKernel.Razor.Dashboard;
+﻿using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 
-namespace FamilyHubs.RequestForSupport.Web.Dashboard;
+namespace FamilyHubs.RequestForSupport.Web.VcsDashboard;
 
 //todo: make more generic
 public class DashboardPagination : LargeSetPagination, ILinkPagination
