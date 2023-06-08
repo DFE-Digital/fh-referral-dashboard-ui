@@ -28,13 +28,10 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
     private readonly IReferralClientService _referralClientService;
 
     string? IDashboard<ReferralDto>.TableClass => "app-vcs-dashboard";
-    public bool ShowNavigationMenu => true;
 
     public IPagination Pagination { get; set; }
 
     public const int PageSize = 10;
-
-    public SortOrder[]? Sort { get; set; }
 
     private IEnumerable<IDashboardColumnHeader> _columnHeaders = Enumerable.Empty<IDashboardColumnHeader>();
     private IEnumerable<IDashboardRow<ReferralDto>> _rows = Enumerable.Empty<IDashboardRow<ReferralDto>>();
@@ -63,13 +60,14 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             sort = SortOrder.descending;
         }
 
-        _columnHeaders = new DashboardColumnHeaderFactory(_columnImmutables, "/VcsRequestForSupport/Dashboard", column.ToString(), sort).CreateAll();
+        _columnHeaders = new DashboardColumnHeaderFactory(_columnImmutables, "/VcsRequestForSupport/Dashboard", column.ToString(), sort)
+            .CreateAll();
 
         var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
 
         _rows = searchResults.Items.Select(r => new VcsDashboardRow(r));
 
-        Pagination = new DashboardPagination(searchResults!.TotalPages, currentPage.Value, column, sort);
+        Pagination = new DashboardPagination(searchResults.TotalPages, currentPage.Value, column, sort);
     }
 
     private async Task<PaginatedList<ReferralDto>> GetConnections(
@@ -84,11 +82,8 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             //todo: check sent == received
             Column.DateReceived => ReferralOrderBy.DateSent,
             Column.Status => ReferralOrderBy.Status,
-            //todo: throw instead?
-            _ => ReferralOrderBy.NotSet
+            _ => throw new InvalidOperationException($"Unexpected sort column {column}")
         };
-
-        //todo: assert/throw if Sort is None?
 
         return await _referralClientService.GetRequestsForConnectionByOrganisationId(
             organisationId, referralOrderBy, sort == SortOrder.ascending, currentPage, PageSize);
