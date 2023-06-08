@@ -48,7 +48,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
         Pagination = new DontShowPagination();
     }
 
-    public async Task OnGet(string? columnName, SortOrder sort, int? currentPage)
+    public async Task OnGet(string? columnName, SortOrder sort, int? currentPage = 1)
     {
         var user = HttpContext.GetFamilyHubsUser();
         if (user.Role != "VcsAdmin")
@@ -65,9 +65,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 
         _columnHeaders = new DashboardColumnHeaderFactory(_columnImmutables, "/VcsRequestForSupport/Dashboard", column.ToString(), sort).CreateAll();
 
-        currentPage ??= 1;
-
-        var searchResults = await GetConnections(user.OrganisationId, currentPage.Value, column, sort);
+        var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
 
         _rows = searchResults.Items.Select(r => new VcsDashboardRow(r));
 
