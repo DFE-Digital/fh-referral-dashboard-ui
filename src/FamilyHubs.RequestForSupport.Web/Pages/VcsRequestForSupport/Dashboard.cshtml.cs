@@ -14,6 +14,7 @@ using FamilyHubs.SharedKernel.Razor.Pagination;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
+//todo: most of this can go in a base class
 [Authorize]
 public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
 {
@@ -29,8 +30,6 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 
     string? IDashboard<ReferralDto>.TableClass => "app-vcs-dashboard";
     public bool ShowNavigationMenu => true;
-
-    public PaginatedList<ReferralDto>? SearchResults { get; set; }
 
     public IPagination Pagination { get; set; }
 
@@ -76,14 +75,18 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 
         currentPage ??= 1;
 
-        SearchResults = await GetConnections(user.OrganisationId, currentPage.Value, column, sort);
+        var searchResults = await GetConnections(user.OrganisationId, currentPage.Value, column, sort);
 
-        _rows = SearchResults.Items.Select(r => new VcsDashboardRow(r));
+        _rows = searchResults.Items.Select(r => new VcsDashboardRow(r));
 
-        Pagination = new DashboardPagination(SearchResults!.TotalPages, currentPage.Value, column, sort);
+        Pagination = new DashboardPagination(searchResults!.TotalPages, currentPage.Value, column, sort);
     }
 
-    private async Task<PaginatedList<ReferralDto>> GetConnections(string organisationId, int currentPage, Column column, SortOrder sort)
+    private async Task<PaginatedList<ReferralDto>> GetConnections(
+        string organisationId,
+        int currentPage,
+        Column column,
+        SortOrder sort)
     {
         var referralOrderBy = column switch
         {
