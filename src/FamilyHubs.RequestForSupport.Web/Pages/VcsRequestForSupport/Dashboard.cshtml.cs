@@ -1,5 +1,4 @@
 using FamilyHubs.RequestForSupport.Core.ApiClients;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Models;
@@ -45,6 +44,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
     public DashboardModel(IReferralClientService referralClientService)
     {
         _referralClientService = referralClientService;
+        //todo: nullable, so don't have to create this dummy?
         Pagination = new DontShowPagination();
     }
 
@@ -56,17 +56,9 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             RedirectToPage("/Error/401");
         }
 
-        Column column;
-        if (columnName != null)
+        if (columnName == null|| !Enum.TryParse(columnName, true, out Column column))
         {
-            if (!Enum.TryParse(columnName, true, out column))
-            {
-                //todo: throw? default? someone's been messing with the url!
-            }
-        }
-        else
-        {
-            // default when first load the page
+            // default when first load the page, or user has manually changed the url
             column = Column.DateReceived;
             sort = SortOrder.descending;
         }
