@@ -3,7 +3,7 @@ using FamilyHubs.SharedKernel.Razor.Pagination;
 
 namespace FamilyHubs.RequestForSupport.Web.VcsDashboard;
 
-//todo: make more generic
+//todo: could have a generic LargeSetLinkPagination that takes the path in the ctor and uses columnname as a string
 public class DashboardPagination : LargeSetPagination, ILinkPagination
 {
     private readonly Column _column;
