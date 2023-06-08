@@ -57,7 +57,7 @@ public static class StartupExtensions
     {
         services.AddSecuredTypedHttpClient<IReferralClientService, ReferralClientService>((serviceProvider, httpClient) =>
         {
-            httpClient.BaseAddress = new Uri(configuration.GetValue<string>("ReferralUrl")!);
+            httpClient.BaseAddress = new Uri(configuration.GetValue<string>("ReferralApiUrl")!);
         });
     }
 
