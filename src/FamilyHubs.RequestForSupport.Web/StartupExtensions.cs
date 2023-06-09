@@ -27,14 +27,14 @@ public static class StartupExtensions
             loggerConfiguration.WriteTo.Console(
                 parsed ? logLevel : LogEventLevel.Warning);
         });
-
-        builder.Services.AddAndConfigureGovUkAuthentication(builder.Configuration);
     }
 
-    public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
+    public static void ConfigureServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         //services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
+
+        services.AddAndConfigureGovUkAuthentication(configuration);
 
         // Add services to the container.
         services.AddHttpClients(configuration);
