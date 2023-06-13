@@ -18,7 +18,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 {
     private static ColumnImmutable[] _columnImmutables = 
     {
-        new("Recipient name", Column.RecipientName.ToString()),
+        new("Contact in family", Column.ContactInFamily.ToString()),
         new("Date received", Column.DateReceived.ToString()),
         new("Request number"),
         new("Status", Column.Status.ToString())
@@ -77,7 +77,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
     {
         var referralOrderBy = column switch
         {
-            Column.RecipientName => ReferralOrderBy.RecipientName,
+            Column.ContactInFamily => ReferralOrderBy.RecipientName,
             //todo: check sent == received
             Column.DateReceived => ReferralOrderBy.DateSent,
             Column.Status => ReferralOrderBy.Status,

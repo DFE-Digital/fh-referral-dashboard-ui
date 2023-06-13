@@ -69,7 +69,7 @@ public class WhenUsingTheVcsDashboard
     public async Task ThenOnGetOneRowIsPrepared()
     {
         //Act & Arrange
-        await _pageModel.OnGet("RecipientName", SortOrder.ascending);
+        await _pageModel.OnGet("ContactInFamily", SortOrder.ascending);
 
         //Assert
         var dashboard = _pageModel as IDashboard<ReferralDto>;

@@ -2,7 +2,7 @@
 
 public enum Column
 {
-    RecipientName,
+    ContactInFamily,
     DateReceived,
     Status,
     Last = Status
