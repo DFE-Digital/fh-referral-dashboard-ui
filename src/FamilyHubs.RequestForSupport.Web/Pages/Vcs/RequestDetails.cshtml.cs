@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
+//todo: status to open when viewed?
+
 [Authorize]
 public class VcsRequestDetailsPageModel : PageModel
 {

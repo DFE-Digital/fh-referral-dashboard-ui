@@ -17,8 +17,9 @@
         <dt class="govuk-summary-list__key">
             Email
         </dt>
+        @* todo: don't think we should use mailto (or tel) *@
         <dd class="govuk-summary-list__value">
-            <a href=$"mailto:{@Model.EmailAddress}">@Model.EmailAddress</a>
+            <a href="mailto:@(Model.EmailAddress)">@Model.EmailAddress</a>
         </dd>
         <dd class="govuk-summary-list__actions">
         </dd>
@@ -28,17 +29,7 @@
             Phone
         </dt>
         <dd class="govuk-summary-list__value">
-            <a href=$"tel:{@Model.PhoneNumber}">@Model.PhoneNumber</a>
-        </dd>
-        <dd class="govuk-summary-list__actions">
-        </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            Role
-        </dt>
-        <dd class="govuk-summary-list__value">
-            @Model.Role
+            <a href="tel:@(Model.PhoneNumber)">@Model.PhoneNumber</a>
         </dd>
         <dd class="govuk-summary-list__actions">
         </dd>
