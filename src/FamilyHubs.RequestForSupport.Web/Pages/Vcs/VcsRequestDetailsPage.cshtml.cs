@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
+namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
 [Authorize]
 public class VcsRequestDetailsPageModel : PageModel

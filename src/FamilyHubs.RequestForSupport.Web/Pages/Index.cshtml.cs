@@ -14,7 +14,7 @@ public class IndexModel : PageModel
         //todo: vcs admin or pro
         if(user.Role == "VcsAdmin")
         {
-            return RedirectToPage("/VcsRequestForSupport/Dashboard");
+            return RedirectToPage("/Vcs/Dashboard");
         }
 
         return RedirectToPage("/Error/401");

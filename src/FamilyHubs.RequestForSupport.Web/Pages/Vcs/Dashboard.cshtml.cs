@@ -10,7 +10,7 @@ using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 
-namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
+namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
 //todo: most of this can go in a base class
 [Authorize]
@@ -59,7 +59,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             sort = SortOrder.descending;
         }
 
-        _columnHeaders = new ColumnHeaderFactory(_columnImmutables, "/VcsRequestForSupport/Dashboard", column.ToString(), sort)
+        _columnHeaders = new ColumnHeaderFactory(_columnImmutables, "/Vcs/Dashboard", column.ToString(), sort)
             .CreateAll();
 
         var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);

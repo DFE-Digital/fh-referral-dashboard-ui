@@ -2,7 +2,7 @@
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
-using FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
+using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;

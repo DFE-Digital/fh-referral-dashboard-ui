@@ -96,6 +96,42 @@
         },
         {
           "User": {
+            "Email": "phil.davies@education.gov.uk",
+            "Sub": "phil.davies@education.gov.uk"
+          },
+          "Claims": [
+            {
+              "Name": "Team",
+              "Value": "VCS Admin"
+            },
+            {
+              "Name": "role",
+              "Value": "VcsAdmin"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "97"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "FullName",
+              "Value": "Phil Davies"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1236"
+            },
+            {
+              "Name": "Email",
+              "Value": "phil.davies@education.gov.uk"
+            }
+          ]
+        },
+        {
+          "User": {
             "Email": "harsha.reddy@education.gov.uk",
             "Sub": "harsha.reddy@education.gov.uk"
           },

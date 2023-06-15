@@ -1,5 +1,5 @@
 ﻿using FamilyHubs.ReferralService.Shared.Dto;
-using FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
+using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 using FluentAssertions;
 using Moq;
 
@@ -43,6 +43,5 @@ public class WhenUsingTheVcsDetailsPage : BaseWhenUsingPage
 
         //Assert
         updateCallback.Should().Be(1);
-        
     }
 }
