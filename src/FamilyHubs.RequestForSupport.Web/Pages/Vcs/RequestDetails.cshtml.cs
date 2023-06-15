@@ -1,6 +1,5 @@
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
-using FamilyHubs.RequestForSupport.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,11 +9,8 @@ namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 [Authorize]
 public class VcsRequestDetailsPageModel : PageModel
 {
-    
     private readonly IReferralClientService _referralClientService;
     public ReferralDto Referral { get; set; } = default!;
-    public ReferrerDtoEx ReferrerEx { get; set; } = default!;
-    public bool ShowTeam { get; private set; }
 
     [BindProperty]
     public string? ReasonForRejection { get; set; }
@@ -22,16 +18,14 @@ public class VcsRequestDetailsPageModel : PageModel
     [BindProperty]
     public string? ServiceRequestResponse { get; set; }
 
-    public VcsRequestDetailsPageModel(IReferralClientService referralClientService, IConfiguration configuration)
+    public VcsRequestDetailsPageModel(IReferralClientService referralClientService)
     {
         _referralClientService = referralClientService;
-        ShowTeam = configuration.GetValue<bool>("ShowTeam");
     }
 
-    public async Task OnGet(long referralId)
+    public async Task OnGet(long id)
     {
-        Referral = await _referralClientService.GetReferralById(referralId);
-        ReferrerEx = ReferrerDtoEx.CreateReferrerDtoEx(Referral.ReferrerDto, ShowTeam);
+        Referral = await _referralClientService.GetReferralById(id);
     }
 
     public async Task OnPost(long referralId)
