@@ -1,10 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model FamilyHubs.ReferralService.Shared.Dto.RecipientDto
-@{
-
-}
+﻿@model FamilyHubs.ReferralService.Shared.Dto.RecipientDto
 
 <h2 class="govuk-heading-m">Person in family to contact</h2>
 
@@ -28,7 +22,7 @@
                     Email
                 </dt>
                 <dd class="govuk-summary-list__value">
-                   <a href=$"mailto:{@Model.Email}">@Model.Email</a>
+                   <a href="mailto:@Model.Email">@Model.Email</a>
                 </dd>
                 <dd class="govuk-summary-list__actions">
                 </dd>
@@ -41,7 +35,7 @@
                         Phone
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        <a href=$"tel:{@Model.Telephone}">@Model.Telephone</a>
+                        <a href="tel:@Model.Telephone">@Model.Telephone</a>
                     </dd>
                     <dd class="govuk-summary-list__actions">
                     </dd>
@@ -54,7 +48,7 @@
                     Text message
                 </dt>
                 <dd class="govuk-summary-list__value">
-                  <a href=$"tel:{@Model.TextPhone}">@Model.TextPhone</a>
+                  <a href="tel:@Model.TextPhone">@Model.TextPhone</a>
                 </dd>
                 <dd class="govuk-summary-list__actions">
                 </dd>
