@@ -1,6 +1,10 @@
 ﻿@page
 @model FamilyHubs.RequestForSupport.Web.Pages.Vcs.VcsRequestDetailsPageModel
 
+@section Back {
+    <a asp-page="/Vcs/Dashboard" class="govuk-back-link">Back</a>
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l">Request @Model.Referral.Id.ToString("X6")</h1>
