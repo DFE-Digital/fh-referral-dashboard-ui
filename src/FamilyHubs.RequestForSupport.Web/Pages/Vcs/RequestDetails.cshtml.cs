@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
 //todo: status to open when viewed?
-//todo: show county
 //todo: encoding strings is converting /r/n/ to &#xD;&#xA; convert line endings to <br /> first
 
 [Authorize]
@@ -27,29 +26,52 @@ public class VcsRequestDetailsPageModel : PageModel
         _referralClientService = referralClientService;
     }
 
-    public async Task OnGet(long id)
+    public async Task OnGet(int id)
     {
         Referral = await _referralClientService.GetReferralById(id);
     }
 
-    public async Task OnPost(long referralId)
+    public async Task<IActionResult> OnPost(bool sendResponse, bool returnLater, int id)
     {
-        var referral = await _referralClientService.GetReferralById(referralId);
+        var referral = await _referralClientService.GetReferralById(id);
 
+        //todo: handle when they don't click accept or decline
+
+        //todo: api client shouldn't have to do this
         List<ReferralStatusDto> statuses = await _referralClientService.GetReferralStatuses();
 
-        if (ServiceRequestResponse == "Accepted")
+        //todo: consts, or even better enum for status
+
+        string? newStatus = null;
+        string? redirectUrl = null;
+        if (returnLater)
         {
-            ReferralStatusDto referralStatusDto = statuses.SingleOrDefault(x => x.Name == "Accepted") ?? new ReferralStatusDto { Name = "Unknown" };
-            referral.Status = referralStatusDto;
-            await _referralClientService.UpdateReferral(referral);
+            newStatus = "Opened";
+            redirectUrl = "/Vcs/Dashboard";
         }
-        else
+        else if (sendResponse)
         {
-            ReferralStatusDto referralStatusDto = statuses.SingleOrDefault(x => x.Name == "Declined") ?? new ReferralStatusDto { Name = "Unknown" };
-            referral.Status = referralStatusDto;
-            referral.ReasonForDecliningSupport = ReasonForRejection;
-            await _referralClientService.UpdateReferral(referral);
+            if (ServiceRequestResponse == "Accepted")
+            {
+                newStatus = "Accepted";
+                redirectUrl = "/Vcs/RequestAccepted";
+            }
+            else if (ServiceRequestResponse == "Declined")
+            {
+                newStatus = "Declined";
+                redirectUrl = "/Vcs/RequestDeclined";
+                referral.ReasonForDecliningSupport = ReasonForRejection;
+            }
         }
+
+        if (newStatus == null)
+        {
+            throw new InvalidOperationException("Unexpected values in posted form");
+        }
+
+        referral.Status = statuses.Single(x => x.Name == newStatus);
+        await _referralClientService.UpdateReferral(referral);
+
+        return RedirectToPage(redirectUrl);
     }
 }
