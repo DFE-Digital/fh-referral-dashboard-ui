@@ -1,0 +1,32 @@
+﻿/* todo: the widths are taken from the prototype, but don't add up to 100%. */
+/* as is, the Status column is wider than the Request number column, which I don't think was the intention. */
+/* the commented out widths are the equivalent ratio widths that add up to 100%, */
+/* but even then the last two columns aren't of equal actual width, due to box-sizing and padding */
+
+table.app-vcs-dashboard {
+
+    // move the table padding to after the scrollable pane
+    margin-bottom: 0;
+
+    tr {
+        > th:nth-child(1) {
+            width: 25%;
+            /*width: 33.3%*/
+        }
+
+        > th:nth-child(2) {
+            width: 20%;
+            /*width: 26.6%;*/
+        }
+
+        > th:nth-child(3) {
+            width: 15%;
+            /*width: 20%;*/
+        }
+
+        > th:nth-child(4) {
+            width: 15%;
+            /*width: 20%;*/
+        }
+    }
+}

@@ -1,103 +1,95 @@
 using FamilyHubs.RequestForSupport.Core.ApiClients;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Models;
-using FamilyHubs.RequestForSupport.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ReferralService.Shared.Enums;
+using FamilyHubs.RequestForSupport.Web.VcsDashboard;
+using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication;
-using FamilyHubs.SharedKernel.Identity.Models;
+using FamilyHubs.SharedKernel.Razor.Pagination;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
 
+//todo: most of this can go in a base class
 [Authorize]
-public class DashboardModel : PageModel, IFamilyHubsHeader
+public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
 {
+    private static ColumnImmutable[] _columnImmutables = 
+    {
+        new("Contact in family", Column.ContactInFamily.ToString()),
+        new("Date received", Column.DateReceived.ToString()),
+        new("Request number"),
+        new("Status", Column.Status.ToString())
+    };
+
     private readonly IReferralClientService _referralClientService;
 
-    public bool ShowNavigationMenu => true;
-    public bool ShowTeam { get; private set; }
-
-    public PaginatedList<ReferralDto> SearchResults { get; set; } = new PaginatedList<ReferralDto>();
+    string? IDashboard<ReferralDto>.TableClass => "app-vcs-dashboard";
 
     public IPagination Pagination { get; set; }
 
-    [BindProperty]
-    public string OrganisationId { get; set; } = string.Empty;
+    public const int PageSize = 20;
 
-    [BindProperty]
-    public int CurrentPage { get; set; } = 1;
-    public int PageSize { get; set; } = 10;
-    public int TotalResults { get; set; }
+    private IEnumerable<IColumnHeader> _columnHeaders = Enumerable.Empty<IColumnHeader>();
+    private IEnumerable<IRow<ReferralDto>> _rows = Enumerable.Empty<IRow<ReferralDto>>();
+    IEnumerable<IColumnHeader> IDashboard<ReferralDto>.ColumnHeaders => _columnHeaders;
+    IEnumerable<IRow<ReferralDto>> IDashboard<ReferralDto>.Rows => _rows;
 
-    public Dictionary<string, bool> ColumnSort { get; set; } = new Dictionary<string, bool>()
-    {
-        { "Team", true },
-        { "DateSent", true },
-        { "Status", true }
-    };
-
-    public DashboardModel(IReferralClientService referralClientService, IConfiguration configuration)
+    public DashboardModel(IReferralClientService referralClientService)
     {
         _referralClientService = referralClientService;
-        ShowTeam = configuration.GetValue<bool>("ShowTeam");
+        //todo: nullable, so don't have to create this dummy?
         Pagination = new DontShowPagination();
     }
-    public async Task OnGet(string? referralOrderBy, bool isAssending, int? currentPage)
+
+    public async Task OnGet(string? columnName, SortOrder sort, int? currentPage = 1)
     {
         var user = HttpContext.GetFamilyHubsUser();
         if (user.Role != "VcsAdmin")
         {
-            RedirectToPage("/Error/401", new
-            {
-
-            });
+            RedirectToPage("/Error/401");
         }
 
-        if (currentPage != null)
-            CurrentPage = currentPage.Value;
-
-        if (referralOrderBy != null)
+        if (columnName == null|| !Enum.TryParse(columnName, true, out Column column))
         {
-            ColumnSort[referralOrderBy] = !isAssending;
+            // default when first load the page, or user has manually changed the url
+            column = Column.DateReceived;
+            sort = SortOrder.descending;
         }
 
-        
-        
-        OrganisationId = user.OrganisationId;
-        //var team = HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "Team");
-        
-        await GetConnections(OrganisationId, referralOrderBy, !isAssending); 
+        _columnHeaders = new ColumnHeaderFactory(_columnImmutables, "/VcsRequestForSupport/Dashboard", column.ToString(), sort)
+            .CreateAll();
 
+        var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
+
+        _rows = searchResults.Items.Select(r => new VcsDashboardRow(r));
+
+        Pagination = new DashboardPagination(searchResults.TotalPages, currentPage.Value, column, sort);
     }
 
-    public async Task OnPost(string organisationId, string? referralOrderBy, bool? isAssending, int? currentPage)
+    private async Task<PaginatedList<ReferralDto>> GetConnections(
+        string organisationId,
+        int currentPage,
+        Column column,
+        SortOrder sort)
     {
-        
-        //Check what we get
-        await GetConnections(organisationId, referralOrderBy, isAssending);
-    }
-
-    private async Task GetConnections(string organisationId, string? referralOrderBy, bool? isAssending)
-    {
-        if (!Enum.TryParse<ReferralOrderBy>(referralOrderBy, true, out ReferralOrderBy referralOrder))
+        var referralOrderBy = column switch
         {
-            referralOrder = ReferralOrderBy.NotSet;
-        }
+            Column.ContactInFamily => ReferralOrderBy.RecipientName,
+            //todo: check sent == received
+            Column.DateReceived => ReferralOrderBy.DateSent,
+            Column.Status => ReferralOrderBy.Status,
+            _ => throw new InvalidOperationException($"Unexpected sort column {column}")
+        };
 
-        SearchResults = await _referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, referralOrder, isAssending, CurrentPage, PageSize);
-
-        Pagination = new LargeSetPagination(SearchResults.TotalPages, CurrentPage);
-
-        TotalResults = SearchResults.TotalCount;
+        return await _referralClientService.GetRequestsForConnectionByOrganisationId(
+            organisationId, referralOrderBy, sort == SortOrder.ascending, currentPage, PageSize);
     }
 
-    public bool IsActive(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
+    LinkStatus IFamilyHubsHeader.GetStatus(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
     {
-        return link.Text == "Received requests";
+        return link.Text == "Received requests" ? LinkStatus.Active : LinkStatus.Visible;
     }
 }

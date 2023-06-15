@@ -27,16 +27,14 @@ public static class StartupExtensions
             loggerConfiguration.WriteTo.Console(
                 parsed ? logLevel : LogEventLevel.Warning);
         });
-
-        // *****  REQUIRED SECTION START
-        builder.Services.AddAndConfigureGovUkAuthentication(builder.Configuration);
-        // *****  REQUIRED SECTION END
     }
 
-    public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
+    public static void ConfigureServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         //services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
+
+        services.AddAndConfigureGovUkAuthentication(configuration);
 
         // Add services to the container.
         services.AddHttpClients(configuration);
@@ -59,7 +57,7 @@ public static class StartupExtensions
     {
         services.AddSecuredTypedHttpClient<IReferralClientService, ReferralClientService>((serviceProvider, httpClient) =>
         {
-            httpClient.BaseAddress = new Uri(configuration.GetValue<string>("ReferralUrl")!);
+            httpClient.BaseAddress = new Uri(configuration.GetValue<string>("ReferralApiUrl")!);
         });
     }
 
@@ -102,11 +100,7 @@ public static class StartupExtensions
 
         app.UseRouting();
 
-        //app.UseAuthorization();
-
-        // *****  REQUIRED SECTION START
         app.UseGovLoginAuthentication();
-        // *****  REQUIRED SECTION END
 
         app.MapRazorPages();
 

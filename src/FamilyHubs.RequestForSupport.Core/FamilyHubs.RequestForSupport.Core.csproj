@@ -7,10 +7,14 @@
 	<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NoWarn>1701;1702;S1135</NoWarn>
+  </PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.6" />
-		<PackageReference Include="FamilyHubs.SharedKernel" Version="2.0.11" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.55.0.65544">
+		<PackageReference Include="FamilyHubs.SharedKernel" Version="2.0.14" />
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.3.0.71466">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

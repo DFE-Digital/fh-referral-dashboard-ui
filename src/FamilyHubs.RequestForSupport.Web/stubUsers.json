@@ -9,7 +9,7 @@
           },
           "Claims": [
             {
-              "Name": "Role",
+              "Name": "role",
               "Value": "DfeAdmin"
             },
             {
@@ -37,7 +37,7 @@
           },
           "Claims": [
             {
-              "Name": "Role",
+              "Name": "role",
               "Value": "LaAdmin"
             },
             {
@@ -69,12 +69,12 @@
               "Value": "VCS Admin"
             },
             {
-              "Name": "Role",
+              "Name": "role",
               "Value": "VcsAdmin"
             },
             {
               "Name": "OrganisationId",
-              "Value": "1"
+              "Value": "165"
             },
             {
               "Name": "AccountStatus",
@@ -96,6 +96,42 @@
         },
         {
           "User": {
+            "Email": "harsha.reddy@education.gov.uk",
+            "Sub": "harsha.reddy@education.gov.uk"
+          },
+          "Claims": [
+            {
+              "Name": "Team",
+              "Value": "VCS Admin"
+            },
+            {
+              "Name": "role",
+              "Value": "VcsAdmin"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "165"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "FullName",
+              "Value": "harsha vcsAdmin"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1236"
+            },
+            {
+              "Name": "Email",
+              "Value": "harsha.reddy@education.gov.uk"
+            }
+          ]
+        },
+        {
+          "User": {
             "Email": "joe.professional@stub.com",
             "Sub": "joe.professional@stub.com"
           },
@@ -105,7 +141,7 @@
               "Value": "Social Worker"
             },
             {
-              "Name": "Role",
+              "Name": "role",
               "Value": "Professional"
             },
             {
@@ -127,6 +163,42 @@
             {
               "Name": "Email ",
               "Value": "joe.professional@stub.com"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "harsha.reddy@education.gov.uk",
+            "Sub": "harsha.reddy@education.gov.uk"
+          },
+          "Claims": [
+            {
+              "Name": "Team",
+              "Value": "Social Worker"
+            },
+            {
+              "Name": "role",
+              "Value": "Professional"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "FullName",
+              "Value": "harsha professional"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            },
+            {
+              "Name": "Email ",
+              "Value": "harsha.reddy@education.gov.uk"
             }
           ]
         }
