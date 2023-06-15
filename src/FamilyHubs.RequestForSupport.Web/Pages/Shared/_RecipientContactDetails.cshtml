@@ -16,8 +16,6 @@
                 <dd class="govuk-summary-list__value">
                     @Model.Name
                 </dd>
-                <dd class="govuk-summary-list__actions">
-                </dd>
             </div>
             @if (!string.IsNullOrEmpty(Model.Email))
             {
@@ -27,8 +25,6 @@
                 </dt>
                 <dd class="govuk-summary-list__value">
                    <a href="mailto:@Model.Email">@Model.Email</a>
-                </dd>
-                <dd class="govuk-summary-list__actions">
                 </dd>
             </div>
             }
@@ -41,8 +37,6 @@
                     <dd class="govuk-summary-list__value">
                         <a href="tel:@Model.Telephone">@Model.Telephone</a>
                     </dd>
-                    <dd class="govuk-summary-list__actions">
-                    </dd>
                 </div>
             }
             @if (!string.IsNullOrEmpty(Model.TextPhone))
@@ -53,8 +47,6 @@
                 </dt>
                 <dd class="govuk-summary-list__value">
                   <a href="tel:@Model.TextPhone">@Model.TextPhone</a>
-                </dd>
-                <dd class="govuk-summary-list__actions">
                 </dd>
             </div>
             }
@@ -77,9 +69,11 @@
                         {
                             <span>@Model.TownOrCity<br></span>
                         }
-                        @Model.PostCode <br>
-                </dd>
-                <dd class="govuk-summary-list__actions">
+                        @if (!string.IsNullOrEmpty(Model.County))
+                        {
+                            <span>@Model.County<br></span>
+                        }
+                        @Model.PostCode
                 </dd>
             </div>
             }

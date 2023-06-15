@@ -4,8 +4,8 @@
       "StubUsers": [
         {
           "User": {
-            "Email": "dfeAdmin.user@stub.com",
-            "Sub": "dfeAdmin.user@stub.com"
+            "Email": "DfeAdmin@example.com",
+            "Sub": "DfeAdmin@example.com"
           },
           "Claims": [
             {
@@ -21,8 +21,8 @@
               "Value": "Active"
             },
             {
-              "Name": "FullName",
-              "Value": "dfeAdmin user"
+              "Name": "Name",
+              "Value": "Dfe Admin"
             },
             {
               "Name": "PhoneNumber",
@@ -32,13 +32,13 @@
         },
         {
           "User": {
-            "Email": "laOrgOne.LaAdmin@stub.com",
-            "Sub": "laOrgOne.LaAdmin@stub.com"
+            "Email": "LaManager@example.com",
+            "Sub": "LaManager@example.com"
           },
           "Claims": [
             {
               "Name": "role",
-              "Value": "LaAdmin"
+              "Value": "LaManager"
             },
             {
               "Name": "OrganisationId",
@@ -49,8 +49,8 @@
               "Value": "Active"
             },
             {
-              "Name": "FullName",
-              "Value": "dfeAdmin User"
+              "Name": "Name",
+              "Value": "La Manager"
             },
             {
               "Name": "PhoneNumber",
@@ -60,53 +60,69 @@
         },
         {
           "User": {
-            "Email": "vcsAdmin2.VcsAdmin@stub.com",
-            "Sub": "vcsAdmin2.VcsAdmin@stub.com"
+            "Email": "VcsManager@example.com",
+            "Sub": "VcsManager@example.com"
           },
           "Claims": [
             {
-              "Name": "Team",
-              "Value": "VCS Admin"
-            },
-            {
               "Name": "role",
-              "Value": "VcsAdmin"
+              "Value": "VcsManager"
             },
             {
               "Name": "OrganisationId",
-              "Value": "165"
+              "Value": "1"
             },
             {
               "Name": "AccountStatus",
               "Value": "Active"
             },
             {
-              "Name": "FullName",
-              "Value": "vcsAdmin2 User"
+              "Name": "Name",
+              "Value": "Vcs Manager"
             },
             {
               "Name": "PhoneNumber",
               "Value": "0121 121 1236"
-            },
-            {
-              "Name": "Email",
-              "Value": "vcs.user@email.com"
             }
           ]
         },
         {
           "User": {
-            "Email": "phil.davies@education.gov.uk",
-            "Sub": "phil.davies@education.gov.uk"
+            "Email": "LaProfessional@example.com",
+            "Sub": "LaProfessional@example.com"
           },
           "Claims": [
             {
-              "Name": "Team",
-              "Value": "VCS Admin"
+              "Name": "role",
+              "Value": "LaProfessional"
             },
             {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "La Professional"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "VcsProfessional_97@example.com",
+            "Sub": "VcsProfessional_97@example.com"
+          },
+          "Claims": [
+            {
               "Name": "role",
-              "Value": "VcsAdmin"
+              "Value": "Vcs Professional"
             },
             {
               "Name": "OrganisationId",
@@ -117,32 +133,24 @@
               "Value": "Active"
             },
             {
-              "Name": "FullName",
-              "Value": "Phil Davies"
+              "Name": "Name",
+              "Value": "Vcs Professional 97"
             },
             {
               "Name": "PhoneNumber",
-              "Value": "0121 121 1236"
-            },
-            {
-              "Name": "Email",
-              "Value": "phil.davies@education.gov.uk"
+              "Value": "0121 121 1227"
             }
           ]
         },
         {
           "User": {
-            "Email": "harsha.reddy@education.gov.uk",
-            "Sub": "harsha.reddy@education.gov.uk"
+            "Email": "VcsProfessional_165@example.com",
+            "Sub": "VcsProfessional_165@example.com"
           },
           "Claims": [
             {
-              "Name": "Team",
-              "Value": "VCS Admin"
-            },
-            {
               "Name": "role",
-              "Value": "VcsAdmin"
+              "Value": "Vcs Professional"
             },
             {
               "Name": "OrganisationId",
@@ -153,32 +161,80 @@
               "Value": "Active"
             },
             {
-              "Name": "FullName",
-              "Value": "harsha vcsAdmin"
+              "Name": "Name",
+              "Value": "Vcs Professional 165"
             },
             {
               "Name": "PhoneNumber",
-              "Value": "0121 121 1236"
-            },
-            {
-              "Name": "Email",
-              "Value": "harsha.reddy@education.gov.uk"
+              "Value": "0121 121 1227"
             }
           ]
         },
         {
           "User": {
-            "Email": "joe.professional@stub.com",
-            "Sub": "joe.professional@stub.com"
+            "Email": "VcsDualRole_97@example.com",
+            "Sub": "VcsDualRole_97@example.com"
           },
           "Claims": [
             {
-              "Name": "Team",
-              "Value": "Social Worker"
+              "Name": "role",
+              "Value": "VcsDualRole"
             },
             {
+              "Name": "OrganisationId",
+              "Value": "97"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Vcs Dual Role 97"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "VcsDualRole_165@example.com",
+            "Sub": "VcsDualRole_165@example.com"
+          },
+          "Claims": [
+            {
               "Name": "role",
-              "Value": "Professional"
+              "Value": "VcsDualRole"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "165"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Vcs Dual Role 165"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "LaDualRole@example.com",
+            "Sub": "LaDualRole@example.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "LaDualRole"
             },
             {
               "Name": "OrganisationId",
@@ -189,16 +245,40 @@
               "Value": "Active"
             },
             {
-              "Name": "FullName",
-              "Value": "joe professional"
+              "Name": "Name",
+              "Value": "La Dual Role"
             },
             {
               "Name": "PhoneNumber",
               "Value": "0121 121 1227"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "phil.davies@education.gov.uk",
+            "Sub": "phil.davies@education.gov.uk"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "VcsDualRole"
             },
             {
-              "Name": "Email ",
-              "Value": "joe.professional@stub.com"
+              "Name": "OrganisationId",
+              "Value": "97"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Phil Davies"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1227"
             }
           ]
         },
@@ -209,32 +289,24 @@
           },
           "Claims": [
             {
-              "Name": "Team",
-              "Value": "Social Worker"
-            },
-            {
               "Name": "role",
-              "Value": "Professional"
+              "Value": "VcsDualRole"
             },
             {
               "Name": "OrganisationId",
-              "Value": "1"
+              "Value": "165"
             },
             {
               "Name": "AccountStatus",
               "Value": "Active"
             },
             {
-              "Name": "FullName",
-              "Value": "harsha professional"
+              "Name": "Name",
+              "Value": "Harsha Reddy"
             },
             {
               "Name": "PhoneNumber",
               "Value": "0121 121 1227"
-            },
-            {
-              "Name": "Email ",
-              "Value": "harsha.reddy@education.gov.uk"
             }
           ]
         }
