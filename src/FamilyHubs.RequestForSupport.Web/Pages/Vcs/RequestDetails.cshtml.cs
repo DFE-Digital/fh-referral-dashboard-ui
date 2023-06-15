@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
 //todo: status to open when viewed?
+//todo: show county
+//todo: encoding strings is converting /r/n/ to &#xD;&#xA; convert line endings to <br /> first
 
 [Authorize]
 public class VcsRequestDetailsPageModel : PageModel
