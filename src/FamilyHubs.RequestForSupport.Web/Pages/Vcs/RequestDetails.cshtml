@@ -1,4 +1,5 @@
 ﻿@page
+@using FamilyHubs.RequestForSupport.Core.ApiClients
 @model FamilyHubs.RequestForSupport.Web.Pages.Vcs.VcsRequestDetailsPageModel
 
 @section Back {
@@ -53,55 +54,56 @@
 
 <partial name="_ProfessionalContactDetails" for="@Model.Referral.ReferrerDto" />
 
-<form method="post" novalidate data-validate='my-form-validation'>
-    @* todo: should come from url*@
-    @*     <input asp-for="@Model.Referral.Id" type="hidden"> *@
-    <div class="govuk-form-group">
-        <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                <h2 class="govuk-fieldset__heading">
-                    Your response
-                </h2>
-            </legend>
-            <div id="contact-hint" class="govuk-hint">
-                Select one option.
-            </div>
-            <div class="govuk-radios" data-module="govuk-radios">
-                <div class="govuk-radios__item">
-                    @* todo: need to set at any point?*@
-                    <input class="govuk-radios__input" id="accept-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Accepted" @(Model.AcceptOrDecline is AcceptDecline.Accepted ? "checked" : "")>
-                    <label class="govuk-label govuk-radios__label" for="accept-request">
-                        Accept - our service will contact this person to offer support
-                    </label>
+@if ((ReferralStatus)Model.Referral.Status.Id is ReferralStatus.New or ReferralStatus.Opened)
+{
+    <form method="post" novalidate data-validate='my-form-validation'>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h2 class="govuk-fieldset__heading">
+                        Your response
+                    </h2>
+                </legend>
+                <div id="contact-hint" class="govuk-hint">
+                    Select one option.
                 </div>
+                <div class="govuk-radios" data-module="govuk-radios">
+                    <div class="govuk-radios__item">
+                        @* todo: need to set at any point?*@
+                        <input class="govuk-radios__input" id="accept-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Accepted" @(Model.AcceptOrDecline is AcceptDecline.Accepted ? "checked" : "")>
+                        <label class="govuk-label govuk-radios__label" for="accept-request">
+                            Accept - our service will contact this person to offer support
+                        </label>
+                    </div>
 
-                <div class="govuk-radios__item">
-                    <input class="govuk-radios__input" id="decline-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Declined" @(Model.AcceptOrDecline is AcceptDecline.Declined ? "checked" : "") data-aria-controls="conditional-contact">
-                    <label class="govuk-label govuk-radios__label" for="decline-request">
-                        Decline - our service will not offer support
-                    </label>
-                </div>
-                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-contact">
-                    <div class="govuk-form-group">
-                        <h1 class="govuk-label-wrapper">
-                            <label class="govuk-label govuk-label--l" for="reason-for-declining">
-                                Reason for declining
-                            </label>
-                        </h1>
-                        <div id="more-detail-hint" class="govuk-hint">
-                            You will no longer have access to this request.
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="decline-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Declined" @(Model.AcceptOrDecline is AcceptDecline.Declined ? "checked" : "") data-aria-controls="conditional-contact">
+                        <label class="govuk-label govuk-radios__label" for="decline-request">
+                            Decline - our service will not offer support
+                        </label>
+                    </div>
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-contact">
+                        <div class="govuk-form-group">
+                            <h1 class="govuk-label-wrapper">
+                                <label class="govuk-label govuk-label--l" for="reason-for-declining">
+                                    Reason for declining
+                                </label>
+                            </h1>
+                            <div id="more-detail-hint" class="govuk-hint">
+                                You will no longer have access to this request.
+                            </div>
+                            <textarea class="govuk-textarea" asp-for="ReasonForRejection" id="reason-for-declining" name="ReasonForRejection" rows="5" aria-describedby="more-detail-hint"></textarea>
                         </div>
-                        <textarea class="govuk-textarea" asp-for="ReasonForRejection" id="reason-for-declining" name="ReasonForRejection" rows="5" aria-describedby="more-detail-hint"></textarea>
                     </div>
                 </div>
+            </fieldset>
+            <div class="govuk-button-group">
+                <button type="submit" name="userAction" value="AcceptDecline" class="govuk-button" data-module="govuk-button">
+                    Send response
+                </button>
+                @* todo: styling *@
+                <button type="submit" name="userAction" value="ReturnLater" class="fh-button-link">Return later</button>
             </div>
-        </fieldset>
-        <div class="govuk-button-group">
-            <button type="submit" name="userAction" value="AcceptDecline" class="govuk-button" data-module="govuk-button">
-                Send response
-            </button>
-            @* todo: styling *@
-            <button type="submit" name="userAction" value="ReturnLater" class="fh-button-link">Return later</button>
         </div>
-    </div>
-</form>
+    </form>
+}

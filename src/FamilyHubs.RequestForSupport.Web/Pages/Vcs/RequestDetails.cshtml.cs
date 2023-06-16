@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
-//todo: status to open when viewed?
 //todo: encoding strings is converting /r/n/ to &#xD;&#xA; convert line endings to <br /> first
+//todo: declined requests shouldn't appear on the requests page
 
 public enum UserAction
 {
