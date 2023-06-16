@@ -6,6 +6,14 @@ using System.Text.Json;
 
 namespace FamilyHubs.RequestForSupport.Core.ApiClients;
 
+public enum ReferralStatus
+{
+    New = 0,
+    Opened = 1,
+    Accepted = 2,
+    Declined = 3
+}
+
 public interface IReferralClientService
 {
     Task<PaginatedList<ReferralDto>> GetRequestsForConnectionByProfessional(string professionalEmailAddress, ReferralOrderBy? orderBy, bool? isAscending, int pageNumber = 1, int pageSize = 10);
@@ -13,6 +21,7 @@ public interface IReferralClientService
     Task<ReferralDto> GetReferralById(long referralId);
     Task<List<ReferralStatusDto>> GetReferralStatuses();
     Task<string> UpdateReferral(ReferralDto referralDto);
+    Task<string> UpdateReferralStatus(long referralId, ReferralStatus referralStatus, string? reason = null);
 }
 
 public class ReferralClientService : ApiService, IReferralClientService
@@ -106,6 +115,26 @@ public class ReferralClientService : ApiService, IReferralClientService
             Method = HttpMethod.Put,
             RequestUri = new Uri(Client.BaseAddress + $"api/referrals/{referralDto.Id}"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(referralDto), Encoding.UTF8, "application/json"),
+        };
+
+        using var response = await Client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var stringResult = await response.Content.ReadAsStringAsync();
+        return stringResult;
+    }
+
+    public async Task<string> UpdateReferralStatus(long referralId, ReferralStatus referralStatus, string? reason = null)
+    {
+        var request = new HttpRequestMessage
+        {
+            // copilot's suggestion. seems good
+            //Method = HttpMethod.Put,
+            //RequestUri = new Uri(Client.BaseAddress + $"api/referrals/{referralId}/status/{referralStatusId}"),
+            Method = HttpMethod.Post,
+            //todo: might have to not send the reason if it's null
+            RequestUri = new Uri(Client.BaseAddress + $"api/referralStatus/{referralId}/{referralStatus}/{reason}"),
         };
 
         using var response = await Client.SendAsync(request);

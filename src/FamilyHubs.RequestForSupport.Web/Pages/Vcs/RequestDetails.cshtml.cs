@@ -45,35 +45,29 @@ public class VcsRequestDetailsPageModel : PageModel
 
     public async Task<IActionResult> OnPost(UserAction userAction, int id)
     {
-        var referral = await _referralClientService.GetReferralById(id);
-
         //todo: handle when they don't click accept or decline
 
-        //todo: api client shouldn't have to do this
-        List<ReferralStatusDto> statuses = await _referralClientService.GetReferralStatuses();
-
-        //todo: consts, or even better enum for status
-
-        string? newStatus = null;
+        ReferralStatus? newStatus = null;
         string? redirectUrl = null;
+        string? reason = null;
         switch (userAction)
         {
             case UserAction.AcceptDecline:
                 switch (AcceptOrDecline)
                 {
                     case AcceptDecline.Accepted:
-                        newStatus = "Accepted";
+                        newStatus = ReferralStatus.Accepted;
                         redirectUrl = "/Vcs/RequestAccepted";
                         break;
                     case AcceptDecline.Declined:
-                        newStatus = "Declined";
+                        newStatus = ReferralStatus.Declined;
                         redirectUrl = "/Vcs/RequestDeclined";
-                        referral.ReasonForDecliningSupport = ReasonForRejection;
+                        reason = ReasonForRejection;
                         break;
                 }
                 break;
             case UserAction.ReturnLater:
-                newStatus = "Opened";
+                newStatus = ReferralStatus.Opened;
                 redirectUrl = "/Vcs/Dashboard";
                 break;
         }
@@ -83,8 +77,7 @@ public class VcsRequestDetailsPageModel : PageModel
             throw new InvalidOperationException("Unexpected values in posted form");
         }
 
-        referral.Status = statuses.Single(x => x.Name == newStatus);
-        await _referralClientService.UpdateReferral(referral);
+        await _referralClientService.UpdateReferralStatus(id, newStatus.Value, reason);
 
         return RedirectToPage(redirectUrl);
     }
