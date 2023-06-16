@@ -68,14 +68,15 @@
             </div>
             <div class="govuk-radios" data-module="govuk-radios">
                 <div class="govuk-radios__item">
-                    <input class="govuk-radios__input" id="accept-request" name="ServiceRequestResponse" type="radio" value="Accepted" @(Model.ServiceRequestResponse is "Accepted" ? "checked" : "")>
+                    @* todo: need to set at any point?*@
+                    <input class="govuk-radios__input" id="accept-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Accepted" @(Model.AcceptOrDecline is AcceptDecline.Accepted ? "checked" : "")>
                     <label class="govuk-label govuk-radios__label" for="accept-request">
                         Accept - our service will contact this person to offer support
                     </label>
                 </div>
 
                 <div class="govuk-radios__item">
-                    <input class="govuk-radios__input" id="decline-request" name="ServiceRequestResponse" type="radio" value="Declined" @(Model.ServiceRequestResponse is "Declined" ? "checked" : "") data-aria-controls="conditional-contact">
+                    <input class="govuk-radios__input" id="decline-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Declined" @(Model.AcceptOrDecline is AcceptDecline.Declined ? "checked" : "") data-aria-controls="conditional-contact">
                     <label class="govuk-label govuk-radios__label" for="decline-request">
                         Decline - our service will not offer support
                     </label>
@@ -96,11 +97,11 @@
             </div>
         </fieldset>
         <div class="govuk-button-group">
-            <button type="submit" name="sendResponse" value="true" class="govuk-button" data-module="govuk-button">
+            <button type="submit" name="userAction" value="AcceptDecline" class="govuk-button" data-module="govuk-button">
                 Send response
             </button>
             @* todo: styling *@
-            <button type="submit" name="returnLater" value="true" class="fh-button-link">Return later</button>
+            <button type="submit" name="userAction" value="ReturnLater" class="fh-button-link">Return later</button>
         </div>
     </div>
 </form>

@@ -9,6 +9,18 @@ namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 //todo: status to open when viewed?
 //todo: encoding strings is converting /r/n/ to &#xD;&#xA; convert line endings to <br /> first
 
+public enum UserAction
+{
+    AcceptDecline,
+    ReturnLater
+}
+
+public enum AcceptDecline
+{
+    Accepted,
+    Declined
+}
+
 [Authorize]
 public class VcsRequestDetailsPageModel : PageModel
 {
@@ -19,7 +31,7 @@ public class VcsRequestDetailsPageModel : PageModel
     public string? ReasonForRejection { get; set; }
 
     [BindProperty]
-    public string? ServiceRequestResponse { get; set; }
+    public AcceptDecline? AcceptOrDecline { get; set; }
 
     public VcsRequestDetailsPageModel(IReferralClientService referralClientService)
     {
@@ -31,7 +43,7 @@ public class VcsRequestDetailsPageModel : PageModel
         Referral = await _referralClientService.GetReferralById(id);
     }
 
-    public async Task<IActionResult> OnPost(bool sendResponse, bool returnLater, int id)
+    public async Task<IActionResult> OnPost(UserAction userAction, int id)
     {
         var referral = await _referralClientService.GetReferralById(id);
 
@@ -44,24 +56,26 @@ public class VcsRequestDetailsPageModel : PageModel
 
         string? newStatus = null;
         string? redirectUrl = null;
-        if (returnLater)
+        switch (userAction)
         {
-            newStatus = "Opened";
-            redirectUrl = "/Vcs/Dashboard";
-        }
-        else if (sendResponse)
-        {
-            if (ServiceRequestResponse == "Accepted")
-            {
-                newStatus = "Accepted";
-                redirectUrl = "/Vcs/RequestAccepted";
-            }
-            else if (ServiceRequestResponse == "Declined")
-            {
-                newStatus = "Declined";
-                redirectUrl = "/Vcs/RequestDeclined";
-                referral.ReasonForDecliningSupport = ReasonForRejection;
-            }
+            case UserAction.AcceptDecline:
+                switch (AcceptOrDecline)
+                {
+                    case AcceptDecline.Accepted:
+                        newStatus = "Accepted";
+                        redirectUrl = "/Vcs/RequestAccepted";
+                        break;
+                    case AcceptDecline.Declined:
+                        newStatus = "Declined";
+                        redirectUrl = "/Vcs/RequestDeclined";
+                        referral.ReasonForDecliningSupport = ReasonForRejection;
+                        break;
+                }
+                break;
+            case UserAction.ReturnLater:
+                newStatus = "Opened";
+                redirectUrl = "/Vcs/Dashboard";
+                break;
         }
 
         if (newStatus == null)
