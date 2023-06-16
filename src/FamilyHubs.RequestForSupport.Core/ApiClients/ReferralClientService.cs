@@ -60,7 +60,7 @@ public class ReferralClientService : ApiService, IReferralClientService
         isAscending ??= true;
 
         //todo: fix spelling in url
-        var url = $"api/organisationreferrals/{organisationId}?orderBy={orderBy}&isAssending={isAscending}&pageNumber={pageNumber}&pageSize={pageSize}";
+        var url = $"api/organisationreferrals/{organisationId}?orderBy={orderBy}&isAssending={isAscending}&pageNumber={pageNumber}&pageSize={pageSize}&includeDeclined=false";
 
         var request = new HttpRequestMessage
         {
