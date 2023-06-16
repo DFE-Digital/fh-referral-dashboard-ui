@@ -1,3 +1,7 @@
 ﻿@use "sass:map";
 @import "../node_modules/familyhubs-frontend/styles/all";
 @import "_VcsDashboard";
+
+.app-break-spaces {
+    white-space: break-spaces;
+}

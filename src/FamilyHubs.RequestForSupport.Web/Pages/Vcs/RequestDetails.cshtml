@@ -39,7 +39,7 @@
 <div class="govuk-grid-row govuk-!-margin-top-2">
     <div class="govuk-grid-column-two-thirds">
         <h2 class="govuk-heading-m">Reason for the connection request</h2>
-        <p>@Html.Encode(Model.Referral.ReasonForSupport)</p>
+        <p class="app-break-spaces">@Model.Referral.ReasonForSupport</p>
     </div>
 </div>
 
@@ -47,8 +47,8 @@
 
 <div class="govuk-grid-row govuk-!-margin-top-2">
     <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-m">How the service can engage @Html.Encode(Model.Referral.RecipientDto.Name)</h2>
-        <p>@Html.Encode(Model.Referral.EngageWithFamily)</p>
+        <h2 class="govuk-heading-m">How the service can engage @Model.Referral.RecipientDto.Name</h2>
+        <p class="app-break-spaces">@Model.Referral.EngageWithFamily</p>
     </div>
 </div>
 
