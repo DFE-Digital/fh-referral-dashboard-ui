@@ -7,14 +7,13 @@ using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.RequestForSupport.Web.VcsDashboard;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
-using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
 //todo: most of this can go in a base class
 [Authorize]
-public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
+public class DashboardModel : PageModel, IDashboard<ReferralDto>
 {
     private static ColumnImmutable[] _columnImmutables = 
     {
@@ -86,10 +85,5 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 
         return await _referralClientService.GetRequestsForConnectionByOrganisationId(
             organisationId, referralOrderBy, sort == SortOrder.ascending, currentPage, PageSize);
-    }
-
-    LinkStatus IFamilyHubsHeader.GetStatus(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
-    {
-        return link.Text == "Received requests" ? LinkStatus.Active : LinkStatus.Visible;
     }
 }
