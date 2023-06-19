@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
+using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +56,15 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
     //todo: need to guard against user changing the id in the url to see a request they shouldn't have access to
     public async Task OnGet(int id, List<ErrorId> errors)
     {
+        //todo: can we do this generically, rather than having to do it on every get/post? (which might get forgotten)
+        var user = HttpContext.GetFamilyHubsUser();
+        if (user.Role is not (RoleTypes.VcsProfessional or RoleTypes.VcsDualRole))
+        {
+            RedirectToPage("/Error/401");
+        }
+
+        //todo: service is being updated to check user has access to the referral. we might need a custom error page to handle it
+
         Errors = errors;
         //todo: check errorIds are valid
 

@@ -47,7 +47,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
     public async Task OnGet(string? columnName, SortOrder sort, int? currentPage = 1)
     {
         var user = HttpContext.GetFamilyHubsUser();
-        if (user.Role != "VcsAdmin")
+        if (user.Role is not (RoleTypes.VcsProfessional or RoleTypes.VcsDualRole))
         {
             RedirectToPage("/Error/401");
         }
