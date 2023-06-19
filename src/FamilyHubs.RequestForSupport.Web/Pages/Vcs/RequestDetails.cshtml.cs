@@ -47,7 +47,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         .Add(ErrorId.SelectAnOption, new Error("accept-request", "Select an option"))
         .Add(ErrorId.EnterReasonForDeclining, new Error("reason-for-declining", "Enter a reason for declining"));
 
-    public List<ErrorId>? Errors { get; set; }
+    public IEnumerable<ErrorId> Errors { get; private set; } = Enumerable.Empty<ErrorId>();
 
     public VcsRequestDetailsPageModel(IReferralClientService referralClientService)
     {
@@ -58,7 +58,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
     //todo: when the error is reason too long, we should populate the reason field with the reason they entered (cut off to a decent limit)
     // where are we going to store that? url too long? session cookie?* redis?
     //todo: need to guard against user changing the id in the url to see a request they shouldn't have access to
-    public async Task OnGet(int id, List<ErrorId> errors)
+    public async Task OnGet(int id, IEnumerable<ErrorId> errors)
     {
         //todo: service is being updated to check user has access to the referral. we might need a custom error page to handle it
 
@@ -74,7 +74,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         ReferralStatus? newStatus = null;
         string? redirectUrl = null;
         string? reason = null;
-        Errors = new List<ErrorId>();
+        var errors = new List<ErrorId>();
 
         switch (userAction)
         {
@@ -88,14 +88,14 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
                     case AcceptDecline.Declined:
                         if (string.IsNullOrEmpty(ReasonForRejection))
                         {
-                            Errors.Add(ErrorId.EnterReasonForDeclining);
+                            errors.Add(ErrorId.EnterReasonForDeclining);
                         }
                         newStatus = ReferralStatus.Declined;
                         redirectUrl = "/Vcs/RequestDeclined";
                         reason = ReasonForRejection;
                         break;
                     default:
-                        Errors.Add(ErrorId.SelectAnOption);
+                        errors.Add(ErrorId.SelectAnOption);
                         break;
                 }
                 break;
@@ -105,9 +105,9 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
                 break;
         }
 
-        if (Errors.Any())
+        if (errors.Any())
         {
-            return RedirectToPage(new {id, Errors});
+            return RedirectToPage(new {id, errors});
         }
 
         if (newStatus == null)
@@ -124,4 +124,10 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
     {
         return PossibleErrors[errorId];
     }
+
+    public bool HasErrors()
+    {
+        return Errors?.Any() == true;
+    }
 }
+

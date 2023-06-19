@@ -6,7 +6,7 @@
     <a asp-page="/Vcs/Dashboard" class="govuk-back-link">Back</a>
 }
 
-@if (Model.Errors?.Any() == true)
+@if (Model.HasErrors())
 {
     <div class="govuk-error-summary" data-module="govuk-error-summary">
         <div role="alert">
