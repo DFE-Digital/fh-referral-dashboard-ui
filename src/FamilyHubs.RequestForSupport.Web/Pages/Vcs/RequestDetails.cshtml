@@ -92,14 +92,14 @@
                 <div class="govuk-radios" data-module="govuk-radios">
                     <div class="govuk-radios__item">
                         @* todo: need to set at any point?*@
-                        <input class="govuk-radios__input" id="accept-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Accepted" @(Model.AcceptOrDecline is AcceptDecline.Accepted ? "checked" : "")>
+                        <input class="govuk-radios__input" id="accept-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Accepted">
                         <label class="govuk-label govuk-radios__label" for="accept-request">
                             Accept - our service will contact this person to offer support
                         </label>
                     </div>
 
                     <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="decline-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Declined" @(Model.AcceptOrDecline is AcceptDecline.Declined ? "checked" : "") data-aria-controls="conditional-contact">
+                        <input class="govuk-radios__input" id="decline-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Declined" @(Model.Errors.Contains(ErrorId.EnterReasonForDeclining) ? "checked" : "") data-aria-controls="conditional-contact">
                         <label class="govuk-label govuk-radios__label" for="decline-request">
                             Decline - our service will not offer support
                         </label>

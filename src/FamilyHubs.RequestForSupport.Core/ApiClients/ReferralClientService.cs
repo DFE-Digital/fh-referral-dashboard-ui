@@ -8,10 +8,10 @@ namespace FamilyHubs.RequestForSupport.Core.ApiClients;
 
 public enum ReferralStatus
 {
-    New = 0,
-    Opened = 1,
-    Accepted = 2,
-    Declined = 3
+    New = 1,
+    Opened,
+    Accepted,
+    Declined
 }
 
 public interface IReferralClientService
