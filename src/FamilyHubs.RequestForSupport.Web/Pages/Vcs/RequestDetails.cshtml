@@ -6,7 +6,7 @@
     <a asp-page="/Vcs/Dashboard" class="govuk-back-link">Back</a>
 }
 
-@if (Model.HasErrors())
+@if (Model.HasErrors)
 {
     <div class="govuk-error-summary" data-module="govuk-error-summary">
         <div role="alert">
@@ -19,7 +19,7 @@
                     {
                         var error = Model.GetError(errorId);
                         <li>
-                            <a href="#@error.HtmlElementId">@error.ErrorMessage</a>
+                            <a href="#@error!.HtmlElementId">@error.ErrorMessage</a>
                         </li>
                     }
                 </ul>
@@ -78,17 +78,26 @@
 
 @if ((ReferralStatus)Model.Referral.Status.Id is ReferralStatus.New or ReferralStatus.Opened)
 {
+    Error? selectResponseError = Model.GetCurrentError(ErrorId.SelectAResponse);
+
     <form method="post" novalidate data-validate='my-form-validation'>
-        <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset" aria-describedby="contact-hint">
+        @* todo: might have to check for options error only x 2*@
+        <div class="govuk-form-group @(Model.HasErrors ? "govuk-form-group--error" : "")">
+            <fieldset class="govuk-fieldset" role="group" aria-describedby="select-option @(Model.HasErrors ? "option-error" : "")">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                     <h2 class="govuk-fieldset__heading">
                         Your response
                     </h2>
                 </legend>
-                <div id="contact-hint" class="govuk-hint">
+                <div id="select-option" class="govuk-hint">
                     Select one option.
                 </div>
+                @if (selectResponseError != null)
+                {
+                    <p id="option-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> @selectResponseError.ErrorMessage
+                    </p>
+                }
                 <div class="govuk-radios" data-module="govuk-radios">
                     <div class="govuk-radios__item">
                         @* todo: need to set at any point?*@

@@ -24,7 +24,7 @@ public enum AcceptDecline
 
 public enum ErrorId
 {
-    SelectAnOption,
+    SelectAResponse,
     EnterReasonForDeclining
 }
 
@@ -44,7 +44,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
 
     public static readonly ImmutableDictionary<ErrorId, Error> PossibleErrors = ImmutableDictionary
         .Create<ErrorId, Error>()
-        .Add(ErrorId.SelectAnOption, new Error("accept-request", "Select an option"))
+        .Add(ErrorId.SelectAResponse, new Error("accept-request", "You must select a response"))
         .Add(ErrorId.EnterReasonForDeclining, new Error("reason-for-declining", "Enter a reason for declining"));
 
     public IEnumerable<ErrorId> Errors { get; private set; } = Enumerable.Empty<ErrorId>();
@@ -95,7 +95,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
                         reason = ReasonForRejection;
                         break;
                     default:
-                        errors.Add(ErrorId.SelectAnOption);
+                        errors.Add(ErrorId.SelectAResponse);
                         break;
                 }
                 break;
@@ -120,14 +120,16 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         return RedirectToPage(redirectUrl);
     }
 
+    public Error? GetCurrentError(ErrorId errorId)
+    {
+        return Errors.Contains(errorId) ? PossibleErrors[errorId] : null;
+    }
+
     public Error GetError(ErrorId errorId)
     {
         return PossibleErrors[errorId];
     }
 
-    public bool HasErrors()
-    {
-        return Errors?.Any() == true;
-    }
+    public bool HasErrors => Errors.Any();
 }
 
