@@ -7,13 +7,14 @@ using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.RequestForSupport.Web.VcsDashboard;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
 //todo: most of this can go in a base class
 [Authorize]
-public class DashboardModel : PageModel, IDashboard<ReferralDto>
+public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
 {
     private static ColumnImmutable[] _columnImmutables = 
     {
