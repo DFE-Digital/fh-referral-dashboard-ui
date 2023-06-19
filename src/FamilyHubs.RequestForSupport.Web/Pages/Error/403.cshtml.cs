@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Error;
 
-public class Error401Model : PageModel, IFamilyHubsHeader
+public class Error403Model : PageModel, IFamilyHubsHeader
 {
     LinkStatus IFamilyHubsHeader.GetStatus(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
     {

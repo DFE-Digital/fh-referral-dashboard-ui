@@ -9,11 +9,15 @@ using FamilyHubs.RequestForSupport.Web.VcsDashboard;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.Pagination;
+using FamilyHubs.RequestForSupport.Web.Security;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
 //todo: most of this can go in a base class
-[Authorize]
+//todo: check handling of 401 (no access to service)
+//todo: we've had to add the standard MS identity role to the stub users for now in addition to the existing role claim
+// Mike is going to update the shared lib to handle this better
+[Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
 public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
 {
     private static ColumnImmutable[] _columnImmutables = 
@@ -46,12 +50,6 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 
     public async Task OnGet(string? columnName, SortOrder sort, int? currentPage = 1)
     {
-        var user = HttpContext.GetFamilyHubsUser();
-        if (user.Role is not (RoleTypes.VcsProfessional or RoleTypes.VcsDualRole))
-        {
-            RedirectToPage("/Error/401");
-        }
-
         if (columnName == null|| !Enum.TryParse(columnName, true, out Column column))
         {
             // default when first load the page, or user has manually changed the url
@@ -62,6 +60,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
         _columnHeaders = new ColumnHeaderFactory(_columnImmutables, "/Vcs/Dashboard", column.ToString(), sort)
             .CreateAll();
 
+        var user = HttpContext.GetFamilyHubsUser();
         var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
 
         _rows = searchResults.Items.Select(r => new VcsDashboardRow(r));
