@@ -32,7 +32,6 @@ public enum ErrorId
 
 public record Error(string HtmlElementId, string ErrorMessage);
 
-//todo: update shared kernel and remove ms roles
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
 public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
 {

@@ -13,10 +13,6 @@
               "Value": "DfeAdmin"
             },
             {
-              "Name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-              "Value": "DfeAdmin"
-            },
-            {
               "Name": "AccountId",
               "Value": "3"
             },
@@ -46,10 +42,6 @@
           "Claims": [
             {
               "Name": "role",
-              "Value": "LaManager"
-            },
-            {
-              "Name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
               "Value": "LaManager"
             },
             {
@@ -85,10 +77,6 @@
               "Value": "VcsManager"
             },
             {
-              "Name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-              "Value": "VcsManager"
-            },
-            {
               "Name": "AccountId",
               "Value": "5"
             },
@@ -118,10 +106,6 @@
           "Claims": [
             {
               "Name": "role",
-              "Value": "LaProfessional"
-            },
-            {
-              "Name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
               "Value": "LaProfessional"
             },
             {
@@ -157,10 +141,6 @@
               "Value": "VcsProfessional"
             },
             {
-              "Name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-              "Value": "VcsProfessional"
-            },
-            {
               "Name": "AccountId",
               "Value": "12"
             },
@@ -190,10 +170,6 @@
           "Claims": [
             {
               "Name": "role",
-              "Value": "VcsProfessional"
-            },
-            {
-              "Name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
               "Value": "VcsProfessional"
             },
             {
@@ -229,10 +205,6 @@
               "Value": "VcsDualRole"
             },
             {
-              "Name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-              "Value": "VcsDualRole"
-            },
-            {
               "Name": "AccountId",
               "Value": "14"
             },
@@ -262,10 +234,6 @@
           "Claims": [
             {
               "Name": "role",
-              "Value": "VcsDualRole"
-            },
-            {
-              "Name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
               "Value": "VcsDualRole"
             },
             {
@@ -301,10 +269,6 @@
               "Value": "LaDualRole"
             },
             {
-              "Name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-              "Value": "LaDualRole"
-            },
-            {
               "Name": "AccountId",
               "Value": "9"
             },
@@ -337,10 +301,6 @@
               "Value": "VcsDualRole"
             },
             {
-              "Name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-              "Value": "VcsDualRole"
-            },
-            {
               "Name": "AccountId",
               "Value": "10"
             },
@@ -370,10 +330,6 @@
           "Claims": [
             {
               "Name": "role",
-              "Value": "VcsDualRole"
-            },
-            {
-              "Name": "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
               "Value": "VcsDualRole"
             },
             {
