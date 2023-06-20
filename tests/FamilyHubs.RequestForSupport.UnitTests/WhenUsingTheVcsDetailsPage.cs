@@ -1,47 +1,59 @@
-﻿//using FamilyHubs.ReferralService.Shared.Dto;
-//using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
-//using FluentAssertions;
-//using Moq;
+﻿using FamilyHubs.RequestForSupport.Core.ApiClients;
+using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
+using FluentAssertions;
+using Moq;
 
-//namespace FamilyHubs.RequestForSupport.UnitTests;
+namespace FamilyHubs.RequestForSupport.UnitTests;
 
-//public class WhenUsingTheVcsDetailsPage : BaseWhenUsingPage
-//{
-//    private readonly VcsRequestDetailsPageModel _pageModel;
-    
-//    public WhenUsingTheVcsDetailsPage()
-//    {
-//        _pageModel = new VcsRequestDetailsPageModel(_mockReferralClientService.Object, GetConfiguration());
-//        _pageModel.PageContext = GetPageContext();
-//    }
+public class WhenUsingTheVcsDetailsPage : BaseWhenUsingPage
+{
+    private readonly VcsRequestDetailsPageModel _pageModel;
 
-//    [Fact]
-//    public async Task ThenOnGetVcsDetails()
-//    {
-//        //Act & Arrange
-//        await _pageModel.OnGet(1L);
+    public WhenUsingTheVcsDetailsPage()
+    {
+        _pageModel = new VcsRequestDetailsPageModel(MockReferralClientService.Object)
+        {
+            PageContext = GetPageContext(),
+            TempData = MockTempDataDictionary.Object
+        };
+    }
 
-//        //Assert
-//        _pageModel.Referral.Should().BeEquivalentTo(WhenUsingTheVcsDashboard.GetReferralDto());
-//    }
+    [Fact]
+    public async Task OnGetShouldRetrieveReferral()
+    {
+        //Act
+        await _pageModel.OnGet(1, Enumerable.Empty<ErrorId>());
 
-//    [Theory]
-//    [InlineData("Accepted")]
-//    [InlineData("Declined")]
-//    public async Task ThenOnPostVcsDetails(string serviceRequestResponse)
-//    {
-//        //Arrange
-//        _pageModel.ServiceRequestResponse = serviceRequestResponse;
-//        _pageModel.ReasonForRejection = "Reason for Rejection";
-//        int updateCallback = 0;
-//        _mockReferralClientService.Setup(x => x.UpdateReferral(It.IsAny<ReferralDto>()))
-//            .Callback(() => updateCallback++)
-//            .ReturnsAsync("1");
+        //Assert
+        _pageModel.Referral.Should().BeEquivalentTo(WhenUsingTheVcsDashboard.GetReferralDto());
+    }
 
-//        //Act
-//        await _pageModel.OnPost(1L);
+    [Fact]
+    public async Task OnGet_SetsReasonForRejection()
+    {
+        // Act
+        await _pageModel.OnGet(123, new List<ErrorId> { ErrorId.ReasonForDecliningTooLong });
 
-//        //Assert
-//        updateCallback.Should().Be(1);
-//    }
-//}
+        _pageModel.ReasonForRejection.Should().Be("example reason");
+    }
+
+    [Theory]
+    [InlineData(ReferralStatus.Accepted, AcceptDecline.Accepted)]
+    [InlineData(ReferralStatus.Declined, AcceptDecline.Declined)]
+    public async Task OnPostShouldSetAcceptOrDeclinedStatusCorrectly(
+        ReferralStatus expectedReferralStatus, AcceptDecline acceptDecline)
+    {
+        const int referralId = 123;
+
+        _pageModel.AcceptOrDecline = acceptDecline;
+        _pageModel.ReasonForRejection = "Reason for Rejection";
+
+        MockReferralClientService.Setup(x => x.UpdateReferralStatus(referralId, expectedReferralStatus, It.IsAny<string>()))
+            .ReturnsAsync("1");
+
+        // Act
+        await _pageModel.OnPost(UserAction.AcceptDecline, referralId);
+
+        MockReferralClientService.Verify(x => x.UpdateReferralStatus(referralId, expectedReferralStatus, It.IsAny<string>()), Times.Once);
+    }
+}
