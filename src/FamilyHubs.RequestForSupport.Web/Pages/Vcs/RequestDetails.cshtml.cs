@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Net;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Security;
@@ -60,17 +61,27 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
     //todo: when the error is reason too long, we should populate the reason field with the reason they entered (cut off to a decent limit)
     // where are we going to store that? url too long? session cookie?* redis?
     //todo: need to guard against user changing the id in the url to see a request they shouldn't have access to
-    public async Task OnGet(int id, IEnumerable<ErrorId> errors)
+    public async Task<IActionResult> OnGet(int id, IEnumerable<ErrorId> errors)
     {
-        //todo: service has being updated to check user has access to the referral.
-        // redirect to error page if service returns a 403
-
         Errors = errors;
         // if the user enters a reason for declining that's too long, then refreshes the page with the corresponding error message on, they'll lose their reason. quite an edge case though, and the site will still work, they'll just have to enter a shorter reason from scratch    
         ReasonForRejection  = TempData["ReasonForDeclining"] as string;
         //todo: check errorIds are valid
 
-        Referral = await _referralClientService.GetReferralById(id);
+        try
+        {
+            Referral = await _referralClientService.GetReferralById(id);
+        }
+        catch (HttpRequestException httpEx)
+        {
+            // user has changed the id in the url to see a referral they shouldn't have access to
+            if (httpEx.StatusCode == HttpStatusCode.Forbidden)
+            {
+                return RedirectToPage("/Error/403");
+            }
+            throw;
+        }
+        return Page();
     }
 
     //todo: component for character count (especially as there are some gotchas with line endings)
