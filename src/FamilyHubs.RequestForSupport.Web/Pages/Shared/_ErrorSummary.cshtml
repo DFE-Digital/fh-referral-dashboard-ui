@@ -1,6 +1,8 @@
 ﻿@model FamilyHubs.RequestForSupport.Web.Pages.Vcs.IErrorSummary
 
 @* todo: once this has been battle hardened, consider moving it to shared *@
+@* have stash which makes this more generic, but sticking point of can't have generic model in a razor class *@
+@* could use int in IErrorSummary and cast, but that's a bit ugly *@
 
 @if (Model.HasErrors)
 {
