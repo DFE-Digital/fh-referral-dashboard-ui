@@ -5,3 +5,21 @@
 .app-break-spaces {
     white-space: break-spaces;
 }
+
+//todo: fh-button-link
+//todo: mixin govuk-link?
+.app-button-link {
+    border: none;
+    padding: 0 !important;
+    color: $govuk-link-colour;
+    cursor: pointer;
+    background: none !important;
+
+/*    &:hover {
+        text-decoration: none;
+    }
+*/
+    &:focus {
+        background-color: $govuk-focus-colour !important;
+    }
+}
