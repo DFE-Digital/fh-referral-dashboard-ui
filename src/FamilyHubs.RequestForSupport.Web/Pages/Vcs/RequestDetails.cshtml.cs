@@ -30,10 +30,18 @@ public enum ErrorId
     ReasonForDecliningTooLong
 }
 
+public interface IErrorSummary
+{
+    bool HasErrors { get; }
+    IEnumerable<ErrorId> ErrorIds { get; }
+    Error GetError(ErrorId errorId);
+}
+
 public record Error(string HtmlElementId, string ErrorMessage);
 
+//todo: use mailto & tel??
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
-public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
+public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSummary
 {
     private readonly IReferralClientService _referralClientService;
     public ReferralDto Referral { get; set; } = default!;
@@ -50,7 +58,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         .Add(ErrorId.EnterReasonForDeclining, new Error("decline-reason", "Enter a reason for declining"))
         .Add(ErrorId.ReasonForDecliningTooLong, new Error("decline-reason", "Reason for declining must be 500 characters or less"));
 
-    public IEnumerable<ErrorId> Errors { get; private set; } = Enumerable.Empty<ErrorId>();
+    public IEnumerable<ErrorId> ErrorIds { get; private set; } = Enumerable.Empty<ErrorId>();
 
     public VcsRequestDetailsPageModel(IReferralClientService referralClientService)
     {
@@ -59,7 +67,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
 
     public async Task<IActionResult> OnGet(int id, IEnumerable<ErrorId> errors)
     {
-        Errors = errors;
+        ErrorIds = errors;
 
         // if the user enters a reason for declining that's too long, then refreshes the page with the corresponding error message on, they'll lose their reason. quite an edge case though, and the site will still work, they'll just have to enter a shorter reason from scratch
         ReasonForRejection  = TempData["ReasonForDeclining"] as string;
@@ -148,15 +156,15 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
     public Error? GetCurrentError(params ErrorId[] mutuallyExclusiveErrorIds)
     {
         // SingleOrDefault would be safer, but this is faster
-        ErrorId currentErrorId = Errors.FirstOrDefault(mutuallyExclusiveErrorIds.Contains);
+        ErrorId currentErrorId = ErrorIds.FirstOrDefault(mutuallyExclusiveErrorIds.Contains);
         return currentErrorId != ErrorId.NoError ? PossibleErrors[currentErrorId] : null;
     }
 
-    public Error GetError(ErrorId errorId)
+    Error IErrorSummary.GetError(ErrorId errorId)
     {
         return PossibleErrors[errorId];
     }
 
-    public bool HasErrors => Errors.Any(e => e != ErrorId.NoError);
+    bool IErrorSummary.HasErrors => ErrorIds.Any(e => e != ErrorId.NoError);
 }
 
