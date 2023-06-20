@@ -106,26 +106,25 @@
                             Accept - our service will contact this person to offer support
                         </label>
                     </div>
-                    @* todo: reapply stash bit by bit *@
                     <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="decline-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Declined" @(Model.Errors.Contains(ErrorId.EnterReasonForDeclining) ? "checked" : "") data-aria-controls="conditional-contact">
+                        <input class="govuk-radios__input" id="decline-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Declined" @(Model.Errors.Contains(ErrorId.EnterReasonForDeclining) ? "checked" : "") data-aria-controls="conditional-decline-reason">
                         <label class="govuk-label govuk-radios__label" for="decline-request">
                             Decline - our service will not offer support
                         </label>
                     </div>
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-contact">
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-decline-reason">
                         <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
                             <div class="govuk-form-group">
                                 <h3 class="govuk-label-wrapper">
-                                    <label class="govuk-label govuk-label--s" for="reason-for-declining">
+                                    <label class="govuk-label govuk-label--s" for="decline-reason">
                                         Reason for declining
                                     </label>
                                 </h3>
-                                <div id="rejection-reason-hint" class="govuk-hint">
+                                <div id="decline-reason-hint" class="govuk-hint">
                                     You will no longer have access to this request.
                                 </div>
-                                <textarea class="govuk-textarea govuk-js-character-count" id="rejection-reason" name="ReasonForRejection" rows="5" aria-describedby="rejection-reason-hint rejection-reason-info"></textarea>
-                                <div id="rejection-reason-info" class="govuk-hint govuk-character-count__message">
+                                <textarea class="govuk-textarea govuk-js-character-count" id="decline-reason" name="ReasonForRejection" rows="5" aria-describedby="decline-reason-hint decline-reason-info"></textarea>
+                                <div id="decline-reason-info" class="govuk-hint govuk-character-count__message">
                                     You can enter up to 500 characters
                                 </div>
                             </div>
