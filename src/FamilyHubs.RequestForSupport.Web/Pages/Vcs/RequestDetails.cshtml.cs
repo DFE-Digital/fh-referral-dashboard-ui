@@ -62,9 +62,11 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
     //todo: need to guard against user changing the id in the url to see a request they shouldn't have access to
     public async Task OnGet(int id, IEnumerable<ErrorId> errors)
     {
-        //todo: service is being updated to check user has access to the referral. we might need a custom error page to handle it
+        //todo: service has being updated to check user has access to the referral.
+        // redirect to error page if service returns a 403
 
         Errors = errors;
+        // if the user enters a reason for declining that's too long, then refreshes the page with the corresponding error message on, they'll lose their reason. quite an edge case though, and the site will still work, they'll just have to enter a shorter reason from scratch    
         ReasonForRejection  = TempData["ReasonForDeclining"] as string;
         //todo: check errorIds are valid
 

@@ -79,6 +79,7 @@
 @if ((ReferralStatus)Model.Referral.Status.Id is ReferralStatus.New or ReferralStatus.Opened)
 {
     Error? selectAResponseError = Model.GetCurrentError(ErrorId.SelectAResponse);
+    Error? declineReasonError = Model.GetCurrentError(ErrorId.EnterReasonForDeclining, ErrorId.ReasonForDecliningTooLong);
 
     <form method="post" novalidate data-validate='my-form-validation'>
         <div class="govuk-form-group @(selectAResponseError != null ? "govuk-form-group--error" : "")">
@@ -97,25 +98,25 @@
                         <span class="govuk-visually-hidden">Error:</span> @selectAResponseError.ErrorMessage
                     </p>
                 }
+
                 <div class="govuk-radios" data-module="govuk-radios">
                     <div class="govuk-radios__item">
-                        @* todo: need to set at any point?*@
                         <input class="govuk-radios__input" id="accept-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Accepted">
                         <label class="govuk-label govuk-radios__label" for="accept-request">
                             Accept - our service will contact this person to offer support
                         </label>
                     </div>
                     <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="decline-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Declined" @(Model.Errors.Contains(ErrorId.EnterReasonForDeclining) ? "checked" : "") data-aria-controls="conditional-decline-reason">
+                        <input class="govuk-radios__input" id="decline-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Declined" @(declineReasonError != null ? "checked" : "") data-aria-controls="conditional-decline-reason">
                         <label class="govuk-label govuk-radios__label" for="decline-request">
                             Decline - our service will not offer support
                         </label>
                     </div>
-                    @{
-                        Error? declineReasonError = Model.GetCurrentError(ErrorId.EnterReasonForDeclining, ErrorId.ReasonForDecliningTooLong);
-                    }
 
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-decline-reason">
+                    @* not strictly necessary to set govuk-radios__conditional--hidden, but will stop a flash on slow user agents *@
+                    @* todo: check this with js disabled *@
+                    <div class="govuk-radios__conditional @(declineReasonError != null ? "" : "govuk-radios__conditional--hidden")" id="conditional-decline-reason">
+@*                     <div class="govuk-radios__conditional" id="conditional-decline-reason"> *@
                         <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
                             <div class="govuk-form-group @(declineReasonError != null ? "govuk-form-group--error": "")">
                                 <h3 class="govuk-label-wrapper">
@@ -123,16 +124,15 @@
                                         Reason for declining
                                     </label>
                                 </h3>
-                                @* todo:before or after hint? *@
+                                <div id="decline-reason-hint" class="govuk-hint">
+                                    You will no longer have access to this request.
+                                </div>
                                 @if (declineReasonError != null)
                                 {
                                     <p id="decline-reason-error" class="govuk-error-message">
                                         <span class="govuk-visually-hidden">Error:</span> @declineReasonError.ErrorMessage
                                     </p>
                                 }
-                                <div id="decline-reason-hint" class="govuk-hint">
-                                    You will no longer have access to this request.
-                                </div>
                                 <textarea class="govuk-textarea govuk-js-character-count @(declineReasonError != null ? "govuk-textarea--error": "")" asp-for="ReasonForRejection" id="decline-reason" rows="5" aria-describedby="decline-reason-hint decline-reason-info @(declineReasonError != null ? "decline-reason-error": "")"></textarea>
                                 <div id="decline-reason-info" class="govuk-hint govuk-character-count__message">
                                     You can enter up to 500 characters
