@@ -106,7 +106,7 @@
                             Accept - our service will contact this person to offer support
                         </label>
                     </div>
-
+                    @* todo: reapply stash bit by bit *@
                     <div class="govuk-radios__item">
                         <input class="govuk-radios__input" id="decline-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Declined" @(Model.Errors.Contains(ErrorId.EnterReasonForDeclining) ? "checked" : "") data-aria-controls="conditional-contact">
                         <label class="govuk-label govuk-radios__label" for="decline-request">
@@ -115,11 +115,11 @@
                     </div>
                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-contact">
                         <div class="govuk-form-group">
-                            <h1 class="govuk-label-wrapper">
-                                <label class="govuk-label govuk-label--l" for="reason-for-declining">
+                            <h3 class="govuk-label-wrapper">
+                                <label class="govuk-label govuk-label--s" for="reason-for-declining">
                                     Reason for declining
                                 </label>
-                            </h1>
+                            </h3>
                             <div id="more-detail-hint" class="govuk-hint">
                                 You will no longer have access to this request.
                             </div>
