@@ -2,7 +2,6 @@ using System.Collections.Immutable;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Security;
-using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,8 +23,10 @@ public enum AcceptDecline
 
 public enum ErrorId
 {
+    NoError,
     SelectAResponse,
-    EnterReasonForDeclining
+    EnterReasonForDeclining,
+    ReasonForDecliningTooLong
 }
 
 public record Error(string HtmlElementId, string ErrorMessage);
@@ -45,7 +46,8 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
     public static readonly ImmutableDictionary<ErrorId, Error> PossibleErrors = ImmutableDictionary
         .Create<ErrorId, Error>()
         .Add(ErrorId.SelectAResponse, new Error("accept-request", "You must select a response"))
-        .Add(ErrorId.EnterReasonForDeclining, new Error("reason-for-declining", "Enter a reason for declining"));
+        .Add(ErrorId.EnterReasonForDeclining, new Error("decline-reason", "Enter a reason for declining"))
+        .Add(ErrorId.ReasonForDecliningTooLong, new Error("decline-reason", "Reason for declining must be 500 characters or less"));
 
     public IEnumerable<ErrorId> Errors { get; private set; } = Enumerable.Empty<ErrorId>();
 
@@ -63,12 +65,14 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         //todo: service is being updated to check user has access to the referral. we might need a custom error page to handle it
 
         Errors = errors;
+        ReasonForRejection  = TempData["ReasonForDeclining"] as string;
         //todo: check errorIds are valid
 
         Referral = await _referralClientService.GetReferralById(id);
     }
 
-    //todo: PRG?
+    //todo: component for character count (especially as there are some gotchas with line endings)
+    //todo: component for standard error summary
     public async Task<IActionResult> OnPost(UserAction userAction, int id)
     {
         ReferralStatus? newStatus = null;
@@ -90,9 +94,20 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
                         {
                             errors.Add(ErrorId.EnterReasonForDeclining);
                         }
-                        newStatus = ReferralStatus.Declined;
-                        redirectUrl = "/Vcs/RequestDeclined";
-                        reason = ReasonForRejection;
+                        // workaround the front end counting line endings as 1 chars (\n) as per HTML spec,
+                        // and the http transport/.net/windows using 2 chars for line ends (\r\n)
+                        else if (ReasonForRejection.Replace("\r", "").Length > 500)
+                        {
+                            errors.Add(ErrorId.ReasonForDecliningTooLong);
+                            // truncate at some large value, although it gets stored in cookie(s), so large values will only affect the user that sends them
+                            TempData["ReasonForDeclining"] = ReasonForRejection[..Math.Min(ReasonForRejection.Length, 4000)];
+                        }
+                        else
+                        {
+                            newStatus = ReferralStatus.Declined;
+                            redirectUrl = "/Vcs/RequestDeclined";
+                            reason = ReasonForRejection;
+                        }
                         break;
                     default:
                         errors.Add(ErrorId.SelectAResponse);
@@ -120,9 +135,11 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         return RedirectToPage(redirectUrl);
     }
 
-    public Error? GetCurrentError(ErrorId errorId)
+    public Error? GetCurrentError(params ErrorId[] mutuallyExclusiveErrorIds)
     {
-        return Errors.Contains(errorId) ? PossibleErrors[errorId] : null;
+        // SingleOrDefault would be safer, but this is faster
+        ErrorId currentErrorId = Errors.FirstOrDefault(mutuallyExclusiveErrorIds.Contains);
+        return currentErrorId != ErrorId.NoError ? PossibleErrors[currentErrorId] : null;
     }
 
     public Error GetError(ErrorId errorId)
@@ -130,6 +147,6 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         return PossibleErrors[errorId];
     }
 
-    public bool HasErrors => Errors.Any();
+    public bool HasErrors => Errors.Any(e => e != ErrorId.NoError);
 }
 

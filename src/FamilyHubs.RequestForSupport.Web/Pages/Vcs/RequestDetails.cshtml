@@ -78,12 +78,11 @@
 
 @if ((ReferralStatus)Model.Referral.Status.Id is ReferralStatus.New or ReferralStatus.Opened)
 {
-    Error? selectResponseError = Model.GetCurrentError(ErrorId.SelectAResponse);
+    Error? selectAResponseError = Model.GetCurrentError(ErrorId.SelectAResponse);
 
     <form method="post" novalidate data-validate='my-form-validation'>
-        @* todo: might have to check for options error only x 2*@
-        <div class="govuk-form-group @(Model.HasErrors ? "govuk-form-group--error" : "")">
-            <fieldset class="govuk-fieldset" role="group" aria-describedby="select-option @(Model.HasErrors ? "option-error" : "")">
+        <div class="govuk-form-group @(selectAResponseError != null ? "govuk-form-group--error" : "")">
+            <fieldset class="govuk-fieldset" role="group" aria-describedby="select-option @(selectAResponseError != null ? "option-error" : "")">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                     <h2 class="govuk-fieldset__heading">
                         Your response
@@ -92,10 +91,10 @@
                 <div id="select-option" class="govuk-hint">
                     Select one option.
                 </div>
-                @if (selectResponseError != null)
+                @if (selectAResponseError != null)
                 {
                     <p id="option-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> @selectResponseError.ErrorMessage
+                        <span class="govuk-visually-hidden">Error:</span> @selectAResponseError.ErrorMessage
                     </p>
                 }
                 <div class="govuk-radios" data-module="govuk-radios">
@@ -112,18 +111,29 @@
                             Decline - our service will not offer support
                         </label>
                     </div>
+                    @{
+                        Error? declineReasonError = Model.GetCurrentError(ErrorId.EnterReasonForDeclining, ErrorId.ReasonForDecliningTooLong);
+                    }
+
                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-decline-reason">
                         <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
-                            <div class="govuk-form-group">
+                            <div class="govuk-form-group @(declineReasonError != null ? "govuk-form-group--error": "")">
                                 <h3 class="govuk-label-wrapper">
                                     <label class="govuk-label govuk-label--s" for="decline-reason">
                                         Reason for declining
                                     </label>
                                 </h3>
+                                @* todo:before or after hint? *@
+                                @if (declineReasonError != null)
+                                {
+                                    <p id="decline-reason-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> @declineReasonError.ErrorMessage
+                                    </p>
+                                }
                                 <div id="decline-reason-hint" class="govuk-hint">
                                     You will no longer have access to this request.
                                 </div>
-                                <textarea class="govuk-textarea govuk-js-character-count" id="decline-reason" name="ReasonForRejection" rows="5" aria-describedby="decline-reason-hint decline-reason-info"></textarea>
+                                <textarea class="govuk-textarea govuk-js-character-count @(declineReasonError != null ? "govuk-textarea--error": "")" asp-for="ReasonForRejection" id="decline-reason" rows="5" aria-describedby="decline-reason-hint decline-reason-info @(declineReasonError != null ? "decline-reason-error": "")"></textarea>
                                 <div id="decline-reason-info" class="govuk-hint govuk-character-count__message">
                                     You can enter up to 500 characters
                                 </div>
