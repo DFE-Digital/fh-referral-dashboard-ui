@@ -39,7 +39,6 @@ public interface IErrorSummary
 
 public record Error(string HtmlElementId, string ErrorMessage);
 
-//todo: use mailto & tel??
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
 public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSummary
 {
