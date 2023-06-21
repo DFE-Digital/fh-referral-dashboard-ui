@@ -129,7 +129,7 @@ public class ReferralClientService : ApiService, IReferralClientService
     {
         var request = new HttpRequestMessage
         {
-            // copilot's suggestion. seems good
+            //todo: this would be more restful
             //Method = HttpMethod.Put,
             //RequestUri = new Uri(Client.BaseAddress + $"api/referrals/{referralId}/status/{referralStatusId}"),
             Method = HttpMethod.Post,
