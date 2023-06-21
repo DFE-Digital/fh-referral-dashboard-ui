@@ -13,8 +13,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.6" />
-		<PackageReference Include="FamilyHubs.SharedKernel" Version="2.0.14" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.3.0.71466">
+		<PackageReference Include="FamilyHubs.SharedKernel" Version="2.0.18" />
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.4.0.72892">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

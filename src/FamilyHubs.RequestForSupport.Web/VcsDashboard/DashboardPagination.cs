@@ -18,6 +18,6 @@ public class DashboardPagination : LargeSetPagination, ILinkPagination
 
     public string GetUrl(int page)
     {
-        return $"/VcsRequestForSupport/Dashboard?columnName={_column}&sort={_sort}&currentPage={page}";
+        return $"/Vcs/Dashboard?columnName={_column}&sort={_sort}&currentPage={page}";
     }
 }

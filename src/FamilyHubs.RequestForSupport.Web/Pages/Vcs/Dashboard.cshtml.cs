@@ -9,11 +9,13 @@ using FamilyHubs.RequestForSupport.Web.VcsDashboard;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.Pagination;
+using FamilyHubs.RequestForSupport.Web.Security;
 
-namespace FamilyHubs.RequestForSupport.Web.Pages.VcsRequestForSupport;
+namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
 //todo: most of this can go in a base class
-[Authorize]
+//todo: check handling of 401 (no access to service)
+[Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
 public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
 {
     private static ColumnImmutable[] _columnImmutables = 
@@ -46,12 +48,6 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 
     public async Task OnGet(string? columnName, SortOrder sort, int? currentPage = 1)
     {
-        var user = HttpContext.GetFamilyHubsUser();
-        if (user.Role != "VcsAdmin")
-        {
-            RedirectToPage("/Error/401");
-        }
-
         if (columnName == null|| !Enum.TryParse(columnName, true, out Column column))
         {
             // default when first load the page, or user has manually changed the url
@@ -59,9 +55,10 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             sort = SortOrder.descending;
         }
 
-        _columnHeaders = new ColumnHeaderFactory(_columnImmutables, "/VcsRequestForSupport/Dashboard", column.ToString(), sort)
+        _columnHeaders = new ColumnHeaderFactory(_columnImmutables, "/Vcs/Dashboard", column.ToString(), sort)
             .CreateAll();
 
+        var user = HttpContext.GetFamilyHubsUser();
         var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
 
         _rows = searchResults.Items.Select(r => new VcsDashboardRow(r));
@@ -86,10 +83,5 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 
         return await _referralClientService.GetRequestsForConnectionByOrganisationId(
             organisationId, referralOrderBy, sort == SortOrder.ascending, currentPage, PageSize);
-    }
-
-    LinkStatus IFamilyHubsHeader.GetStatus(SharedKernel.Razor.FamilyHubsUi.Options.LinkOptions link)
-    {
-        return link.Text == "Received requests" ? LinkStatus.Active : LinkStatus.Visible;
     }
 }

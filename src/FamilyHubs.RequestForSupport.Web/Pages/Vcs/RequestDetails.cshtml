@@ -1,0 +1,131 @@
+﻿@page
+@using FamilyHubs.RequestForSupport.Core.ApiClients
+@model FamilyHubs.RequestForSupport.Web.Pages.Vcs.VcsRequestDetailsPageModel
+
+@section Back {
+    <a asp-page="/Vcs/Dashboard" class="govuk-back-link">Back</a>
+}
+
+<partial name="_ErrorSummary" for="@Model"/>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">Request @Model.Referral.Id.ToString("X6")</h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <dl class="govuk-summary-list govuk-!-margin-bottom-6">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Date received
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.Referral.Created?.ToString("dd MMM yyyyy")
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Status
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <partial name="_ConnectionStatus" for="@Model.Referral" />
+                </dd>
+            </div>
+        </dl>
+    </div>
+</div>
+
+@* todo: better to just have margin-bottoms? *@
+<div class="govuk-grid-row govuk-!-margin-top-2">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">Reason for the connection request</h2>
+        <p class="app-break-spaces">@Model.Referral.ReasonForSupport</p>
+    </div>
+</div>
+
+<partial name="_RecipientContactDetails" for="@Model.Referral.RecipientDto" />
+
+<div class="govuk-grid-row govuk-!-margin-top-2">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">How the service can engage @Model.Referral.RecipientDto.Name</h2>
+        <p class="app-break-spaces">@Model.Referral.EngageWithFamily</p>
+    </div>
+</div>
+
+<partial name="_ProfessionalContactDetails" for="@Model.Referral.ReferrerDto" />
+
+@if ((ReferralStatus)Model.Referral.Status.Id is ReferralStatus.New or ReferralStatus.Opened)
+{
+    Error? selectAResponseError = Model.GetCurrentError(ErrorId.SelectAResponse);
+    Error? declineReasonError = Model.GetCurrentError(ErrorId.EnterReasonForDeclining, ErrorId.ReasonForDecliningTooLong);
+
+    <form method="post" novalidate data-validate='my-form-validation'>
+        <div class="govuk-form-group @(selectAResponseError != null ? "govuk-form-group--error" : "")">
+            <fieldset class="govuk-fieldset" role="group" aria-describedby="select-option @(selectAResponseError != null ? "option-error" : "")">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h2 class="govuk-fieldset__heading">
+                        Your response
+                    </h2>
+                </legend>
+                <div id="select-option" class="govuk-hint">
+                    Select one option.
+                </div>
+                @if (selectAResponseError != null)
+                {
+                    <p id="option-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> @selectAResponseError.ErrorMessage
+                    </p>
+                }
+
+                <div class="govuk-radios" data-module="govuk-radios">
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="accept-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Accepted">
+                        <label class="govuk-label govuk-radios__label" for="accept-request">
+                            Accept - our service will contact this person to offer support
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="decline-request" name="AcceptOrDecline" type="radio" value="@AcceptDecline.Declined" @(declineReasonError != null ? "checked" : "") data-aria-controls="conditional-decline-reason">
+                        <label class="govuk-label govuk-radios__label" for="decline-request">
+                            Decline - our service will not offer support
+                        </label>
+                    </div>
+
+                    @* not strictly necessary to set govuk-radios__conditional--hidden, but will stop a flash on slow user agents *@
+                    <div class="govuk-radios__conditional @(declineReasonError != null ? "" : "govuk-radios__conditional--hidden")" id="conditional-decline-reason">
+                        <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
+                            <div class="govuk-form-group @(declineReasonError != null ? "govuk-form-group--error": "")">
+                                <h3 class="govuk-label-wrapper">
+                                    <label class="govuk-label govuk-label--s" for="decline-reason">
+                                        Reason for declining
+                                    </label>
+                                </h3>
+                                <div id="decline-reason-hint" class="govuk-hint">
+                                    You will no longer have access to this request.
+                                </div>
+                                @if (declineReasonError != null)
+                                {
+                                    <p id="decline-reason-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> @declineReasonError.ErrorMessage
+                                    </p>
+                                }
+                                <textarea class="govuk-textarea govuk-js-character-count @(declineReasonError != null ? "govuk-textarea--error": "")" asp-for="ReasonForRejection" id="decline-reason" rows="5" aria-describedby="decline-reason-hint decline-reason-info @(declineReasonError != null ? "decline-reason-error": "")"></textarea>
+                                <div id="decline-reason-info" class="govuk-hint govuk-character-count__message">
+                                    You can enter up to 500 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="govuk-button-group">
+                <button type="submit" name="userAction" value="AcceptDecline" class="govuk-button" data-module="govuk-button">
+                    Send response
+                </button>
+                <button type="submit" name="userAction" value="ReturnLater" class="govuk-link app-button-link">Return later</button>
+            </div>
+        </div>
+    </form>
+}

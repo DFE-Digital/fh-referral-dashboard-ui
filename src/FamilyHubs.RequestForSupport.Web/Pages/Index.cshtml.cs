@@ -11,11 +11,15 @@ public class IndexModel : PageModel
     public IActionResult OnGet()
     {
         var user = HttpContext.GetFamilyHubsUser();
-        //todo: vcs admin or pro
-        if(user.Role == "VcsAdmin")
+        if(user.Role is RoleTypes.VcsProfessional or RoleTypes.VcsDualRole)
         {
-            return RedirectToPage("/VcsRequestForSupport/Dashboard");
+            return RedirectToPage("/Vcs/Dashboard");
         }
+
+        //if (user.Role is RoleTypes.LaProfessional or RoleTypes.LaDualRole)
+        //{
+        //    return RedirectToPage("/La/Dashboard");
+        //}
 
         return RedirectToPage("/Error/401");
     }

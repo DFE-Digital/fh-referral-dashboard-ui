@@ -2,9 +2,7 @@
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
-using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 using FamilyHubs.SharedKernel.Identity;
-using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -14,30 +12,42 @@ using Microsoft.AspNetCore.Routing;
 using Moq;
 using System.Security.Claims;
 using System.Security.Principal;
-using FamilyHubs.SharedKernel.Razor.Dashboard;
 
 namespace FamilyHubs.RequestForSupport.UnitTests;
 
-public class WhenUsingTheVcsDashboard
+public abstract class BaseWhenUsingPage
 {
-    private readonly DashboardModel _pageModel;
-    private readonly Mock<IReferralClientService> _mockReferralClientService;
+    protected readonly Mock<IReferralClientService> MockReferralClientService;
+    protected readonly Mock<ITempDataDictionary> MockTempDataDictionary;
 
-    public WhenUsingTheVcsDashboard()
+    protected BaseWhenUsingPage()
     {
-        _mockReferralClientService = new Mock<IReferralClientService>();
+        MockReferralClientService = new Mock<IReferralClientService>();
+
+        MockTempDataDictionary = new Mock<ITempDataDictionary>();
+        MockTempDataDictionary.Setup(x => x["ReasonForDeclining"]).Returns("example reason");
+    }
+
+    protected PageContext GetPageContext()
+    {
+        MockReferralClientService
+            .Setup(x => x.GetReferralById(It.IsAny<long>()))
+            .ReturnsAsync(WhenUsingTheVcsDashboard.GetReferralDto());
+
         List<ReferralDto> list = new() { GetReferralDto() };
         PaginatedList<ReferralDto> pagelist = new PaginatedList<ReferralDto>(list, 1, 1, 1);
-        _mockReferralClientService.Setup(x => x.GetRequestsForConnectionByOrganisationId(It.IsAny<string>(), It.IsAny<ReferralOrderBy>(), It.IsAny<bool?>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(pagelist);
+        MockReferralClientService
+            .Setup(x => x.GetRequestsForConnectionByOrganisationId(It.IsAny<string>(), It.IsAny<ReferralOrderBy>(), It.IsAny<bool?>(), It.IsAny<int>(), It.IsAny<int>()))
+            .ReturnsAsync(pagelist);
 
         var displayName = "User name";
         var identity = new GenericIdentity(displayName);
-        identity.AddClaim(new Claim(FamilyHubsClaimTypes.Role, "Professional"));
+        identity.AddClaim(new Claim(FamilyHubsClaimTypes.Role, "VcsAdmin"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.OrganisationId, "1"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.AccountStatus, "active"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.FullName, "Test User"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.LoginTime, DateTime.UtcNow.ToString()));
-        identity.AddClaim(new Claim(ClaimTypes.Email, "Joe.Professional@email.com"));
+        identity.AddClaim(new Claim(ClaimTypes.Email, "vcsAdmin2.VcsAdmin@stub.com"));
         identity.AddClaim(new Claim(FamilyHubsClaimTypes.PhoneNumber, "012345678"));
         var principle = new ClaimsPrincipal(identity);
         // use default context with user
@@ -57,23 +67,7 @@ public class WhenUsingTheVcsDashboard
             ViewData = viewData
         };
 
-        _pageModel = new DashboardModel(_mockReferralClientService.Object)
-        {
-            PageContext = pageContext
-        };
-    }
-
-    //todo: bit light on actual tests
-
-    [Fact]
-    public async Task ThenOnGetOneRowIsPrepared()
-    {
-        //Act & Arrange
-        await _pageModel.OnGet("ContactInFamily", SortOrder.ascending);
-
-        //Assert
-        var dashboard = _pageModel as IDashboard<ReferralDto>;
-        dashboard.Rows.Should().HaveCount(1);
+        return pageContext;
     }
 
     public static ReferralDto GetReferralDto()
