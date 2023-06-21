@@ -3,6 +3,7 @@ using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.ReferralService.Shared.Models;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 
 namespace FamilyHubs.RequestForSupport.Core.ApiClients;
 
@@ -18,6 +19,7 @@ public interface IReferralClientService
 {
     Task<PaginatedList<ReferralDto>> GetRequestsForConnectionByProfessional(string professionalEmailAddress, ReferralOrderBy? orderBy, bool? isAscending, int pageNumber = 1, int pageSize = 10);
     Task<PaginatedList<ReferralDto>> GetRequestsForConnectionByOrganisationId(string organisationId, ReferralOrderBy? orderBy, bool? isAscending, int pageNumber = 1, int pageSize = 10);
+    Task<PaginatedList<ReferralDto>> GetRequestsByLaProfessional(string accountId, ReferralOrderBy? orderBy, bool? isAscending, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default);
     Task<ReferralDto> GetReferralById(long referralId);
     Task<List<ReferralStatusDto>> GetReferralStatuses();
     Task<string> UpdateReferral(ReferralDto referralDto);
@@ -51,6 +53,52 @@ public class ReferralClientService : ApiService, IReferralClientService
 
         return await JsonSerializer.DeserializeAsync<PaginatedList<ReferralDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                ?? new PaginatedList<ReferralDto>();
+    }
+
+    //todo: commonality in methods
+    public async Task<PaginatedList<ReferralDto>> GetRequestsByLaProfessional(
+        string accountId,
+        ReferralOrderBy? orderBy,
+        bool? isAscending,
+        int pageNumber = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        orderBy ??= ReferralOrderBy.NotSet;
+
+        isAscending ??= true;
+
+        //todo: fix spelling in url
+        var url = $"api/referralsByReferrer/{accountId}?orderBy={orderBy}&isAssending={isAscending}&pageNumber={pageNumber}&pageSize={pageSize}&includeDeclined=true";
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(Client.BaseAddress + url),
+        };
+
+        using var response = await Client.SendAsync(request, cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new ReferralClientServiceException(response, await response.Content.ReadAsStringAsync(cancellationToken));
+        }
+
+        var referrals = await JsonSerializer.DeserializeAsync<PaginatedList<ReferralDto>>(
+            await response.Content.ReadAsStreamAsync(cancellationToken),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
+            cancellationToken);
+
+        if (referrals is null)
+        {
+            // the only time it'll be null, is if the API returns "null"
+            // (see https://stackoverflow.com/questions/71162382/why-are-the-return-types-of-nets-system-text-json-jsonserializer-deserialize-m)
+            // unlikely, but possibly (pass new MemoryStream(Encoding.UTF8.GetBytes("null")) to see it actually return null)
+            // note we hard-code passing "null", rather than messing about trying to rewind the stream, as this is such a corner case and we want to let the deserializer take advantage of the async stream (in the happy case)
+            throw new ReferralClientServiceException(response, "null");
+        }
+
+        return referrals;
     }
 
     public async Task<PaginatedList<ReferralDto>> GetRequestsForConnectionByOrganisationId(string organisationId, ReferralOrderBy? orderBy, bool? isAscending, int pageNumber = 1, int pageSize = 10)

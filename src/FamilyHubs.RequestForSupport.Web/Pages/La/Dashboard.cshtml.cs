@@ -57,7 +57,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             .CreateAll();
 
         var user = HttpContext.GetFamilyHubsUser();
-        var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
+        var searchResults = await GetConnections(user.AccountId, currentPage!.Value, column, sort);
 
         _rows = searchResults.Items.Select(r => new LaDashboardRow(r));
 
@@ -65,7 +65,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
     }
 
     private async Task<PaginatedList<ReferralDto>> GetConnections(
-        string organisationId,
+        string laProfessionalAccountId,
         int currentPage,
         Column column,
         SortOrder sort)
@@ -80,7 +80,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             _ => throw new InvalidOperationException($"Unexpected sort column {column}")
         };
 
-        return await _referralClientService.GetRequestsForConnectionByOrganisationId(
-            organisationId, referralOrderBy, sort == SortOrder.ascending, currentPage, PageSize);
+        return await _referralClientService.GetRequestsByLaProfessional(
+            laProfessionalAccountId, referralOrderBy, sort == SortOrder.ascending, currentPage, PageSize);
     }
 }
