@@ -15,8 +15,6 @@ namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
 //todo: most of this can go in a base class
 //todo: check handling of 401 (no access to service)
-//todo: we've had to add the standard MS identity role to the stub users for now in addition to the existing role claim
-// Mike is going to update the shared lib to handle this better
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
 public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
 {
