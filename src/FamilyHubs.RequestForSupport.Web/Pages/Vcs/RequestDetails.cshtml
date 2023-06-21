@@ -94,7 +94,6 @@
                     </div>
 
                     @* not strictly necessary to set govuk-radios__conditional--hidden, but will stop a flash on slow user agents *@
-                    @* todo: check this with js disabled *@
                     <div class="govuk-radios__conditional @(declineReasonError != null ? "" : "govuk-radios__conditional--hidden")" id="conditional-decline-reason">
                         <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
                             <div class="govuk-form-group @(declineReasonError != null ? "govuk-form-group--error": "")">
