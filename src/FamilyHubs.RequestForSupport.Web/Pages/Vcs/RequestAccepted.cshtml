@@ -1,0 +1,32 @@
+﻿@page
+@model FamilyHubs.RequestForSupport.Web.Pages.Shared.GetRequestIdModel
+@{
+    ViewData["Title"] = "Request for support accepted";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+                Request for support accepted
+            </h1>
+            <div class="govuk-panel__body">
+                Request number:<br><strong>@Model.RequestId?.ToString("X6")</strong>
+            </div>
+        </div>
+
+        <h2 class="govuk-heading-m">What happens next</h2>
+
+        <p>
+            You can make contact with the person who requested support for this family to discuss this request further.
+        </p>
+        <p>
+            You must contact the family. If you are unable to make contact, you should contact the person who requested support for the family.
+        </p>
+
+        <a asp-page="/Vcs/RequestDetails" asp-route-id="@Model.RequestId" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+            View connection request
+        </a>
+    </div>
+
+</div>

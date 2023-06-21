@@ -1,0 +1,26 @@
+﻿@page
+@model FamilyHubs.RequestForSupport.Web.Pages.Shared.GetRequestIdModel
+@{
+    ViewData["Title"] = "Request for support declined";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-l">
+            Request for support declined
+        </h1>
+
+        <p>Request number: <strong>@Model.RequestId?.ToString("X6")</strong></p>
+
+        <h2 class="govuk-heading-m">What happens next</h2>
+
+        <p>
+            We have notified the professional who requested support for this family. 
+        </p>
+
+        <a asp-page="/Vcs/Dashboard" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+            Go to received requests
+        </a>
+    </div>
+</div>

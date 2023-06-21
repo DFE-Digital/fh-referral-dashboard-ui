@@ -24,6 +24,7 @@ public enum AcceptDecline
 
 public enum ErrorId
 {
+    //todo: have NoError, or use null?
     NoError,
     SelectAResponse,
     EnterReasonForDeclining,
@@ -94,6 +95,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
     {
         ReferralStatus? newStatus = null;
         string? redirectUrl = null;
+        object? redirectRouteValues = null;
         string? reason = null;
         var errors = new List<ErrorId>();
 
@@ -105,6 +107,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
                     case AcceptDecline.Accepted:
                         newStatus = ReferralStatus.Accepted;
                         redirectUrl = "/Vcs/RequestAccepted";
+                        redirectRouteValues = new {id};
                         break;
                     case AcceptDecline.Declined:
                         if (string.IsNullOrEmpty(ReasonForRejection))
@@ -123,6 +126,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
                         {
                             newStatus = ReferralStatus.Declined;
                             redirectUrl = "/Vcs/RequestDeclined";
+                            redirectRouteValues = new { id };
                             reason = ReasonForRejection;
                         }
                         break;
@@ -149,7 +153,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
 
         await _referralClientService.UpdateReferralStatus(id, newStatus.Value, reason);
 
-        return RedirectToPage(redirectUrl);
+        return RedirectToPage(redirectUrl, redirectRouteValues);
     }
 
     public Error? GetCurrentError(params ErrorId[] mutuallyExclusiveErrorIds)
