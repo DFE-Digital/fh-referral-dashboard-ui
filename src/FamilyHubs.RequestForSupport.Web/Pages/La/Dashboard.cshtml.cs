@@ -1,35 +1,32 @@
-using FamilyHubs.RequestForSupport.Core.ApiClients;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using FamilyHubs.ReferralService.Shared.Dto;
-using FamilyHubs.ReferralService.Shared.Models;
-using Microsoft.AspNetCore.Authorization;
-using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ReferralService.Shared.Enums;
+using FamilyHubs.ReferralService.Shared.Models;
+using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Dashboard;
-using FamilyHubs.RequestForSupport.Web.VcsDashboard;
+using FamilyHubs.RequestForSupport.Web.LaDashboard;
+using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.Pagination;
-using FamilyHubs.RequestForSupport.Web.Security;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
+namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 
-//todo: most of this can go in a base class
-//todo: check handling of 401 (no access to service)
-[Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
 public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
 {
-    private static ColumnImmutable[] _columnImmutables = 
+    private static ColumnImmutable[] _columnImmutables =
     {
         new("Contact in family", Column.ContactInFamily.ToString()),
-        new("Date received", Column.DateReceived.ToString()),
+        new("Service", Column.Service.ToString()),
+        new("Date updated", Column.DateUpdated.ToString()),
+        new("Date sent", Column.DateSent.ToString()),
         new("Request number"),
         new("Status", Column.Status.ToString())
     };
 
     private readonly IReferralClientService _referralClientService;
 
-    string? IDashboard<ReferralDto>.TableClass => "app-vcs-dashboard";
+    string? IDashboard<ReferralDto>.TableClass => "app-la-dashboard";
 
     public IPagination Pagination { get; set; }
 
@@ -49,22 +46,22 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
 
     public async Task OnGet(string? columnName, SortOrder sort, int? currentPage = 1)
     {
-        if (columnName == null|| !Enum.TryParse(columnName, true, out Column column))
+        if (columnName == null || !Enum.TryParse(columnName, true, out Column column))
         {
             // default when first load the page, or user has manually changed the url
-            column = Column.DateReceived;
+            column = Column.DateUpdated;
             sort = SortOrder.descending;
         }
 
-        _columnHeaders = new ColumnHeaderFactory(_columnImmutables, "/Vcs/Dashboard", column.ToString(), sort)
+        _columnHeaders = new ColumnHeaderFactory(_columnImmutables, "/La/Dashboard", column.ToString(), sort)
             .CreateAll();
 
         var user = HttpContext.GetFamilyHubsUser();
         var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
 
-        _rows = searchResults.Items.Select(r => new VcsDashboardRow(r));
+        _rows = searchResults.Items.Select(r => new LaDashboardRow(r));
 
-        Pagination = new LargeSetLinkPagination<Column>("/Vcs/Dashboard", searchResults.TotalPages, currentPage.Value, column, sort);
+        Pagination = new LargeSetLinkPagination<Column>("/La/Dashboard", searchResults.TotalPages, currentPage.Value, column, sort);
     }
 
     private async Task<PaginatedList<ReferralDto>> GetConnections(
@@ -76,8 +73,9 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
         var referralOrderBy = column switch
         {
             Column.ContactInFamily => ReferralOrderBy.RecipientName,
-            //todo: check sent == received
-            Column.DateReceived => ReferralOrderBy.DateSent,
+            Column.Service => ReferralOrderBy.ServiceName,
+            Column.DateUpdated => ReferralOrderBy.DateUpdated,
+            Column.DateSent => ReferralOrderBy.DateSent,
             Column.Status => ReferralOrderBy.Status,
             _ => throw new InvalidOperationException($"Unexpected sort column {column}")
         };

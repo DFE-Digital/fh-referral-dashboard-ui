@@ -16,10 +16,10 @@ public class IndexModel : PageModel
             return RedirectToPage("/Vcs/Dashboard");
         }
 
-        //if (user.Role is RoleTypes.LaProfessional or RoleTypes.LaDualRole)
-        //{
-        //    return RedirectToPage("/La/Dashboard");
-        //}
+        if (user.Role is RoleTypes.LaProfessional or RoleTypes.LaDualRole)
+        {
+            return RedirectToPage("/La/Dashboard");
+        }
 
         return RedirectToPage("/Error/401");
     }
