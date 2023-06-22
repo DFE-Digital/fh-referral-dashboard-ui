@@ -11,6 +11,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 
+//todo: professional dashboard has a secondary sort on date updated, rather than created (api/referralsByReferrer/)
+//todo: if status is sent, then status ordering shouldnb't be new by updated, then opened by updated. it needs to be new|opened by updated (api/referralsByReferrer/)
+//todo: status should be accepted, declined or sent (new or opened)
+
+//todo: make back button remember dashboard state?
 //todo: check AccountStatus on claim? is it done auto?
 //todo: add url for 401 (no access to service)
 public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
