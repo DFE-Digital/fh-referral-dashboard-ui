@@ -19,7 +19,6 @@ public interface IReferralClientService
     Task<PaginatedList<ReferralDto>> GetRequestsForConnectionByOrganisationId(string organisationId, ReferralOrderBy? orderBy, bool? isAscending, int pageNumber = 1, int pageSize = 10);
     Task<PaginatedList<ReferralDto>> GetRequestsByLaProfessional(string accountId, ReferralOrderBy? orderBy, bool? isAscending, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default);
     Task<ReferralDto> GetReferralById(long referralId);
-    Task<string> UpdateReferral(ReferralDto referralDto);
     Task<string> UpdateReferralStatus(long referralId, ReferralStatus referralStatus, string? reason = null);
 }
 
@@ -136,23 +135,6 @@ public class ReferralClientService : ApiService, IReferralClientService
         response.EnsureSuccessStatusCode();
 
         return await JsonSerializer.DeserializeAsync<ReferralDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? default!;
-    }
-
-    public async Task<string> UpdateReferral(ReferralDto referralDto)
-    {
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Put,
-            RequestUri = new Uri(Client.BaseAddress + $"api/referrals/{referralDto.Id}"),
-            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(referralDto), Encoding.UTF8, "application/json"),
-        };
-
-        using var response = await Client.SendAsync(request);
-
-        response.EnsureSuccessStatusCode();
-
-        var stringResult = await response.Content.ReadAsStringAsync();
-        return stringResult;
     }
 
     public async Task<string> UpdateReferralStatus(long referralId, ReferralStatus referralStatus, string? reason = null)
