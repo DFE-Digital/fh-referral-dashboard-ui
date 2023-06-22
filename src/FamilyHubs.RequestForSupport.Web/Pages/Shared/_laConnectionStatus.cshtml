@@ -1,0 +1,19 @@
+﻿@using FamilyHubs.RequestForSupport.Core.ApiClients
+@model FamilyHubs.ReferralService.Shared.Dto.ReferralDto
+
+@* todo: should be int in model*@
+@switch ((ReferralStatus)(int)Model.Status.Id)
+{
+    case ReferralStatus.Opened:
+    case ReferralStatus.New:
+        <strong class="govuk-tag govuk-tag--purple">Sent</strong>
+        break;
+    case ReferralStatus.Accepted:
+        <strong class="govuk-tag govuk-tag--green">Accepted</strong>
+        break;
+    case ReferralStatus.Declined:
+        <strong class="govuk-tag govuk-tag--red">Declined</strong>
+        break;
+    default:
+        throw new ArgumentOutOfRangeException($"Unexpected status id {Model.Status.Id}");
+}

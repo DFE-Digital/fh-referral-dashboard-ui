@@ -12,8 +12,25 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 
 //todo: professional dashboard has a secondary sort on date updated, rather than created (api/referralsByReferrer/)
-//todo: if status is sent, then status ordering shouldnb't be new by updated, then opened by updated. it needs to be new|opened by updated (api/referralsByReferrer/)
+//todo: if status is sent, then status ordering shouldn't be new by updated, then opened by updated. it needs to be new|opened by updated (api/referralsByReferrer/)
 //todo: status should be accepted, declined or sent (new or opened)
+
+/*   backend   fronend modified     frontend  current ordering  what we want ordering
+ *   new        sent      3         sent          1             1
+ *   new        sent      1         sent          2             3
+ *   opened     sent      2         sent          3             2
+ *   accepted                       acc           4             4
+ *   declind                        dec           5             5
+ *
+ *   new          2         sent          1             1
+ *   new          2         sent          1             1
+ *   opened       1         sent          2             2
+ *   accepted               acc           3             3
+ *   declind                dec           4             4
+
+ *
+ *
+ */
 
 //todo: make back button remember dashboard state?
 //todo: check AccountStatus on claim? is it done auto?
