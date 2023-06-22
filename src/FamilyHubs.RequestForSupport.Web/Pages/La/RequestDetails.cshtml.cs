@@ -24,6 +24,7 @@ public class RequestDetailsModel : PageModel, IFamilyHubsHeader
     {
         try
         {
+            //todo: api will need to be updated to check the user has access to this referral
             Referral = await _referralClientService.GetReferralById(id);
         }
         catch (HttpRequestException httpEx)
