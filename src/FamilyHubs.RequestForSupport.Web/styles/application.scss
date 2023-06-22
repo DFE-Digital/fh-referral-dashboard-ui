@@ -8,16 +8,13 @@
 }
 
 //todo: what's going on here? sort out this / fh-button-link
-//todo: put fh-button-link back to how it was
 
 #return-later {
     @include govuk-link-common;
     @include govuk-link-style-default;
+    @include govuk-typography-responsive(19);
     border: none;
     padding: 0;
     cursor: pointer;
     background: none;
-    /*todo: should this respond the same as standard paragraph text, rather than always be 16px?*/
-    font-size: $dfe-base-font-size;
-    line-height: 1.33333;
 }
