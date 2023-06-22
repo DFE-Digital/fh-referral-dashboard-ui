@@ -28,7 +28,7 @@ public class WhenUsingTheVcsDashboard
         _mockReferralClientService = new Mock<IReferralClientService>();
         List<ReferralDto> list = new() { GetReferralDto() };
         PaginatedList<ReferralDto> pagelist = new PaginatedList<ReferralDto>(list, 1, 1, 1);
-        _mockReferralClientService.Setup(x => x.GetRequestsForConnectionByOrganisationId(It.IsAny<string>(), It.IsAny<ReferralOrderBy>(), It.IsAny<bool?>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(pagelist);
+        _mockReferralClientService.Setup(x => x.GetRequestsForConnectionByOrganisationId(It.IsAny<string>(), It.IsAny<ReferralOrderBy>(), It.IsAny<bool?>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(pagelist);
 
         var displayName = "User name";
         var identity = new GenericIdentity(displayName);

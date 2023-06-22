@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 
+//todo: check AccountStatus on claim? is it done auto?
+//todo: add url for 401 (no access to service)
 public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
 {
     private static ColumnImmutable[] _columnImmutables =
