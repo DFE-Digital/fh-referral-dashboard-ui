@@ -31,13 +31,13 @@ public abstract class BaseWhenUsingPage
     protected PageContext GetPageContext()
     {
         MockReferralClientService
-            .Setup(x => x.GetReferralById(It.IsAny<long>()))
+            .Setup(x => x.GetReferralById(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(WhenUsingTheVcsDashboard.GetReferralDto());
 
         List<ReferralDto> list = new() { GetReferralDto() };
         PaginatedList<ReferralDto> pagelist = new PaginatedList<ReferralDto>(list, 1, 1, 1);
         MockReferralClientService
-            .Setup(x => x.GetRequestsForConnectionByOrganisationId(It.IsAny<string>(), It.IsAny<ReferralOrderBy>(), It.IsAny<bool?>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(x => x.GetRequestsForConnectionByOrganisationId(It.IsAny<string>(), It.IsAny<ReferralOrderBy>(), It.IsAny<bool?>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(pagelist);
 
         var displayName = "User name";

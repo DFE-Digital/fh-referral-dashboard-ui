@@ -1,0 +1,16 @@
+﻿@page
+@model FamilyHubs.RequestForSupport.Web.Pages.La.RequestDetailsModel
+@{
+    string pageName = $"Declined request {Model.Referral.Id:X6}";
+    ViewData["Title"] = pageName;
+}
+
+@section Back {
+    <a asp-page="/La/Dashboard" class="govuk-back-link">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">@pageName</h1>
+    </div>
+</div>

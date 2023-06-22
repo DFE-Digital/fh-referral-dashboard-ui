@@ -1,25 +1,20 @@
 ﻿@use "sass:map";
 @import "../node_modules/familyhubs-frontend/styles/all";
 @import "_VcsDashboard";
+@import "_LaDashboard";
 
 .app-break-spaces {
     white-space: break-spaces;
 }
 
-//todo: remove hover from fh-button-link, then remove this
-//todo: mixin govuk-link?
-.app-button-link {
-    border: none;
-    padding: 0 !important;
-    color: $govuk-link-colour;
-    cursor: pointer;
-    background: none !important;
+//todo: what's going on here? sort out this / fh-button-link
 
-/*    &:hover {
-        text-decoration: none;
-    }
-*/
-    &:focus {
-        background-color: $govuk-focus-colour !important;
-    }
+#return-later {
+    @include govuk-link-common;
+    @include govuk-link-style-default;
+    @include govuk-typography-responsive(19);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    background: none;
 }
