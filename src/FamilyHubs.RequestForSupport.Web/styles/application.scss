@@ -10,17 +10,14 @@
 //todo: what's going on here? sort out this / fh-button-link
 //todo: put fh-button-link back to how it was
 
-.app-button-link {
+#return-later {
+    @include govuk-link-common;
+    @include govuk-link-style-default;
     border: none;
-    padding: 0 !important;
-    color: $govuk-link-colour;
+    padding: 0;
     cursor: pointer;
-    background: none !important;
-    /*    &:hover {
-        text-decoration: none;
-    }
-*/
-    &:focus {
-        background-color: $govuk-focus-colour !important;
-    }
+    background: none;
+    /*todo: should this respond the same as standard paragraph text, rather than always be 16px?*/
+    font-size: $dfe-base-font-size;
+    line-height: 1.33333;
 }

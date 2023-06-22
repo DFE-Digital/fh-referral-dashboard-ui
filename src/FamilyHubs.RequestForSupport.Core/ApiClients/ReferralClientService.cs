@@ -3,7 +3,6 @@ using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.ReferralService.Shared.Models;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
 
 namespace FamilyHubs.RequestForSupport.Core.ApiClients;
 
