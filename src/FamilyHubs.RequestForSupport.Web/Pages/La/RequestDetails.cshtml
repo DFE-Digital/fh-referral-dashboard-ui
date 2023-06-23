@@ -23,7 +23,8 @@
                     Service details
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    <a href="island-advice.html">Island Advice Centre</a>
+                    @* todo: we need the url (but not the description)*@
+                    <a href="https://example.com/todo">@Model.Referral.ReferralServiceDto.Name</a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -31,7 +32,7 @@
                     Date updated
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    20 Apr 2023
+                    @Model.Referral.LastModified?.ToString("dd MMM yyyyy")
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -39,7 +40,7 @@
                     Date sent
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    15 Apr 2023
+                    @Model.Referral.Created?.ToString("dd MMM yyyyy")
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -47,7 +48,7 @@
                     Status
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    <strong class="govuk-tag govuk-tag--green">Accepted</strong>
+                    <partial name="Shared/_laConnectionStatus" for="@Model.Referral"/>
                 </dd>
             </div>
         </dl>
@@ -57,67 +58,15 @@
 <div class="govuk-grid-row govuk-!-margin-top-2">
     <div class="govuk-grid-column-two-thirds">
         <h2 class="govuk-heading-m">Reason for the connection request</h2>
-        <p>Jerry is on a low fixed income and keeps getting chased by Tom, who would like to eat him.<p>
+        <p>@Model.Referral.ReasonForSupport</p>
     </div>
 </div>
 
-@* todo: row? *@
-<h2 class="govuk-heading-m">Person in family to contact</h2>
-
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <dl class="govuk-summary-list govuk-!-margin-bottom-6">
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Name
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    Jerry
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Email
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    <a href="mailto:richard.neil@gmail.com">jy19@gmail.com</a>
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Phone
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    <a href="tel:0122 888 920">07349 53722</a>
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Text message
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    <a href="tel:0122 888 920">07349 53722</a>
-                </dd>
-            </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Address
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    12 Milton Street<br>
-                    London<br>
-                    E14 3P<br>
-                </dd>
-            </div>
-        </dl>
-    </div>
-</div>
+<partial name="Shared/_RecipientContactDetails" for="@Model.Referral.RecipientDto" />
 
 <div class="govuk-grid-row govuk-!-margin-top-2">
     <div class="govuk-grid-column-two-thirds">
         <h2 class="govuk-heading-m">How the service can engage with Jerry Yates</h2>
-        <p>
-            Jerry has a mobile phone but finds it hard to operate it with his tiny paws.
-        </p>
+        <p>@Model.Referral.EngageWithFamily</p>
     </div>
 </div>
