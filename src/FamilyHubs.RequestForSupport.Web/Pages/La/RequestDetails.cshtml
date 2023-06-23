@@ -23,8 +23,14 @@
                     Service details
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @* todo: we need the url (but not the description)*@
-                    <a href="https://example.com/todo">@Model.Referral.ReferralServiceDto.Name</a>
+                    @if (Model.Referral.ReferralServiceDto.Url != null)
+                    {
+                        <a href="@Model.Referral.ReferralServiceDto.Url">@Model.Referral.ReferralServiceDto.Name</a>
+                    }
+                    else
+                    {
+                        @Model.Referral.ReferralServiceDto.Name
+                    }
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
