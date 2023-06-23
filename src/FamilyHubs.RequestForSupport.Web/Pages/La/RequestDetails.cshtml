@@ -1,7 +1,17 @@
 ﻿@page
+@using FamilyHubs.RequestForSupport.Core.ApiClients
 @model FamilyHubs.RequestForSupport.Web.Pages.La.RequestDetailsModel
+
 @{
-    string pageName = $"Declined request {Model.Referral.Id:X6}";
+    // string pageNamePrefix = (ReferralStatus) (int) Model.Referral.Status.Id switch
+    // {
+    //     ReferralStatus.Opened or ReferralStatus.New => "Request",
+    //     ReferralStatus.Accepted => "Accepted request",
+    //     ReferralStatus.Declined => "Declined request",
+    //     _ => throw new ArgumentOutOfRangeException($"Unexpected status id {Model.Referral.Status.Id}")
+    // };
+    string pageNamePrefix = "Request";
+    string pageName = $"{pageNamePrefix} {Model.Referral.Id:X6}";
     ViewData["Title"] = pageName;
 }
 
@@ -60,6 +70,16 @@
         </dl>
     </div>
 </div>
+
+@if ((ReferralStatus) (int) Model.Referral.Status.Id == ReferralStatus.Declined)
+{
+    <div class="govuk-grid-row govuk-!-margin-top-2">
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-m">Reason for declining the connection request</h2>
+            <p>@Model.Referral.ReasonForDecliningSupport</p>
+        </div>
+    </div>
+}
 
 <div class="govuk-grid-row govuk-!-margin-top-2">
     <div class="govuk-grid-column-two-thirds">
