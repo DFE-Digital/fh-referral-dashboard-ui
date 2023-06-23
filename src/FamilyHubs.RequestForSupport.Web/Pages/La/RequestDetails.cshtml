@@ -1,7 +1,17 @@
 ﻿@page
+@using FamilyHubs.RequestForSupport.Core.ApiClients
 @model FamilyHubs.RequestForSupport.Web.Pages.La.RequestDetailsModel
+
 @{
-    string pageName = $"Declined request {Model.Referral.Id:X6}";
+    // string pageNamePrefix = (ReferralStatus) (int) Model.Referral.Status.Id switch
+    // {
+    //     ReferralStatus.Opened or ReferralStatus.New => "Request",
+    //     ReferralStatus.Accepted => "Accepted request",
+    //     ReferralStatus.Declined => "Declined request",
+    //     _ => throw new ArgumentOutOfRangeException($"Unexpected status id {Model.Referral.Status.Id}")
+    // };
+    string pageNamePrefix = "Request";
+    string pageName = $"{pageNamePrefix} {Model.Referral.Id:X6}";
     ViewData["Title"] = pageName;
 }
 
@@ -12,5 +22,77 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l">@pageName</h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <dl class="govuk-summary-list govuk-!-margin-bottom-6">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Service details
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @if (Model.Referral.ReferralServiceDto.Url != null)
+                    {
+                        <a href="@Model.Referral.ReferralServiceDto.Url">@Model.Referral.ReferralServiceDto.Name</a>
+                    }
+                    else
+                    {
+                        @Model.Referral.ReferralServiceDto.Name
+                    }
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Date updated
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.Referral.LastModified?.ToString("dd MMM yyyyy")
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Date sent
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.Referral.Created?.ToString("dd MMM yyyyy")
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Status
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <partial name="Shared/_laConnectionStatus" for="@Model.Referral"/>
+                </dd>
+            </div>
+        </dl>
+    </div>
+</div>
+
+@if ((ReferralStatus) (int) Model.Referral.Status.Id == ReferralStatus.Declined)
+{
+    <div class="govuk-grid-row govuk-!-margin-top-2">
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-m">Reason for declining the connection request</h2>
+            <p>@Model.Referral.ReasonForDecliningSupport</p>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row govuk-!-margin-top-2">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">Reason for the connection request</h2>
+        <p>@Model.Referral.ReasonForSupport</p>
+    </div>
+</div>
+
+<partial name="Shared/_RecipientContactDetails" for="@Model.Referral.RecipientDto" />
+
+<div class="govuk-grid-row govuk-!-margin-top-2">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">How the service can engage with Jerry Yates</h2>
+        <p>@Model.Referral.EngageWithFamily</p>
     </div>
 </div>
