@@ -1,11 +1,12 @@
 ﻿using FamilyHubs.RequestForSupport.Web.Security;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Shared;
 
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
-public class GetRequestIdModel : PageModel
+public class GetRequestIdModel : PageModel, IFamilyHubsHeader
 {
     public int? RequestId { get; private set; }
 
