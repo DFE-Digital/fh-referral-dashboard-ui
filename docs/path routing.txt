@@ -1,0 +1,21 @@
+
+    
+browser URL
+
+                                              App Gateway
+
+path route                          n/a                            /dashboard                                          
+
+
+app service url                              
+
+                       Connect (request ui) Pool          manage connection request Pool (dashboard)
+
+
+prod
+settings connectUrl       https://common/
+         dashboardUrl     https://common/dashboard
+
+local
+settings connectUrl       http://localhost:3000
+         dashboardUrl     http://localhost:3001
