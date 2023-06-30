@@ -33,14 +33,7 @@
                     Service details
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @if (Model.Referral.ReferralServiceDto.Url != null)
-                    {
-                        <a href="@Model.Referral.ReferralServiceDto.Url">@Model.Referral.ReferralServiceDto.Name</a>
-                    }
-                    else
-                    {
-                        @Model.Referral.ReferralServiceDto.Name
-                    }
+                    <a href="@(Model.GetReferralServiceUrl(Model.Referral.ReferralServiceDto.Id))" rel="noreferrer noopener" target="_blank">@Model.Referral.ReferralServiceDto.Name (opens in a new tab)</a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -48,7 +41,7 @@
                     Date updated
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @Model.Referral.LastModified?.ToString("dd MMM yyyyy")
+                    @Model.Referral.LastModified?.ToString("dd MMM yyyy")
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -56,7 +49,7 @@
                     Date sent
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @Model.Referral.Created?.ToString("dd MMM yyyyy")
+                    @Model.Referral.Created?.ToString("dd MMM yyyy")
                 </dd>
             </div>
             <div class="govuk-summary-list__row">

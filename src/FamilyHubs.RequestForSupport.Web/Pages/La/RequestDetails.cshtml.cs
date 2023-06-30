@@ -14,10 +14,16 @@ public class RequestDetailsModel : PageModel, IFamilyHubsHeader
 {
     private readonly IReferralClientService _referralClientService;
     public ReferralDto Referral { get; set; } = default!;
+    public Uri ReferralUiUrl { get; set; }
 
-    public RequestDetailsModel(IReferralClientService referralClientService)
+    public RequestDetailsModel(
+        IReferralClientService referralClientService,
+        IConfiguration configuration)
     {
         _referralClientService = referralClientService;
+        //todo: bring in our config exception
+        ReferralUiUrl = new Uri(configuration["ReferralUiUrl"]
+            ?? throw new InvalidOperationException("Missing config for ReferralUiUrl"));
     }
 
     public async Task<IActionResult> OnGet(int id)
@@ -37,5 +43,10 @@ public class RequestDetailsModel : PageModel, IFamilyHubsHeader
             throw;
         }
         return Page();
+    }
+
+    public Uri GetReferralServiceUrl(long serviceId)
+    {
+        return new Uri(ReferralUiUrl, $"ProfessionalReferral/LocalOfferDetail?serviceid={serviceId}");
     }
 }
