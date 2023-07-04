@@ -96,10 +96,11 @@ public class WhenUsingTheVcsDashboard
                 County = "County",
                 PostCode = "B30 2TV"
             },
-            ReferrerDto = new ReferrerDto
+            ReferrerDto = new ReferralUserAccountDto()
             {
                 Id = 2,
                 EmailAddress = "Bob.Referrer@email.com",
+                Role = "LaProfessional"
             },
             Status = new ReferralStatusDto
             {
@@ -111,14 +112,13 @@ public class WhenUsingTheVcsDashboard
                 Id = 2,
                 Name = "Service",
                 Description = "Service Description",
-                ReferralOrganisationDto = new ReferralOrganisationDto
+                OrganisationDto = new OrganisationDto
                 {
                     Id = 2,
                     Name = "Organisation",
                     Description = "Organisation Description",
                 }
             }
-
         };
     }
 }
