@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Net;
+using FamilyHubs.Notification.Api.Client;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Security;
@@ -22,6 +23,7 @@ public enum AcceptDecline
     Declined
 }
 
+//todo: switch to new shared ErrorState
 public enum ErrorId
 {
     //todo: have NoError, or use null?
@@ -40,10 +42,19 @@ public interface IErrorSummary
 
 public record Error(string HtmlElementId, string ErrorMessage);
 
+public enum NotificationType
+{
+    ProfessionalAcceptedRequest,
+    ProfessionalDeclinedRequest
+}
+
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
 public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSummary
 {
     private readonly IReferralClientService _referralClientService;
+    private readonly IConfiguration _configuration;
+    private readonly INotifications _notifications;
+    private readonly ILogger<VcsRequestDetailsPageModel> _logger;
     public ReferralDto Referral { get; set; } = default!;
 
     [BindProperty]
@@ -60,9 +71,16 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
 
     public IEnumerable<ErrorId> ErrorIds { get; private set; } = Enumerable.Empty<ErrorId>();
 
-    public VcsRequestDetailsPageModel(IReferralClientService referralClientService)
+    public VcsRequestDetailsPageModel(
+        IReferralClientService referralClientService,
+        IConfiguration configuration,
+        INotifications notifications,
+        ILogger<VcsRequestDetailsPageModel> logger)
     {
         _referralClientService = referralClientService;
+        _configuration = configuration;
+        _notifications = notifications;
+        _logger = logger;
     }
 
     public async Task<IActionResult> OnGet(int id, IEnumerable<ErrorId> errors)
@@ -153,7 +171,73 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
 
         await _referralClientService.UpdateReferralStatus(id, newStatus.Value, reason);
 
+        NotificationType? notificationType = newStatus switch
+        {
+            ReferralStatus.Accepted => NotificationType.ProfessionalAcceptedRequest,
+            ReferralStatus.Declined => NotificationType.ProfessionalDeclinedRequest,
+            _ => null
+        };
+        if (notificationType != null)
+        {
+            await TrySendNotificationEmails("todo: pro email", notificationType.Value, "todo: service name", id, "/");
+        }
+
         return RedirectToPage(redirectUrl, redirectRouteValues);
+    }
+
+    private async Task TrySendNotificationEmails(
+        string emailAddress,
+        NotificationType notificationType,
+        string serviceName,
+        int requestNumber,
+        string dashboardUrl)
+    {
+        try
+        {
+            await SendNotificationEmails(emailAddress, notificationType, requestNumber, serviceName, dashboardUrl);
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning(e, "Unable to send {NotificationType} email for request {RequestNumber}", notificationType, requestNumber);
+        }
+    }
+
+    private async Task SendNotificationEmails(
+        string emailAddress,
+        NotificationType notificationType,
+        int requestNumber,
+        string serviceName,
+        string dashboardUrl)
+    {
+        var viewConnectionRequestUrl = new UriBuilder(dashboardUrl)
+        {
+            Path = "La/RequestDetails",
+            Query = $"id={requestNumber}"
+        }.Uri;
+
+        var emailTokens = new Dictionary<string, string>
+        {
+            { "RequestNumber", requestNumber.ToString("X6") },
+            { "ServiceName", serviceName },
+            { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
+        };
+
+        //todo: have singleton, so that we only read the config once. perhaps put it in the client??
+        string templateName = notificationType switch
+        {
+            NotificationType.ProfessionalAcceptedRequest => "ProfessionalAcceptedRequest",
+            NotificationType.ProfessionalDeclinedRequest => "ProfessionalDeclinedRequest",
+            _ => throw new ArgumentOutOfRangeException(nameof(notificationType), notificationType, null)
+        };
+
+        string? templateId = _configuration[$"Notification:TemplateIds:{templateName}"];
+        if (string.IsNullOrEmpty(templateId))
+        {
+            //todo: use config exception
+            throw new InvalidOperationException($"Notification:TemplateIds:{templateName} not set in config");
+        }
+
+        await _notifications.SendEmailsAsync(new List<string> { emailAddress }, templateId, emailTokens);
     }
 
     public Error? GetCurrentError(params ErrorId[] mutuallyExclusiveErrorIds)
