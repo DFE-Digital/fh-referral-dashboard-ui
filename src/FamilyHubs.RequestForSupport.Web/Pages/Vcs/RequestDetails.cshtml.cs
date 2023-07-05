@@ -108,7 +108,6 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
     }
 
     //todo: component for character count (especially as there are some gotchas with line endings)
-    //todo: component for standard error summary
     public async Task<IActionResult> OnPost(UserAction userAction, int id)
     {
         ReferralStatus? newStatus = null;
@@ -177,10 +176,26 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
             ReferralStatus.Declined => NotificationType.ProfessionalDeclinedRequest,
             _ => null
         };
-        if (notificationType != null)
+        if (notificationType == null)
         {
-            await TrySendNotificationEmails("todo: pro email", notificationType.Value, "todo: service name", id, "/");
+            return RedirectToPage(redirectUrl, redirectRouteValues);
         }
+
+        try
+        {
+            Referral = await _referralClientService.GetReferralById(id);
+        }
+        catch (ReferralClientServiceException ex)
+        {
+            // user has changed the id in the url to see a referral they shouldn't have access to
+            if (ex.StatusCode == HttpStatusCode.Forbidden)
+            {
+                return RedirectToPage("/Error/403");
+            }
+            throw;
+        }
+
+        await TrySendNotificationEmails(Referral.ReferrerDto.EmailAddress, notificationType.Value, Referral.ReferralServiceDto.Name, id, "/");
 
         return RedirectToPage(redirectUrl, redirectRouteValues);
     }
