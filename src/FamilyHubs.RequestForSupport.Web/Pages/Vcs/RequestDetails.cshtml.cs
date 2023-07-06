@@ -3,7 +3,9 @@ using System.Net;
 using FamilyHubs.Notification.Api.Client;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
+using FamilyHubs.RequestForSupport.Web.Errors;
 using FamilyHubs.RequestForSupport.Web.Security;
+using FamilyHubs.SharedKernel.Razor.Errors;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -60,25 +62,6 @@ public enum AcceptDecline
     Declined
 }
 
-//todo: switch to new shared ErrorState
-public enum ErrorId
-{
-    //todo: have NoError, or use null?
-    NoError,
-    SelectAResponse,
-    EnterReasonForDeclining,
-    ReasonForDecliningTooLong
-}
-
-public interface IErrorSummary
-{
-    bool HasErrors { get; }
-    IEnumerable<ErrorId> ErrorIds { get; }
-    Error GetError(ErrorId errorId);
-}
-
-public record Error(string HtmlElementId, string ErrorMessage);
-
 public enum NotificationType
 {
     ProfessionalAcceptedRequest,
@@ -86,7 +69,7 @@ public enum NotificationType
 }
 
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
-public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSummary
+public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
 {
     private readonly IReferralClientService _referralClientService;
     private readonly INotifications _notifications;
@@ -100,13 +83,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
     [BindProperty]
     public AcceptDecline? AcceptOrDecline { get; set; }
 
-    public static readonly ImmutableDictionary<ErrorId, Error> PossibleErrors = ImmutableDictionary
-        .Create<ErrorId, Error>()
-        .Add(ErrorId.SelectAResponse, new Error("accept-request", "You must select a response"))
-        .Add(ErrorId.EnterReasonForDeclining, new Error("decline-reason", "Enter a reason for declining"))
-        .Add(ErrorId.ReasonForDecliningTooLong, new Error("decline-reason", "Reason for declining must be 500 characters or less"));
-
-    public IEnumerable<ErrorId> ErrorIds { get; private set; } = Enumerable.Empty<ErrorId>();
+    public IErrorState ErrorState { get; private set; }
 
     public VcsRequestDetailsPageModel(
         IReferralClientService referralClientService,
@@ -118,11 +95,13 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
         _notifications = notifications;
         _notificationTemplates = notificationTemplates;
         _logger = logger;
+        //todo: do something so doesn't have to be fully qualified
+        ErrorState = SharedKernel.Razor.Errors.ErrorState.Empty;
     }
 
     public async Task<IActionResult> OnGet(int id, IEnumerable<ErrorId> errors)
     {
-        ErrorIds = errors;
+        ErrorState = SharedKernel.Razor.Errors.ErrorState.Create(PossibleErrors.All, errors);
 
         // if the user enters a reason for declining that's too long, then refreshes the page with the corresponding error message on, they'll lose their reason. quite an edge case though, and the site will still work, they'll just have to enter a shorter reason from scratch
         ReasonForRejection  = TempData["ReasonForDeclining"] as string;
@@ -282,19 +261,5 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
         //todo: change api to accept IEnumerable and dynamic dictionary
         await _notifications.SendEmailsAsync(new List<string> { emailAddress }, templateId, emailTokens);
     }
-
-    public Error? GetCurrentError(params ErrorId[] mutuallyExclusiveErrorIds)
-    {
-        // SingleOrDefault would be safer, but this is faster
-        ErrorId currentErrorId = ErrorIds.FirstOrDefault(mutuallyExclusiveErrorIds.Contains);
-        return currentErrorId != ErrorId.NoError ? PossibleErrors[currentErrorId] : null;
-    }
-
-    Error IErrorSummary.GetError(ErrorId errorId)
-    {
-        return PossibleErrors[errorId];
-    }
-
-    bool IErrorSummary.HasErrors => ErrorIds.Any(e => e != ErrorId.NoError);
 }
 

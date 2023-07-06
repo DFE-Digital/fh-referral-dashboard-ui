@@ -11,7 +11,7 @@
     <a asp-page="/Vcs/Dashboard" class="govuk-back-link">Back</a>
 }
 
-<partial name="_ErrorSummary" for="@Model"/>
+<partial name="Shared/_ErrorSummary" for="@Model.ErrorState" />
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -63,8 +63,8 @@
 
 @if ((ReferralStatus)Model.Referral.Status.Id is ReferralStatus.New or ReferralStatus.Opened)
 {
-    Error? selectAResponseError = Model.GetCurrentError(ErrorId.SelectAResponse);
-    Error? declineReasonError = Model.GetCurrentError(ErrorId.EnterReasonForDeclining, ErrorId.ReasonForDecliningTooLong);
+    Error? selectAResponseError = Model.ErrorState.GetErrorIfTriggered((int)ErrorId.SelectAResponse);
+    Error? declineReasonError = Model.ErrorState.GetErrorIfTriggered((int)ErrorId.EnterReasonForDeclining, (int)ErrorId.ReasonForDecliningTooLong);
 
     <form method="post" novalidate data-validate='my-form-validation'>
         <div class="govuk-form-group @(selectAResponseError != null ? "govuk-form-group--error" : "")">
