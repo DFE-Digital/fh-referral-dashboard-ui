@@ -74,6 +74,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
     private readonly IReferralClientService _referralClientService;
     private readonly INotifications _notifications;
     private readonly INotificationTemplates<NotificationType> _notificationTemplates;
+    private readonly IConfiguration _configuration;
     private readonly ILogger<VcsRequestDetailsPageModel> _logger;
     public ReferralDto Referral { get; set; } = default!;
 
@@ -89,11 +90,13 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         IReferralClientService referralClientService,
         INotifications notifications,
         INotificationTemplates<NotificationType> notificationTemplates,
+        IConfiguration configuration,
         ILogger<VcsRequestDetailsPageModel> logger)
     {
         _referralClientService = referralClientService;
         _notifications = notifications;
         _notificationTemplates = notificationTemplates;
+        _configuration = configuration;
         _logger = logger;
         //todo: do something so doesn't have to be fully qualified
         ErrorState = SharedKernel.Razor.Errors.ErrorState.Empty;
@@ -214,7 +217,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
             throw;
         }
 
-        await TrySendNotificationEmails(Referral.ReferralUserAccountDto.EmailAddress, notificationType.Value, Referral.ReferralServiceDto.Name, id, "/");
+        await TrySendNotificationEmails(Referral.ReferralUserAccountDto.EmailAddress, notificationType.Value, Referral.ReferralServiceDto.Name, id);
 
         return RedirectToPage(redirectUrl, redirectRouteValues);
     }
@@ -223,12 +226,11 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         string emailAddress,
         NotificationType notificationType,
         string serviceName,
-        int requestNumber,
-        string dashboardUrl)
+        int requestNumber)
     {
         try
         {
-            await SendNotificationEmails(emailAddress, notificationType, requestNumber, serviceName, dashboardUrl);
+            await SendNotificationEmails(emailAddress, notificationType, requestNumber, serviceName);
         }
         catch (Exception e)
         {
@@ -240,9 +242,9 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         string emailAddress,
         NotificationType notificationType,
         int requestNumber,
-        string serviceName,
-        string dashboardUrl)
+        string serviceName)
     {
+        string dashboardUrl = GetDashboardUrl();
         var viewConnectionRequestUrl = new UriBuilder(dashboardUrl)
         {
             Path = "La/RequestDetails",
@@ -260,6 +262,20 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
 
         //todo: change api to accept IEnumerable and dynamic dictionary
         await _notifications.SendEmailsAsync(new List<string> { emailAddress }, templateId, emailTokens);
+    }
+
+    private string GetDashboardUrl()
+    {
+        string? requestsSent = _configuration["DashboardUiUrl"];
+
+        //todo: config exception
+        if (string.IsNullOrEmpty(requestsSent))
+        {
+            //todo: use config exception
+            throw new InvalidOperationException("DashboardUiUrl not set in config");
+        }
+
+        return requestsSent;
     }
 }
 

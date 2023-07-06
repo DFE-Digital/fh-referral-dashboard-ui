@@ -3,6 +3,7 @@ using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Errors;
 using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -14,15 +15,22 @@ public class WhenUsingTheVcsDetailsPage : BaseWhenUsingPage
 
     public Mock<INotifications> Notifications { get; set; }
     public Mock<INotificationTemplates<NotificationType>> NotificationTemplates { get; set; }
+    public Mock<IConfiguration> Configuration { get; set; }
     public Mock<ILogger<VcsRequestDetailsPageModel>> Logger { get; set; }
 
     public WhenUsingTheVcsDetailsPage()
     {
         Notifications = new Mock<INotifications>();
         NotificationTemplates = new Mock<INotificationTemplates<NotificationType>>();
+        Configuration = new Mock<IConfiguration>();
         Logger = new Mock<ILogger<VcsRequestDetailsPageModel>>();
 
-        _pageModel = new VcsRequestDetailsPageModel(MockReferralClientService.Object, Notifications.Object, NotificationTemplates.Object, Logger.Object)
+        _pageModel = new VcsRequestDetailsPageModel(
+            MockReferralClientService.Object,
+            Notifications.Object,
+            NotificationTemplates.Object,
+            Configuration.Object,
+            Logger.Object)
         {
             PageContext = GetPageContext(),
             TempData = MockTempDataDictionary.Object
