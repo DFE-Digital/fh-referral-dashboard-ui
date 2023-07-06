@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.Notification.Api.Client.Extensions;
+using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;

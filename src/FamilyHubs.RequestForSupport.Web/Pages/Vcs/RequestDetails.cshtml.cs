@@ -1,6 +1,6 @@
-using System.Collections.Immutable;
 using System.Net;
 using FamilyHubs.Notification.Api.Client;
+using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Errors;
@@ -12,43 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
-
-//todo: move to shared, with a helper to set as a singleton
-// role into INotifications, or keep separate?
-public interface INotificationTemplates<in T>
-    where T : struct, Enum, IConvertible
-{
-    string GetTemplateId(T templateEnum);
-}
-
-public class NotificationTemplates<T> : INotificationTemplates<T>
-    where T : struct, Enum, IConvertible
-{
-    private ImmutableDictionary<T, string> TemplateIds { get; }
-
-    public NotificationTemplates(IConfiguration configuration)
-    {
-        //todo: use config exception
-        TemplateIds = configuration.GetSection("Notification:TemplateIds").AsEnumerable(true)
-            .ToImmutableDictionary(
-                x => ConvertToEnum(x.Key),
-                x => x.Value ?? throw new InvalidOperationException($"TemplateId is missing for {x.Key}"));
-    }
-
-    public string GetTemplateId(T templateEnum)
-    {
-        return TemplateIds[templateEnum];
-    }
-
-    private static T ConvertToEnum(string enumValueString)
-    {
-        if (Enum.TryParse(enumValueString, out T result))
-        {
-            return result;
-        }
-        throw new ArgumentException($"The template name '{enumValueString}' is not a valid representation of the {typeof(T).Name} enumeration.");
-    }
-}
 
 public enum UserAction
 {
