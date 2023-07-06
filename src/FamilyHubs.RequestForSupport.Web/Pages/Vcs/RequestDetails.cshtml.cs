@@ -29,7 +29,7 @@ public class NotificationTemplates<T> : INotificationTemplates<T>
     public NotificationTemplates(IConfiguration configuration)
     {
         //todo: use config exception
-        TemplateIds = configuration.GetSection("Notification:TemplateIds").AsEnumerable()
+        TemplateIds = configuration.GetSection("Notification:TemplateIds").AsEnumerable(true)
             .ToImmutableDictionary(
                 x => ConvertToEnum(x.Key),
                 x => x.Value ?? throw new InvalidOperationException($"TemplateId is missing for {x.Key}"));
