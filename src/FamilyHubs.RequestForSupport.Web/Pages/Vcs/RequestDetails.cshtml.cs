@@ -11,6 +11,43 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
+//todo: move to shared, with a helper to set as a singleton
+// role into INotifications, or keep separate?
+public interface INotificationTemplates<in T>
+    where T : struct, Enum, IConvertible
+{
+    string GetTemplateId(T templateEnum);
+}
+
+public class NotificationTemplates<T> : INotificationTemplates<T>
+    where T : struct, Enum, IConvertible
+{
+    private ImmutableDictionary<T, string> TemplateIds { get; }
+
+    public NotificationTemplates(IConfiguration configuration)
+    {
+        //todo: use config exception
+        TemplateIds = configuration.GetSection("Notification:TemplateIds").AsEnumerable()
+            .ToImmutableDictionary(
+                x => ConvertToEnum(x.Key),
+                x => x.Value ?? throw new InvalidOperationException($"TemplateId is missing for {x.Key}"));
+    }
+
+    public string GetTemplateId(T templateEnum)
+    {
+        return TemplateIds[templateEnum];
+    }
+
+    private static T ConvertToEnum(string enumValueString)
+    {
+        if (Enum.TryParse(enumValueString, out T result))
+        {
+            return result;
+        }
+        throw new ArgumentException($"The template name '{enumValueString}' is not a valid representation of the {typeof(T).Name} enumeration.");
+    }
+}
+
 public enum UserAction
 {
     AcceptDecline,
@@ -52,8 +89,8 @@ public enum NotificationType
 public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSummary
 {
     private readonly IReferralClientService _referralClientService;
-    private readonly IConfiguration _configuration;
     private readonly INotifications _notifications;
+    private readonly INotificationTemplates<NotificationType> _notificationTemplates;
     private readonly ILogger<VcsRequestDetailsPageModel> _logger;
     public ReferralDto Referral { get; set; } = default!;
 
@@ -73,13 +110,13 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
 
     public VcsRequestDetailsPageModel(
         IReferralClientService referralClientService,
-        IConfiguration configuration,
         INotifications notifications,
+        INotificationTemplates<NotificationType> notificationTemplates,
         ILogger<VcsRequestDetailsPageModel> logger)
     {
         _referralClientService = referralClientService;
-        _configuration = configuration;
         _notifications = notifications;
+        _notificationTemplates = notificationTemplates;
         _logger = logger;
     }
 
@@ -170,6 +207,9 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
 
         await _referralClientService.UpdateReferralStatus(id, newStatus.Value, reason);
 
+        //todo: extract
+
+        // we _could_ currently use INotificationTemplates<ReferralStatus> directly, but this is more future proof
         NotificationType? notificationType = newStatus switch
         {
             ReferralStatus.Accepted => NotificationType.ProfessionalAcceptedRequest,
@@ -195,7 +235,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
             throw;
         }
 
-        await TrySendNotificationEmails(Referral.ReferrerDto.EmailAddress, notificationType.Value, Referral.ReferralServiceDto.Name, id, "/");
+        await TrySendNotificationEmails(Referral.ReferralUserAccountDto.EmailAddress, notificationType.Value, Referral.ReferralServiceDto.Name, id, "/");
 
         return RedirectToPage(redirectUrl, redirectRouteValues);
     }
@@ -237,21 +277,9 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
             { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
         };
 
-        //todo: have singleton, so that we only read the config once. perhaps put it in the client??
-        string templateName = notificationType switch
-        {
-            NotificationType.ProfessionalAcceptedRequest => "ProfessionalAcceptedRequest",
-            NotificationType.ProfessionalDeclinedRequest => "ProfessionalDeclinedRequest",
-            _ => throw new ArgumentOutOfRangeException(nameof(notificationType), notificationType, null)
-        };
+        string templateId = _notificationTemplates.GetTemplateId(notificationType);
 
-        string? templateId = _configuration[$"Notification:TemplateIds:{templateName}"];
-        if (string.IsNullOrEmpty(templateId))
-        {
-            //todo: use config exception
-            throw new InvalidOperationException($"Notification:TemplateIds:{templateName} not set in config");
-        }
-
+        //todo: change api to accept IEnumerable and dynamic dictionary
         await _notifications.SendEmailsAsync(new List<string> { emailAddress }, templateId, emailTokens);
     }
 

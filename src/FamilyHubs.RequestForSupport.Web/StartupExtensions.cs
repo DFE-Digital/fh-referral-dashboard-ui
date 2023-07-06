@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.Notification.Api.Client.Extensions;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
+using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
 using FamilyHubs.SharedKernel.Identity;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -41,6 +42,7 @@ public static class StartupExtensions
         services.AddHttpClients(configuration);
 
         services.AddNotificationsApiClient(configuration);
+        services.AddSingleton<INotificationTemplates<NotificationType>, NotificationTemplates<NotificationType>>();
 
         services.AddRazorPages();
 
