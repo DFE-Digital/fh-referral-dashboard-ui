@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.Notification.Api.Client;
+using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Errors;
 using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
