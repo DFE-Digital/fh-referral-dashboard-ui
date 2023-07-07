@@ -33,10 +33,10 @@ public class RequestDetailsModel : PageModel, IFamilyHubsHeader
             //todo: api will need to be updated to check the user has access to this referral
             Referral = await _referralClientService.GetReferralById(id);
         }
-        catch (HttpRequestException httpEx)
+        catch (ReferralClientServiceException ex)
         {
             // user has changed the id in the url to see a referral they shouldn't have access to
-            if (httpEx.StatusCode == HttpStatusCode.Forbidden)
+            if (ex.StatusCode == HttpStatusCode.Forbidden)
             {
                 return RedirectToPage("/Error/403");
             }
