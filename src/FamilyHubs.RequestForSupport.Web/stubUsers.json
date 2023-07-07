@@ -309,6 +309,34 @@
               "Value": "Harsha Reddy"
             }
           ]
+        },
+        {
+          "User": {
+            "Email": "harsha.reddy@talentconsulting.uk",
+            "Sub": "harsha.reddy@talentconsulting.uk"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "LaDualRole"
+            },
+            {
+              "Name": "AccountId",
+              "Value": "300"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Harsha Reddy"
+            }
+          ]
         }
       ]
     }
