@@ -1,8 +1,11 @@
-using System.Collections.Immutable;
 using System.Net;
+using FamilyHubs.Notification.Api.Client;
+using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
+using FamilyHubs.RequestForSupport.Web.Errors;
 using FamilyHubs.RequestForSupport.Web.Security;
+using FamilyHubs.SharedKernel.Razor.Errors;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,28 +25,20 @@ public enum AcceptDecline
     Declined
 }
 
-public enum ErrorId
+public enum NotificationType
 {
-    //todo: have NoError, or use null?
-    NoError,
-    SelectAResponse,
-    EnterReasonForDeclining,
-    ReasonForDecliningTooLong
+    ProfessionalAcceptedRequest,
+    ProfessionalDeclinedRequest
 }
-
-public interface IErrorSummary
-{
-    bool HasErrors { get; }
-    IEnumerable<ErrorId> ErrorIds { get; }
-    Error GetError(ErrorId errorId);
-}
-
-public record Error(string HtmlElementId, string ErrorMessage);
 
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
-public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSummary
+public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
 {
     private readonly IReferralClientService _referralClientService;
+    private readonly INotifications _notifications;
+    private readonly INotificationTemplates<NotificationType> _notificationTemplates;
+    private readonly IConfiguration _configuration;
+    private readonly ILogger<VcsRequestDetailsPageModel> _logger;
     public ReferralDto Referral { get; set; } = default!;
 
     [BindProperty]
@@ -52,22 +47,27 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
     [BindProperty]
     public AcceptDecline? AcceptOrDecline { get; set; }
 
-    public static readonly ImmutableDictionary<ErrorId, Error> PossibleErrors = ImmutableDictionary
-        .Create<ErrorId, Error>()
-        .Add(ErrorId.SelectAResponse, new Error("accept-request", "You must select a response"))
-        .Add(ErrorId.EnterReasonForDeclining, new Error("decline-reason", "Enter a reason for declining"))
-        .Add(ErrorId.ReasonForDecliningTooLong, new Error("decline-reason", "Reason for declining must be 500 characters or less"));
+    public IErrorState ErrorState { get; private set; }
 
-    public IEnumerable<ErrorId> ErrorIds { get; private set; } = Enumerable.Empty<ErrorId>();
-
-    public VcsRequestDetailsPageModel(IReferralClientService referralClientService)
+    public VcsRequestDetailsPageModel(
+        IReferralClientService referralClientService,
+        INotifications notifications,
+        INotificationTemplates<NotificationType> notificationTemplates,
+        IConfiguration configuration,
+        ILogger<VcsRequestDetailsPageModel> logger)
     {
         _referralClientService = referralClientService;
+        _notifications = notifications;
+        _notificationTemplates = notificationTemplates;
+        _configuration = configuration;
+        _logger = logger;
+        //todo: do something so doesn't have to be fully qualified
+        ErrorState = SharedKernel.Razor.Errors.ErrorState.Empty;
     }
 
     public async Task<IActionResult> OnGet(int id, IEnumerable<ErrorId> errors)
     {
-        ErrorIds = errors;
+        ErrorState = SharedKernel.Razor.Errors.ErrorState.Create(PossibleErrors.All, errors);
 
         // if the user enters a reason for declining that's too long, then refreshes the page with the corresponding error message on, they'll lose their reason. quite an edge case though, and the site will still work, they'll just have to enter a shorter reason from scratch
         ReasonForRejection  = TempData["ReasonForDeclining"] as string;
@@ -90,7 +90,6 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
     }
 
     //todo: component for character count (especially as there are some gotchas with line endings)
-    //todo: component for standard error summary
     public async Task<IActionResult> OnPost(UserAction userAction, int id)
     {
         ReferralStatus? newStatus = null;
@@ -153,21 +152,93 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader, IErrorSu
 
         await _referralClientService.UpdateReferralStatus(id, newStatus.Value, reason);
 
+        //todo: extract
+
+        // we _could_ currently use INotificationTemplates<ReferralStatus> directly, but this is more future proof
+        NotificationType? notificationType = newStatus switch
+        {
+            ReferralStatus.Accepted => NotificationType.ProfessionalAcceptedRequest,
+            ReferralStatus.Declined => NotificationType.ProfessionalDeclinedRequest,
+            _ => null
+        };
+        if (notificationType == null)
+        {
+            return RedirectToPage(redirectUrl, redirectRouteValues);
+        }
+
+        try
+        {
+            Referral = await _referralClientService.GetReferralById(id);
+        }
+        catch (ReferralClientServiceException ex)
+        {
+            // user has changed the id in the url to see a referral they shouldn't have access to
+            if (ex.StatusCode == HttpStatusCode.Forbidden)
+            {
+                return RedirectToPage("/Error/403");
+            }
+            throw;
+        }
+
+        await TrySendNotificationEmails(Referral.ReferralUserAccountDto.EmailAddress, notificationType.Value, Referral.ReferralServiceDto.Name, id);
+
         return RedirectToPage(redirectUrl, redirectRouteValues);
     }
 
-    public Error? GetCurrentError(params ErrorId[] mutuallyExclusiveErrorIds)
+    private async Task TrySendNotificationEmails(
+        string emailAddress,
+        NotificationType notificationType,
+        string serviceName,
+        int requestNumber)
     {
-        // SingleOrDefault would be safer, but this is faster
-        ErrorId currentErrorId = ErrorIds.FirstOrDefault(mutuallyExclusiveErrorIds.Contains);
-        return currentErrorId != ErrorId.NoError ? PossibleErrors[currentErrorId] : null;
+        try
+        {
+            await SendNotificationEmails(emailAddress, notificationType, requestNumber, serviceName);
+        }
+        catch (Exception e)
+        {
+            _logger.LogWarning(e, "Unable to send {NotificationType} email for request {RequestNumber}", notificationType, requestNumber);
+        }
     }
 
-    Error IErrorSummary.GetError(ErrorId errorId)
+    private async Task SendNotificationEmails(
+        string emailAddress,
+        NotificationType notificationType,
+        int requestNumber,
+        string serviceName)
     {
-        return PossibleErrors[errorId];
+        string dashboardUrl = GetDashboardUrl();
+        var viewConnectionRequestUrl = new UriBuilder(dashboardUrl)
+        {
+            Path = "La/RequestDetails",
+            Query = $"id={requestNumber}"
+        }.Uri;
+
+        var emailTokens = new Dictionary<string, string>
+        {
+            { "RequestNumber", requestNumber.ToString("X6") },
+            { "ServiceName", serviceName },
+            { "ViewConnectionRequestUrl", viewConnectionRequestUrl.ToString()}
+        };
+
+        string templateId = _notificationTemplates.GetTemplateId(notificationType);
+
+        //todo: change api to accept IEnumerable and dynamic dictionary
+        await _notifications.SendEmailsAsync(new List<string> { emailAddress }, templateId, emailTokens);
     }
 
-    bool IErrorSummary.HasErrors => ErrorIds.Any(e => e != ErrorId.NoError);
+    private string GetDashboardUrl()
+    {
+        string? requestsSent = _configuration["DashboardUiUrl"];
+
+        //todo: config exception
+        if (string.IsNullOrEmpty(requestsSent))
+        {
+            //todo: use config exception
+            throw new InvalidOperationException("DashboardUiUrl not set in config");
+        }
+
+        return requestsSent;
+    }
 }
 
