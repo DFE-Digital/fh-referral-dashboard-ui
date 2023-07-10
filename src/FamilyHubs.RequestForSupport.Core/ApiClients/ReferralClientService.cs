@@ -122,7 +122,7 @@ public class ReferralClientService : ApiService, IReferralClientService
             //Method = HttpMethod.Put,
             //RequestUri = new Uri(Client.BaseAddress + $"api/referrals/{referralId}/status/{referralStatusId}"),
             Method = HttpMethod.Post,
-            RequestUri = new Uri(Client.BaseAddress + $"api/referralStatus/{referralId}/{referralStatus}/{reason}"),
+            RequestUri = new Uri(Client.BaseAddress + $"api/status/{referralId}/{referralStatus}/{reason}"),
         };
 
         using var response = await Client.SendAsync(request);
