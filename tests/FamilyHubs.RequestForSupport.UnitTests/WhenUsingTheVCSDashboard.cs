@@ -15,6 +15,7 @@ using Moq;
 using System.Security.Claims;
 using System.Security.Principal;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FamilyHubs.RequestForSupport.UnitTests;
 
@@ -96,11 +97,24 @@ public class WhenUsingTheVcsDashboard
                 County = "County",
                 PostCode = "B30 2TV"
             },
-            ReferrerDto = new ReferralUserAccountDto()
+            ReferralUserAccountDto = new UserAccountDto
             {
                 Id = 2,
                 EmailAddress = "Bob.Referrer@email.com",
-                Role = "LaProfessional"
+                UserAccountRoles = new List<UserAccountRoleDto>
+                {
+                    new()
+                    {
+                        UserAccount = new UserAccountDto
+                        {
+                            EmailAddress = "Bob.Referrer@email.com",
+                        },
+                        Role = new RoleDto
+                        {
+                            Name = "LaProfessional"
+                        }
+                    }
+                }
             },
             Status = new ReferralStatusDto
             {
