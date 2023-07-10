@@ -15,7 +15,6 @@ using Moq;
 using System.Security.Claims;
 using System.Security.Principal;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FamilyHubs.RequestForSupport.UnitTests;
 
