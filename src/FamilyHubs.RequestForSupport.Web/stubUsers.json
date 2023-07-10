@@ -262,7 +262,7 @@
           "Claims": [
             {
               "Name": "role",
-              "Value": "LaDualRole"
+              "Value": "VcsDualRole"
             },
             {
               "Name": "AccountId",
