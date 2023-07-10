@@ -100,7 +100,6 @@ public abstract class BaseWhenUsingPage
                     {
                         UserAccount = new UserAccountDto
                         {
-                            Id = 2,
                             EmailAddress = "Bob.Referrer@email.com",
                         },
                         Role = new RoleDto

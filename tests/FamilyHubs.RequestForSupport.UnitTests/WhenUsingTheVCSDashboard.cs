@@ -106,7 +106,6 @@ public class WhenUsingTheVcsDashboard
                     {
                         UserAccount = new UserAccountDto
                         {
-                            Id = 2,
                             EmailAddress = "Bob.Referrer@email.com",
                         },
                         Role = new RoleDto
