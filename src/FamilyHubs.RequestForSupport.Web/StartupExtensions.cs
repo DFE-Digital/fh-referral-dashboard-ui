@@ -4,6 +4,7 @@ using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
 using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.SharedKernel.Security;
 using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
@@ -36,6 +37,8 @@ public static class StartupExtensions
     {
         //services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
+
+        services.AddTransient<ICrypto, Crypto>();
 
         services.AddAndConfigureGovUkAuthentication(configuration);
 
