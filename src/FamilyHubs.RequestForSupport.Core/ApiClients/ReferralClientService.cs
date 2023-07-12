@@ -1,14 +1,17 @@
 ﻿using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.ReferralService.Shared.Models;
+using FamilyHubs.SharedKernel.Security;
 using System.Text.Json;
 
 namespace FamilyHubs.RequestForSupport.Core.ApiClients;
 
 public class ReferralClientService : ApiService, IReferralClientService
 {
-    public ReferralClientService(HttpClient client) : base(client)
+    public readonly ICrypto _crypto;
+    public ReferralClientService(HttpClient client, ICrypto crypto) : base(client)
     {
+        _crypto = crypto;
     }
 
     private async Task<PaginatedList<ReferralDto>> GetRequests(
@@ -52,6 +55,12 @@ public class ReferralClientService : ApiService, IReferralClientService
                 // unlikely, but possibly (pass new MemoryStream(Encoding.UTF8.GetBytes("null")) to see it actually return null)
                 // note we hard-code passing "null", rather than messing about trying to rewind the stream, as this is such a corner case and we want to let the deserializer take advantage of the async stream (in the happy case)
                 throw new ReferralClientServiceException(response, "null");
+            }
+
+            foreach(var item in referrals.Items) 
+            {
+                item.ReasonForSupport = _crypto.DecryptData(item.ReasonForSupport);
+                item.EngageWithFamily = _crypto.DecryptData(item.EngageWithFamily);
             }
 
             return referrals;
@@ -110,6 +119,9 @@ public class ReferralClientService : ApiService, IReferralClientService
             // note we hard-code passing "null", rather than messing about trying to rewind the stream, as this is such a corner case and we want to let the deserializer take advantage of the async stream (in the happy case)
             throw new ReferralClientServiceException(response, "null");
         }
+
+        referral.ReasonForSupport = _crypto.DecryptData(referral.ReasonForSupport);
+        referral.EngageWithFamily = _crypto.DecryptData(referral.EngageWithFamily);
 
         return referral;
     }
