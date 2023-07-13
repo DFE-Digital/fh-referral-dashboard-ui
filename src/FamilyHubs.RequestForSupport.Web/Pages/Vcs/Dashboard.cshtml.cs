@@ -43,8 +43,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
     public DashboardModel(IReferralClientService referralClientService)
     {
         _referralClientService = referralClientService;
-        //todo: nullable, so don't have to create this dummy?
-        Pagination = new DontShowPagination();
+        Pagination = IPagination.DontShow;
     }
 
     public async Task OnGet(string? columnName, SortOrder sort, int? currentPage = 1)
