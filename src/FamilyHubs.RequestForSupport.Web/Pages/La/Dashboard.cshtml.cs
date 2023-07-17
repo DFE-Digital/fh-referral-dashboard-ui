@@ -3,13 +3,16 @@ using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.LaDashboard;
+using FamilyHubs.RequestForSupport.Web.Models;
 using FamilyHubs.RequestForSupport.Web.Security;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 
@@ -30,6 +33,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
     };
 
     private readonly IReferralClientService _referralClientService;
+    private readonly FamilyHubsUiOptions _familyHubsUiOptions;
 
     string? IDashboard<ReferralDto>.TableClass => "app-la-dashboard";
 
@@ -42,9 +46,12 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
     IEnumerable<IColumnHeader> IDashboard<ReferralDto>.ColumnHeaders => _columnHeaders;
     IEnumerable<IRow<ReferralDto>> IDashboard<ReferralDto>.Rows => _rows;
 
-    public DashboardModel(IReferralClientService referralClientService)
+    public DashboardModel(
+        IReferralClientService referralClientService,
+        IOptions<FamilyHubsUiOptions> familyHubsUiOptions)
     {
         _referralClientService = referralClientService;
+        _familyHubsUiOptions = familyHubsUiOptions.Value;
         Pagination = IPagination.DontShow;
     }
 
@@ -63,7 +70,8 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
         var user = HttpContext.GetFamilyHubsUser();
         var searchResults = await GetConnections(user.AccountId, currentPage!.Value, column, sort);
 
-        _rows = searchResults.Items.Select(r => new LaDashboardRow(r));
+        Uri connectWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.ConnectWeb, "");
+        _rows = searchResults.Items.Select(r => new LaDashboardRow(r, connectWebBaseUrl));
 
         Pagination = new LargeSetLinkPagination<Column>("/La/Dashboard", searchResults.TotalPages, currentPage.Value, column, sort);
     }
