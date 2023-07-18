@@ -3,9 +3,10 @@ using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Errors;
 using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace FamilyHubs.RequestForSupport.UnitTests;
@@ -16,21 +17,28 @@ public class WhenUsingTheVcsDetailsPage : BaseWhenUsingPage
 
     public Mock<INotifications> Notifications { get; set; }
     public Mock<INotificationTemplates<NotificationType>> NotificationTemplates { get; set; }
-    public Mock<IConfiguration> Configuration { get; set; }
+    private readonly Mock<IOptions<FamilyHubsUiOptions>> OptionsFamilyHubsUiOptions;
+    private readonly FamilyHubsUiOptions FamilyHubsUiOptions;
     public Mock<ILogger<VcsRequestDetailsPageModel>> Logger { get; set; }
 
     public WhenUsingTheVcsDetailsPage()
     {
         Notifications = new Mock<INotifications>();
         NotificationTemplates = new Mock<INotificationTemplates<NotificationType>>();
-        Configuration = new Mock<IConfiguration>();
+        OptionsFamilyHubsUiOptions = new Mock<IOptions<FamilyHubsUiOptions>>();
+        FamilyHubsUiOptions = new FamilyHubsUiOptions();
         Logger = new Mock<ILogger<VcsRequestDetailsPageModel>>();
+
+        FamilyHubsUiOptions.Urls.Add("ThisWeb", "http://example.com");
+
+        OptionsFamilyHubsUiOptions.Setup(options => options.Value)
+            .Returns(FamilyHubsUiOptions);
 
         _pageModel = new VcsRequestDetailsPageModel(
             MockReferralClientService.Object,
             Notifications.Object,
             NotificationTemplates.Object,
-            Configuration.Object,
+            OptionsFamilyHubsUiOptions.Object,
             Logger.Object)
         {
             PageContext = GetPageContext(),

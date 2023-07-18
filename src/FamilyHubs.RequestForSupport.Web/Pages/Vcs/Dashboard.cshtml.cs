@@ -68,7 +68,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
         var user = HttpContext.GetFamilyHubsUser();
         var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
 
-        Uri vcsWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.VcsWeb, "");
+        Uri vcsWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.VcsWeb);
         _rows = searchResults.Items.Select(r => new VcsDashboardRow(r, vcsWebBaseUrl));
 
         Pagination = new LargeSetLinkPagination<Column>("/Vcs/Dashboard", searchResults.TotalPages, currentPage.Value, column, sort);

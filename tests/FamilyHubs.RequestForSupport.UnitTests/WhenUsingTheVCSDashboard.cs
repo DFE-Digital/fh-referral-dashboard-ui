@@ -24,9 +24,7 @@ public class WhenUsingTheVcsDashboard
 {
     private readonly DashboardModel _pageModel;
     private readonly Mock<IReferralClientService> _mockReferralClientService;
-    //todo: use IFamilyHubsUiOptions
     private readonly Mock<IOptions<FamilyHubsUiOptions>> _mockOptionsFamilyHubsUiOptions;
-    //private readonly Mock<FamilyHubsUiOptions> _mockFamilyHubsUiOptions;
     private readonly FamilyHubsUiOptions _familyHubsUiOptions;
 
     public WhenUsingTheVcsDashboard()
@@ -65,10 +63,6 @@ public class WhenUsingTheVcsDashboard
         {
             ViewData = viewData
         };
-
-        //_mockFamilyHubsUiOptions
-        //    .Setup(options => options.Url(UrlKeys.VcsWeb, ""))
-        //    .Returns(new Uri("http://localhost:5000"));
 
         _familyHubsUiOptions.Urls.Add("VcsWeb", new Uri("http://example.com").ToString());
 
