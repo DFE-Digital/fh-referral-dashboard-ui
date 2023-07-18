@@ -1,7 +1,6 @@
 ﻿using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
 using System.Web;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FamilyHubs.RequestForSupport.Web.VcsDashboard;
 
@@ -20,7 +19,7 @@ public class VcsDashboardRow : IRow<ReferralDto>
     {
         get
         {
-            var requestDetailsUrl = new Uri(_vcsWebBaseUrl, new Uri($"/Vcs/RequestDetails?id={Item.Id}")).ToString();
+            var requestDetailsUrl = new Uri(_vcsWebBaseUrl, $"/Vcs/RequestDetails?id={Item.Id}").ToString();
             yield return new Cell($"<a href=\"{requestDetailsUrl}\">{HttpUtility.HtmlEncode(Item.RecipientDto.Name)}</a>");
             yield return new Cell(Item.Created?.ToString("dd MMM yyyy") ?? "");
             yield return new Cell(Item.Id.ToString("X6"));
