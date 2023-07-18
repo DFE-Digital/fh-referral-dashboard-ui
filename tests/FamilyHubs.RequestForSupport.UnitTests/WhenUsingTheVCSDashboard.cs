@@ -14,7 +14,10 @@ using Microsoft.AspNetCore.Routing;
 using Moq;
 using System.Security.Claims;
 using System.Security.Principal;
+using FamilyHubs.RequestForSupport.Web.Models;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
+using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.RequestForSupport.UnitTests;
 
@@ -22,10 +25,17 @@ public class WhenUsingTheVcsDashboard
 {
     private readonly DashboardModel _pageModel;
     private readonly Mock<IReferralClientService> _mockReferralClientService;
+    //todo: use IFamilyHubsUiOptions
+    private readonly Mock<IOptions<FamilyHubsUiOptions>> _mockOptionsFamilyHubsUiOptions;
+    //private readonly Mock<FamilyHubsUiOptions> _mockFamilyHubsUiOptions;
+    private readonly FamilyHubsUiOptions _familyHubsUiOptions;
 
     public WhenUsingTheVcsDashboard()
     {
         _mockReferralClientService = new Mock<IReferralClientService>();
+        _mockOptionsFamilyHubsUiOptions = new Mock<IOptions<FamilyHubsUiOptions>>();
+        _familyHubsUiOptions = new FamilyHubsUiOptions();
+
         List<ReferralDto> list = new() { GetReferralDto() };
         PaginatedList<ReferralDto> pagelist = new PaginatedList<ReferralDto>(list, 1, 1, 1);
         _mockReferralClientService.Setup(x => x.GetRequestsForConnectionByOrganisationId(It.IsAny<string>(), It.IsAny<ReferralOrderBy>(), It.IsAny<bool?>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(pagelist);
@@ -57,7 +67,16 @@ public class WhenUsingTheVcsDashboard
             ViewData = viewData
         };
 
-        _pageModel = new DashboardModel(_mockReferralClientService.Object)
+        //_mockFamilyHubsUiOptions
+        //    .Setup(options => options.Url(UrlKeys.VcsWeb, ""))
+        //    .Returns(new Uri("http://localhost:5000"));
+
+        _familyHubsUiOptions.Urls.Add("VcsWeb", new Uri("http://example.com").ToString());
+
+        _mockOptionsFamilyHubsUiOptions.Setup(options => options.Value)
+            .Returns(_familyHubsUiOptions);
+
+        _pageModel = new DashboardModel(_mockReferralClientService.Object, _mockOptionsFamilyHubsUiOptions.Object)
         {
             PageContext = pageContext
         };

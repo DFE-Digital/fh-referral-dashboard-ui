@@ -70,8 +70,8 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
         var user = HttpContext.GetFamilyHubsUser();
         var searchResults = await GetConnections(user.AccountId, currentPage!.Value, column, sort);
 
-        Uri connectWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.ConnectWeb, "");
-        _rows = searchResults.Items.Select(r => new LaDashboardRow(r, connectWebBaseUrl));
+        Uri laWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.LaWeb, "");
+        _rows = searchResults.Items.Select(r => new LaDashboardRow(r, laWebBaseUrl));
 
         Pagination = new LargeSetLinkPagination<Column>("/La/Dashboard", searchResults.TotalPages, currentPage.Value, column, sort);
     }

@@ -10,6 +10,9 @@ using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using FamilyHubs.RequestForSupport.Web.Security;
+using FamilyHubs.RequestForSupport.Web.Models;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
+using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
@@ -28,6 +31,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
     };
 
     private readonly IReferralClientService _referralClientService;
+    private readonly FamilyHubsUiOptions _familyHubsUiOptions;
 
     string? IDashboard<ReferralDto>.TableClass => "app-vcs-dashboard";
 
@@ -40,9 +44,12 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
     IEnumerable<IColumnHeader> IDashboard<ReferralDto>.ColumnHeaders => _columnHeaders;
     IEnumerable<IRow<ReferralDto>> IDashboard<ReferralDto>.Rows => _rows;
 
-    public DashboardModel(IReferralClientService referralClientService)
+    public DashboardModel(
+        IReferralClientService referralClientService,
+        IOptions<FamilyHubsUiOptions> familyHubsUiOptions)
     {
         _referralClientService = referralClientService;
+        _familyHubsUiOptions = familyHubsUiOptions.Value;
         Pagination = IPagination.DontShow;
     }
 
@@ -61,7 +68,8 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
         var user = HttpContext.GetFamilyHubsUser();
         var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
 
-        _rows = searchResults.Items.Select(r => new VcsDashboardRow(r));
+        Uri vcsWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.VcsWeb, "");
+        _rows = searchResults.Items.Select(r => new VcsDashboardRow(r, vcsWebBaseUrl));
 
         Pagination = new LargeSetLinkPagination<Column>("/Vcs/Dashboard", searchResults.TotalPages, currentPage.Value, column, sort);
     }
