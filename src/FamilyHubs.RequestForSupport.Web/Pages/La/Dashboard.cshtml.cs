@@ -6,6 +6,7 @@ using FamilyHubs.RequestForSupport.Web.LaDashboard;
 using FamilyHubs.RequestForSupport.Web.Models;
 using FamilyHubs.RequestForSupport.Web.Security;
 using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.SharedKernel.Razor.AlternativeServices;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
@@ -20,8 +21,10 @@ namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 //todo: check AccountStatus on claim? is it done auto?
 //todo: add url for 401 (no access to service)
 [Authorize(Roles = Roles.LaProfessionalOrDualRole)]
-public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
+public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>, IAlternativeService
 {
+    string? IAlternativeService.ServiceName => "Connect";
+
     private static ColumnImmutable[] _columnImmutables =
     {
         new("Contact in family", Column.ContactInFamily.ToString()),
