@@ -1,5 +1,5 @@
 ﻿@page
-@model FamilyHubs.RequestForSupport.Web.Pages.Shared.GetRequestIdModel
+@model GetRequestIdModel
 @{
     ViewData["Title"] = "Request for support declined";
 }
@@ -19,7 +19,7 @@
             We have notified the professional who requested support for this family. 
         </p>
 
-        <a href="@Html.FamilyHubUrl(UrlKeys.VcsWeb, "/Vcs/Dashboard")" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+        <a href="@Html.FamilyHubUrl(UrlKeys.ThisWeb, "/Vcs/Dashboard")" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
             Go to received requests
         </a>
     </div>

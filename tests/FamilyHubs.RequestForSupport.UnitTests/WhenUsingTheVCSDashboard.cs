@@ -67,7 +67,7 @@ public class WhenUsingTheVcsDashboard
             ViewData = viewData
         };
 
-        _familyHubsUiOptions.Urls.Add("VcsWeb", new Uri("http://example.com").ToString());
+        _familyHubsUiOptions.Urls.Add("ThisWeb", new Uri("http://example.com").ToString());
 
         _mockOptionsFamilyHubsUiOptions.Setup(options => options.Value)
             .Returns(_familyHubsUiOptions);

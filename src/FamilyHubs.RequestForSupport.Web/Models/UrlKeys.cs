@@ -1,12 +1,13 @@
 ﻿namespace FamilyHubs.RequestForSupport.Web.Models;
 
-//todo: remove existing urls in config and move into here
 public enum UrlKeys
 {
-    LaWeb,
-    VcsWeb,
+    /// <summary>
+    /// the current site url, whether the default, or an alternative
+    /// </summary>
     ThisWeb,
     ConnectWeb,
     ManageWeb,
-    ReferralApi
+    ReferralApi,
+    DashboardWeb
 }

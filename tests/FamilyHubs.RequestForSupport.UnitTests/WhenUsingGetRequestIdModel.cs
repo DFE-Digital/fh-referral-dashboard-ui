@@ -1,4 +1,4 @@
-﻿using FamilyHubs.RequestForSupport.Web.Pages.Shared;
+﻿using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
 namespace FamilyHubs.RequestForSupport.UnitTests;
 

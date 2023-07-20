@@ -33,7 +33,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
     private readonly IReferralClientService _referralClientService;
     private readonly FamilyHubsUiOptions _familyHubsUiOptions;
 
-    string? IDashboard<ReferralDto>.TableClass => "app-vcs-dashboard";
+    string IDashboard<ReferralDto>.TableClass => "app-vcs-dashboard";
 
     public IPagination Pagination { get; set; }
 
@@ -68,8 +68,8 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
         var user = HttpContext.GetFamilyHubsUser();
         var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
 
-        Uri vcsWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.VcsWeb);
-        _rows = searchResults.Items.Select(r => new VcsDashboardRow(r, vcsWebBaseUrl));
+        Uri thisWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb);
+        _rows = searchResults.Items.Select(r => new VcsDashboardRow(r, thisWebBaseUrl));
 
         Pagination = new LargeSetLinkPagination<Column>("/Vcs/Dashboard", searchResults.TotalPages, currentPage.Value, column, sort);
     }
