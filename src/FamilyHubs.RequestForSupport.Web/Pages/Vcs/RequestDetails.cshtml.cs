@@ -66,7 +66,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         //todo: do something so doesn't have to be fully qualified
         ErrorState = SharedKernel.Razor.Errors.ErrorState.Empty;
 
-        _dashboardUrl = familyHubsUiOptions.Value.Url(UrlKeys.ThisWeb).ToString();
+        _dashboardUrl = familyHubsUiOptions.Value.Url(UrlKeys.VcsWeb).ToString();
     }
 
     public async Task<IActionResult> OnGet(int id, IEnumerable<ErrorId> errors)

@@ -29,7 +29,7 @@ public class WhenUsingTheVcsDetailsPage : BaseWhenUsingPage
         FamilyHubsUiOptions = new FamilyHubsUiOptions();
         Logger = new Mock<ILogger<VcsRequestDetailsPageModel>>();
 
-        FamilyHubsUiOptions.Urls.Add("ThisWeb", "http://example.com");
+        FamilyHubsUiOptions.Urls.Add("VcsWeb", "http://example.com");
 
         OptionsFamilyHubsUiOptions.Setup(options => options.Value)
             .Returns(FamilyHubsUiOptions);

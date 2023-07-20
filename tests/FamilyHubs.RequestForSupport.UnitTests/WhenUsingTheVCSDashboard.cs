@@ -15,6 +15,8 @@ using Moq;
 using System.Security.Claims;
 using System.Security.Principal;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Extensions;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
 using Microsoft.Extensions.Options;
 
@@ -58,6 +60,7 @@ public class WhenUsingTheVcsDashboard
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
         var modelMetadataProvider = new EmptyModelMetadataProvider();
         var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
+
         // need page context for the page model
         var pageContext = new PageContext(actionContext)
         {

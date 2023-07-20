@@ -23,7 +23,7 @@ namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 [Authorize(Roles = Roles.LaProfessionalOrDualRole)]
 public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>, IAlternativeService
 {
-    string? IAlternativeService.ServiceName => "Connect";
+    public string ServiceName => "Connect";
 
     private static ColumnImmutable[] _columnImmutables =
     {
@@ -73,7 +73,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
         var user = HttpContext.GetFamilyHubsUser();
         var searchResults = await GetConnections(user.AccountId, currentPage!.Value, column, sort);
 
-        Uri laWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.LaWeb);
+        Uri laWebBaseUrl = _familyHubsUiOptions.GetAlternative(ServiceName).Url(UrlKeys.LaWeb);
         _rows = searchResults.Items.Select(r => new LaDashboardRow(r, laWebBaseUrl));
 
         Pagination = new LargeSetLinkPagination<Column>("/La/Dashboard", searchResults.TotalPages, currentPage.Value, column, sort);
