@@ -1,7 +1,5 @@
 # ToDo
 
-* asp-page links
-
 * tidy up urls in appsettings & split UrlKeys into 2?
 
 * menu button visible in mobile view even with no nav items
