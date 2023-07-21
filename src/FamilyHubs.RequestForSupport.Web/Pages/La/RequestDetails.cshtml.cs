@@ -7,17 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net;
 using FamilyHubs.RequestForSupport.Web.Models;
-using FamilyHubs.SharedKernel.Razor.AlternativeServices;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
 using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 
 [Authorize(Roles = Roles.LaProfessionalOrDualRole)]
-public class RequestDetailsModel : PageModel, IFamilyHubsHeader, IAlternativeService
+public class RequestDetailsModel : PageModel, IFamilyHubsHeader
 {
-    public string ServiceName => "Connect";
-
     private readonly IReferralClientService _referralClientService;
     public ReferralDto Referral { get; set; } = default!;
     public string ServiceUrl { get; }
@@ -28,7 +25,6 @@ public class RequestDetailsModel : PageModel, IFamilyHubsHeader, IAlternativeSer
     {
         _referralClientService = referralClientService;
         ServiceUrl = familyHubsUiOptions.Value
-            .GetAlternative(ServiceName)
             .Url(UrlKeys.ConnectWeb, "ProfessionalReferral/LocalOfferDetail?serviceid=").ToString();
     }
 

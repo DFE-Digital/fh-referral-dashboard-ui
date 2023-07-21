@@ -6,7 +6,6 @@ using FamilyHubs.RequestForSupport.Web.LaDashboard;
 using FamilyHubs.RequestForSupport.Web.Models;
 using FamilyHubs.RequestForSupport.Web.Security;
 using FamilyHubs.SharedKernel.Identity;
-using FamilyHubs.SharedKernel.Razor.AlternativeServices;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
@@ -21,10 +20,8 @@ namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 //todo: check AccountStatus on claim? is it done auto?
 //todo: add url for 401 (no access to service)
 [Authorize(Roles = Roles.LaProfessionalOrDualRole)]
-public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>, IAlternativeService
+public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
 {
-    public string ServiceName => "Connect";
-
     private static ColumnImmutable[] _columnImmutables =
     {
         new("Contact in family", Column.ContactInFamily.ToString()),
@@ -73,7 +70,7 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
         var user = HttpContext.GetFamilyHubsUser();
         var searchResults = await GetConnections(user.AccountId, currentPage!.Value, column, sort);
 
-        Uri thisWebBaseUrl = _familyHubsUiOptions.GetAlternative(ServiceName).Url(UrlKeys.ThisWeb);
+        Uri thisWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb);
         _rows = searchResults.Items.Select(r => new LaDashboardRow(r, thisWebBaseUrl));
 
         Pagination = new LargeSetLinkPagination<Column>("/La/Dashboard", searchResults.TotalPages, currentPage.Value, column, sort);
