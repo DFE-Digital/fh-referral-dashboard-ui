@@ -8,7 +8,7 @@
 }
 
 @section Back {
-    <a asp-page="/Vcs/Dashboard" class="govuk-back-link">Back</a>
+    <a href="@Html.FamilyHubUrl(UrlKeys.ThisWeb, "/Vcs/Dashboard")" class="govuk-back-link">Back</a>
 }
 
 <partial name="Shared/_ErrorSummary" for="@Model.ErrorState" />

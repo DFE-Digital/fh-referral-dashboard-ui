@@ -15,6 +15,10 @@ using Moq;
 using System.Security.Claims;
 using System.Security.Principal;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Extensions;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
+using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.RequestForSupport.UnitTests;
 
@@ -22,10 +26,15 @@ public class WhenUsingTheVcsDashboard
 {
     private readonly DashboardModel _pageModel;
     private readonly Mock<IReferralClientService> _mockReferralClientService;
+    private readonly Mock<IOptions<FamilyHubsUiOptions>> _mockOptionsFamilyHubsUiOptions;
+    private readonly FamilyHubsUiOptions _familyHubsUiOptions;
 
     public WhenUsingTheVcsDashboard()
     {
         _mockReferralClientService = new Mock<IReferralClientService>();
+        _mockOptionsFamilyHubsUiOptions = new Mock<IOptions<FamilyHubsUiOptions>>();
+        _familyHubsUiOptions = new FamilyHubsUiOptions();
+
         List<ReferralDto> list = new() { GetReferralDto() };
         PaginatedList<ReferralDto> pagelist = new PaginatedList<ReferralDto>(list, 1, 1, 1);
         _mockReferralClientService.Setup(x => x.GetRequestsForConnectionByOrganisationId(It.IsAny<string>(), It.IsAny<ReferralOrderBy>(), It.IsAny<bool?>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(pagelist);
@@ -51,13 +60,19 @@ public class WhenUsingTheVcsDashboard
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
         var modelMetadataProvider = new EmptyModelMetadataProvider();
         var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
+
         // need page context for the page model
         var pageContext = new PageContext(actionContext)
         {
             ViewData = viewData
         };
 
-        _pageModel = new DashboardModel(_mockReferralClientService.Object)
+        _familyHubsUiOptions.Urls.Add("ThisWeb", new Uri("http://example.com").ToString());
+
+        _mockOptionsFamilyHubsUiOptions.Setup(options => options.Value)
+            .Returns(_familyHubsUiOptions);
+
+        _pageModel = new DashboardModel(_mockReferralClientService.Object, _mockOptionsFamilyHubsUiOptions.Object)
         {
             PageContext = pageContext
         };

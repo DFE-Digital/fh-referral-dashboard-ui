@@ -1,8 +1,7 @@
 ﻿@using FamilyHubs.RequestForSupport.Core.ApiClients
 @model FamilyHubs.ReferralService.Shared.Dto.ReferralDto
 
-@* todo: should be int in model*@
-@switch ((ReferralStatus)(int)Model.Status.Id)
+@switch ((ReferralStatus)Model.Status.Id)
 {
     case ReferralStatus.Opened:
     case ReferralStatus.New:

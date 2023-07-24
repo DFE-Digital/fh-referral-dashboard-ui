@@ -6,6 +6,7 @@ using System.Text.Json;
 
 namespace FamilyHubs.RequestForSupport.Core.ApiClients;
 
+//todo: construct Uri's better
 public class ReferralClientService : ApiService, IReferralClientService
 {
     public readonly ICrypto _crypto;

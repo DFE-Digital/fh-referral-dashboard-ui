@@ -1,5 +1,5 @@
 ﻿@page
-@model FamilyHubs.RequestForSupport.Web.Pages.Shared.GetRequestIdModel
+@model GetRequestIdModel
 @{
     ViewData["Title"] = "Request for support accepted";
 }
@@ -24,7 +24,7 @@
             You must contact the family. If you are unable to make contact, you should contact the person who requested support for the family.
         </p>
 
-        <a asp-page="/Vcs/RequestDetails" asp-route-id="@Model.RequestId" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+        <a href="@Html.FamilyHubUrl(UrlKeys.ThisWeb, $"/Vcs/RequestDetails?id={Model.RequestId}")" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
             View connection request
         </a>
     </div>

@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net;
+using FamilyHubs.RequestForSupport.Web.Models;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
+using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 
@@ -14,16 +17,15 @@ public class RequestDetailsModel : PageModel, IFamilyHubsHeader
 {
     private readonly IReferralClientService _referralClientService;
     public ReferralDto Referral { get; set; } = default!;
-    public Uri ReferralUiUrl { get; set; }
+    public string ServiceUrl { get; }
 
     public RequestDetailsModel(
         IReferralClientService referralClientService,
-        IConfiguration configuration)
+        IOptions<FamilyHubsUiOptions> familyHubsUiOptions)
     {
         _referralClientService = referralClientService;
-        //todo: bring in our config exception
-        ReferralUiUrl = new Uri(configuration["ReferralUiUrl"]
-            ?? throw new InvalidOperationException("Missing config for ReferralUiUrl"));
+        ServiceUrl = familyHubsUiOptions.Value
+            .Url(UrlKeys.ConnectWeb, "ProfessionalReferral/LocalOfferDetail?serviceid=").ToString();
     }
 
     public async Task<IActionResult> OnGet(int id)
@@ -44,8 +46,8 @@ public class RequestDetailsModel : PageModel, IFamilyHubsHeader
         return Page();
     }
 
-    public Uri GetReferralServiceUrl(long serviceId)
+    public string GetReferralServiceUrl(long serviceId)
     {
-        return new Uri(ReferralUiUrl, $"ProfessionalReferral/LocalOfferDetail?serviceid={serviceId}");
+        return $"{ServiceUrl}{serviceId}";
     }
 }

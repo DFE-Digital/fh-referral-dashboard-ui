@@ -4,12 +4,15 @@ using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Errors;
+using FamilyHubs.RequestForSupport.Web.Models;
 using FamilyHubs.RequestForSupport.Web.Security;
 using FamilyHubs.SharedKernel.Razor.Errors;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
@@ -37,7 +40,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
     private readonly IReferralClientService _referralClientService;
     private readonly INotifications _notifications;
     private readonly INotificationTemplates<NotificationType> _notificationTemplates;
-    private readonly IConfiguration _configuration;
+    private readonly string _dashboardUrl;
     private readonly ILogger<VcsRequestDetailsPageModel> _logger;
     public ReferralDto Referral { get; set; } = default!;
 
@@ -53,16 +56,17 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         IReferralClientService referralClientService,
         INotifications notifications,
         INotificationTemplates<NotificationType> notificationTemplates,
-        IConfiguration configuration,
+        IOptions<FamilyHubsUiOptions> familyHubsUiOptions,
         ILogger<VcsRequestDetailsPageModel> logger)
     {
         _referralClientService = referralClientService;
         _notifications = notifications;
         _notificationTemplates = notificationTemplates;
-        _configuration = configuration;
         _logger = logger;
         //todo: do something so doesn't have to be fully qualified
         ErrorState = SharedKernel.Razor.Errors.ErrorState.Empty;
+
+        _dashboardUrl = familyHubsUiOptions.Value.Url(UrlKeys.ThisWeb).ToString();
     }
 
     public async Task<IActionResult> OnGet(int id, IEnumerable<ErrorId> errors)
@@ -207,8 +211,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         int requestNumber,
         string serviceName)
     {
-        string dashboardUrl = GetDashboardUrl();
-        var viewConnectionRequestUrl = new UriBuilder(dashboardUrl)
+        var viewConnectionRequestUrl = new UriBuilder(_dashboardUrl)
         {
             Path = "La/RequestDetails",
             Query = $"id={requestNumber}"
@@ -225,20 +228,6 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
 
         //todo: change api to accept IEnumerable and dynamic dictionary
         await _notifications.SendEmailsAsync(new List<string> { emailAddress }, templateId, emailTokens);
-    }
-
-    private string GetDashboardUrl()
-    {
-        string? requestsSent = _configuration["DashboardUiUrl"];
-
-        //todo: config exception
-        if (string.IsNullOrEmpty(requestsSent))
-        {
-            //todo: use config exception
-            throw new InvalidOperationException("DashboardUiUrl not set in config");
-        }
-
-        return requestsSent;
     }
 }
 
