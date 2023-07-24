@@ -11,16 +11,15 @@ public class IndexModel : PageModel
     public IActionResult OnGet()
     {
         var user = HttpContext.GetFamilyHubsUser();
-        if(user.Role is RoleTypes.VcsProfessional or RoleTypes.VcsDualRole)
-        {
-            return RedirectToPage("/Vcs/Dashboard");
-        }
 
-        if (user.Role is RoleTypes.LaProfessional or RoleTypes.LaDualRole)
+        string redirect = user.Role switch
         {
-            return RedirectToPage("/La/Dashboard");
-        }
+            null or "" => "/Error/401",
+            RoleTypes.VcsProfessional or RoleTypes.VcsDualRole => "/Vcs/Dashboard",
+            RoleTypes.LaProfessional or RoleTypes.LaDualRole => "/La/Dashboard",
+            _ => "/Error/403"
+        };
 
-        return RedirectToPage("/Error/401");
+        return RedirectToPage(redirect);
     }
 }
