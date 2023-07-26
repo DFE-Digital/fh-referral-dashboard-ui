@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Error;
 
+//todo: only show account/sign-out link if user is signed in
 public class Error403Model : PageModel, IFamilyHubsHeader
 {
     LinkStatus IFamilyHubsHeader.GetStatus(FhLinkOptions link)

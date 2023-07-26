@@ -14,6 +14,7 @@ public class IndexModel : PageModel
 
         string redirect = user.Role switch
         {
+            // this case should be picked up by the middleware, but we leave it here, so that there's no way we can end up with a 403, when it should be a 401
             null or "" => "/Error/401",
             RoleTypes.VcsProfessional or RoleTypes.VcsDualRole => "/Vcs/Dashboard",
             RoleTypes.LaProfessional or RoleTypes.LaDualRole => "/La/Dashboard",
