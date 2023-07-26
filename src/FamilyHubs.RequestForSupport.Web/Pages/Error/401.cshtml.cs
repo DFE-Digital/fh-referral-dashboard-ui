@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Error;
 
-//todo: only show account/sign-out link if user is signed in
 public class Error401Model : PageModel, IFamilyHubsHeader
 {
+    // user should only ever see the 401 page if they've logged in
+    //bool IFamilyHubsHeader.ShowActionLinks => PageContext.HttpContext.User.Identity?.IsAuthenticated == true;
+
     LinkStatus IFamilyHubsHeader.GetStatus(FhLinkOptions link)
     {
         return link.Text == "Received requests" ? LinkStatus.Active : LinkStatus.Visible;
