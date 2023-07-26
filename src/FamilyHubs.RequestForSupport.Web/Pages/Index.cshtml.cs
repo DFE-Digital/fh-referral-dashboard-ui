@@ -11,16 +11,16 @@ public class IndexModel : PageModel
     public IActionResult OnGet()
     {
         var user = HttpContext.GetFamilyHubsUser();
-        if(user.Role is RoleTypes.VcsProfessional or RoleTypes.VcsDualRole)
-        {
-            return RedirectToPage("/Vcs/Dashboard");
-        }
 
-        if (user.Role is RoleTypes.LaProfessional or RoleTypes.LaDualRole)
+        string redirect = user.Role switch
         {
-            return RedirectToPage("/La/Dashboard");
-        }
+            // this case should be picked up by the middleware, but we leave it here, so that there's no way we can end up with a 403, when it should be a 401
+            null or "" => "/Error/401",
+            RoleTypes.VcsProfessional or RoleTypes.VcsDualRole => "/Vcs/Dashboard",
+            RoleTypes.LaProfessional or RoleTypes.LaDualRole => "/La/Dashboard",
+            _ => "/Error/403"
+        };
 
-        return RedirectToPage("/Error/401");
+        return RedirectToPage(redirect);
     }
 }

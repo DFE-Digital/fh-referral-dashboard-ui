@@ -4,6 +4,14 @@
       "StubUsers": [
         {
           "User": {
+            "Email": "noclaims@example.com",
+            "Sub": "noclaims@example.com"
+          },
+          "Claims": [
+          ]
+        },
+        {
+          "User": {
             "Email": "DfeAdmin@example.com",
             "Sub": "DfeAdmin@example.com"
           },
