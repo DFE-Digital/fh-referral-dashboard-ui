@@ -5,6 +5,7 @@ using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Security;
+using FamilyHubs.SharedKernel.DataProtection;
 using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
@@ -35,6 +36,9 @@ public static class StartupExtensions
 
     public static void ConfigureServices(this IServiceCollection services, ConfigurationManager configuration)
     {
+        const string dataProtectionAppName = "Connect";
+        services.AddFamilyHubsDataProtection(configuration, dataProtectionAppName);
+
         //services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
 
@@ -93,6 +97,8 @@ public static class StartupExtensions
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
+
+        app.UseFamilyHubsDataProtection();
 
         app.UseFamilyHubs();
 
