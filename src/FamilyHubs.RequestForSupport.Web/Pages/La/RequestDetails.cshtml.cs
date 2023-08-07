@@ -25,7 +25,8 @@ public class RequestDetailsModel : PageModel, IFamilyHubsHeader
     {
         _referralClientService = referralClientService;
         ServiceUrl = familyHubsUiOptions.Value
-            .Url(UrlKeys.ConnectWeb, "ProfessionalReferral/LocalOfferDetail?serviceid=").ToString();
+            .Url(UrlKeys.ConnectWeb, "ProfessionalReferral/LocalOfferDetail").ToString();
+        ServiceUrl += "?serviceid=";
     }
 
     public async Task<IActionResult> OnGet(int id)
