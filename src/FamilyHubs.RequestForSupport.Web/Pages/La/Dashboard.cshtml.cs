@@ -64,16 +64,18 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             sort = SortOrder.descending;
         }
 
-        _columnHeaders = new ColumnHeaderFactory(_columnImmutables, "/La/Dashboard", column.ToString(), sort)
+        Uri thisWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb);
+        string laDashboardUrl = $"{thisWebBaseUrl}La/Dashboard";
+
+        _columnHeaders = new ColumnHeaderFactory(_columnImmutables, laDashboardUrl, column.ToString(), sort)
             .CreateAll();
 
         var user = HttpContext.GetFamilyHubsUser();
         var searchResults = await GetConnections(user.AccountId, currentPage!.Value, column, sort);
 
-        Uri thisWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb);
         _rows = searchResults.Items.Select(r => new LaDashboardRow(r, thisWebBaseUrl));
 
-        Pagination = new LargeSetLinkPagination<Column>("/La/Dashboard", searchResults.TotalPages, currentPage.Value, column, sort);
+        Pagination = new LargeSetLinkPagination<Column>(laDashboardUrl, searchResults.TotalPages, currentPage.Value, column, sort);
     }
 
     private async Task<PaginatedList<ReferralDto>> GetConnections(

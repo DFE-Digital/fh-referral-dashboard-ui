@@ -19,7 +19,7 @@ public class LaDashboardRow : IRow<ReferralDto>
     {
         get
         {
-            var requestDetailsUrl = new Uri(_laWebBaseUrl, $"La/RequestDetails?id={Item.Id}").ToString();
+            var requestDetailsUrl = $"{_laWebBaseUrl}La/RequestDetails?id={Item.Id}";
             yield return new Cell($"<a href=\"{requestDetailsUrl}\">{HttpUtility.HtmlEncode(Item.RecipientDto.Name)}</a>");
             yield return new Cell(Item.ReferralServiceDto.Name);
             yield return new Cell(Item.LastModified?.ToString("dd MMM yyyy") ?? "");
