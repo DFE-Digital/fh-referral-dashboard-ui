@@ -109,7 +109,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
                 {
                     case AcceptDecline.Accepted:
                         newStatus = ReferralStatus.Accepted;
-                        redirectUrl = "/Vcs/RequestAccepted";
+                        redirectUrl = "/referrals/Vcs/RequestAccepted";
                         redirectRouteValues = new {id};
                         break;
                     case AcceptDecline.Declined:
@@ -128,7 +128,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
                         else
                         {
                             newStatus = ReferralStatus.Declined;
-                            redirectUrl = "/Vcs/RequestDeclined";
+                            redirectUrl = "/referrals/Vcs/RequestDeclined";
                             redirectRouteValues = new { id };
                             reason = ReasonForRejection;
                         }
@@ -140,7 +140,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
                 break;
             case UserAction.ReturnLater:
                 newStatus = ReferralStatus.Opened;
-                redirectUrl = "/Vcs/Dashboard";
+                redirectUrl = "/referrals/Vcs/Dashboard";
                 break;
         }
 
