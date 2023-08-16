@@ -40,7 +40,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
     private readonly IReferralClientService _referralClientService;
     private readonly INotifications _notifications;
     private readonly INotificationTemplates<NotificationType> _notificationTemplates;
-    private readonly string _dashboardUrl;
+    private readonly FamilyHubsUiOptions _familyHubsUiOptions;
     private readonly ILogger<VcsRequestDetailsPageModel> _logger;
     public ReferralDto Referral { get; set; } = default!;
 
@@ -62,11 +62,10 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         _referralClientService = referralClientService;
         _notifications = notifications;
         _notificationTemplates = notificationTemplates;
+        _familyHubsUiOptions = familyHubsUiOptions.Value;
         _logger = logger;
         //todo: do something so doesn't have to be fully qualified
         ErrorState = SharedKernel.Razor.Errors.ErrorState.Empty;
-
-        _dashboardUrl = familyHubsUiOptions.Value.Url(UrlKeys.ThisWeb).ToString();
     }
 
     public async Task<IActionResult> OnGet(int id, IEnumerable<ErrorId> errors)
@@ -186,7 +185,9 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
 
         await TrySendNotificationEmails(Referral.ReferralUserAccountDto.EmailAddress, notificationType.Value, Referral.ReferralServiceDto.Name, id);
 
-        return RedirectToPage(redirectUrl, redirectRouteValues);
+        var redirectAbsoluteUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb, redirectUrl);
+
+        return RedirectToPage(redirectAbsoluteUrl.ToString(), redirectRouteValues);
     }
 
     private async Task TrySendNotificationEmails(
@@ -211,11 +212,8 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         int requestNumber,
         string serviceName)
     {
-        var viewConnectionRequestUrl = new UriBuilder(_dashboardUrl)
-        {
-            Path = "La/RequestDetails",
-            Query = $"id={requestNumber}"
-        }.Uri;
+        var viewConnectionRequestUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb,
+            $"La/RequestDetails?id={requestNumber}");
 
         var emailTokens = new Dictionary<string, string>
         {
