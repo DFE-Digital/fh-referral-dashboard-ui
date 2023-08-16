@@ -66,7 +66,7 @@
     Error? selectAResponseError = Model.ErrorState.GetErrorIfTriggered((int)ErrorId.SelectAResponse);
     Error? declineReasonError = Model.ErrorState.GetErrorIfTriggered((int)ErrorId.EnterReasonForDeclining, (int)ErrorId.ReasonForDecliningTooLong);
 
-    <form method="post" novalidate action="@Html.FamilyHubUrl(UrlKeys.ThisWeb, "/Vcs/RequestDetails")">
+    <form method="post" novalidate action="@Html.FamilyHubUrl(UrlKeys.ThisWeb, $"/Vcs/RequestDetails?id={Model.Referral.Id}")">
         <div class="govuk-form-group @(selectAResponseError != null ? "govuk-form-group--error" : "")">
             <fieldset class="govuk-fieldset" role="group" aria-describedby="select-option @(selectAResponseError != null ? "option-error" : "")">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
