@@ -22,7 +22,6 @@ public class IndexModel : PageModel
     {
         var user = HttpContext.GetFamilyHubsUser();
 
-        //prepend this web
         string redirect = user.Role switch
         {
             // this case should be picked up by the middleware, but we leave it here, so that there's no way we can end up with a 403, when it should be a 401
