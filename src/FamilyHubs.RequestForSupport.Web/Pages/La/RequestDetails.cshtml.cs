@@ -39,6 +39,7 @@ public class RequestDetailsModel : PageModel, IFamilyHubsHeader
             // user has changed the id in the url to see a referral they shouldn't have access to
             if (ex.StatusCode == HttpStatusCode.Forbidden)
             {
+                //todo: don't use redirect to page
                 return RedirectToPage("/Error/403");
             }
             throw;

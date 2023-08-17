@@ -34,6 +34,8 @@ public enum NotificationType
     ProfessionalDeclinedRequest
 }
 
+//todo: don't use redirect to page
+
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
 public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
 {
@@ -95,57 +97,57 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
     //todo: component for character count (especially as there are some gotchas with line endings)
     public async Task<IActionResult> OnPost(UserAction userAction, int id)
     {
+        if (userAction == UserAction.ReturnLater)
+        {
+            await _referralClientService.UpdateReferralStatus(id, ReferralStatus.Opened);
+            return Redirect(_familyHubsUiOptions.Url(UrlKeys.ThisWeb, "/Vcs/Dashboard").ToString());
+        }
+
         ReferralStatus? newStatus = null;
-        string? redirectUrl = null;
-        object? redirectRouteValues = null;
+        string? redirectTo = null;
         string? reason = null;
         var errors = new List<ErrorId>();
 
-        switch (userAction)
+        switch (AcceptOrDecline)
         {
-            case UserAction.AcceptDecline:
-                switch (AcceptOrDecline)
+            case AcceptDecline.Accepted:
+                newStatus = ReferralStatus.Accepted;
+                redirectTo = "RequestAccepted";
+                break;
+            case AcceptDecline.Declined:
+                if (string.IsNullOrEmpty(ReasonForRejection))
                 {
-                    case AcceptDecline.Accepted:
-                        newStatus = ReferralStatus.Accepted;
-                        redirectUrl = "/Vcs/RequestAccepted";
-                        redirectRouteValues = new {id};
-                        break;
-                    case AcceptDecline.Declined:
-                        if (string.IsNullOrEmpty(ReasonForRejection))
-                        {
-                            errors.Add(ErrorId.EnterReasonForDeclining);
-                        }
-                        // workaround the front end counting line endings as 1 chars (\n) as per HTML spec,
-                        // and the http transport/.net/windows using 2 chars for line ends (\r\n)
-                        else if (ReasonForRejection.Replace("\r", "").Length > 500)
-                        {
-                            errors.Add(ErrorId.ReasonForDecliningTooLong);
-                            // truncate at some large value, although it gets stored in cookie(s), so large values will only affect the user that sends them
-                            TempData["ReasonForDeclining"] = ReasonForRejection[..Math.Min(ReasonForRejection.Length, 4000)];
-                        }
-                        else
-                        {
-                            newStatus = ReferralStatus.Declined;
-                            redirectUrl = "/Vcs/RequestDeclined";
-                            redirectRouteValues = new { id };
-                            reason = ReasonForRejection;
-                        }
-                        break;
-                    default:
-                        errors.Add(ErrorId.SelectAResponse);
-                        break;
+                    errors.Add(ErrorId.EnterReasonForDeclining);
+                }
+                // workaround the front end counting line endings as 1 chars (\n) as per HTML spec,
+                // and the http transport/.net/windows using 2 chars for line ends (\r\n)
+                else if (ReasonForRejection.Replace("\r", "").Length > 500)
+                {
+                    errors.Add(ErrorId.ReasonForDecliningTooLong);
+                    // truncate at some large value, although it gets stored in cookie(s), so large values will only affect the user that sends them
+                    TempData["ReasonForDeclining"] = ReasonForRejection[..Math.Min(ReasonForRejection.Length, 4000)];
+                }
+                else
+                {
+                    newStatus = ReferralStatus.Declined;
+                    redirectTo = "RequestDeclined";
+                    reason = ReasonForRejection;
                 }
                 break;
-            case UserAction.ReturnLater:
-                newStatus = ReferralStatus.Opened;
-                redirectUrl = "/Vcs/Dashboard";
+            default:
+                errors.Add(ErrorId.SelectAResponse);
                 break;
         }
 
         if (errors.Any())
         {
-            return RedirectToPage(new {id, errors});
+            string redirectGetUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb, $"/Vcs/RequestDetails?id={id}").ToString();
+            if (errors.Any())
+            {
+                redirectGetUrl += $"&errors={string.Join(',', errors)}";
+            }
+
+            return Redirect(redirectGetUrl);
         }
 
         if (newStatus == null)
@@ -156,18 +158,6 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         await _referralClientService.UpdateReferralStatus(id, newStatus.Value, reason);
 
         //todo: extract
-
-        // we _could_ currently use INotificationTemplates<ReferralStatus> directly, but this is more future proof
-        NotificationType? notificationType = newStatus switch
-        {
-            ReferralStatus.Accepted => NotificationType.ProfessionalAcceptedRequest,
-            ReferralStatus.Declined => NotificationType.ProfessionalDeclinedRequest,
-            _ => null
-        };
-        if (notificationType == null)
-        {
-            return RedirectToPage(redirectUrl, redirectRouteValues);
-        }
 
         try
         {
@@ -183,19 +173,27 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
             throw;
         }
 
-        await TrySendNotificationEmails(Referral.ReferralUserAccountDto.EmailAddress, notificationType.Value, Referral.ReferralServiceDto.Name, id);
+        await TrySendNotificationEmails(Referral.ReferralUserAccountDto.EmailAddress, newStatus, Referral.ReferralServiceDto.Name, id);
 
-        var redirectAbsoluteUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb, redirectUrl);
+        var redirectAbsoluteUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb, $"/Vcs/{redirectTo}?id={id}");
 
-        return RedirectToPage(redirectAbsoluteUrl.ToString(), redirectRouteValues);
+        return Redirect(redirectAbsoluteUrl.ToString());
     }
 
     private async Task TrySendNotificationEmails(
         string emailAddress,
-        NotificationType notificationType,
+        ReferralStatus? newStatus,
         string serviceName,
         int requestNumber)
     {
+        // we _could_ currently use INotificationTemplates<ReferralStatus> directly, but this is more future proof
+        NotificationType notificationType = newStatus switch
+        {
+            ReferralStatus.Accepted => NotificationType.ProfessionalAcceptedRequest,
+            ReferralStatus.Declined => NotificationType.ProfessionalDeclinedRequest,
+            _ => throw new ArgumentOutOfRangeException(nameof(newStatus), $"Unexpected value {newStatus}")
+        };
+
         try
         {
             await SendNotificationEmails(emailAddress, notificationType, requestNumber, serviceName);
