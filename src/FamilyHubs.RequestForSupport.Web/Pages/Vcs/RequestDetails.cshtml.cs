@@ -34,8 +34,6 @@ public enum NotificationType
     ProfessionalDeclinedRequest
 }
 
-//todo: don't use redirect to page
-
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
 public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
 {
