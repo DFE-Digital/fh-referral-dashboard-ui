@@ -141,13 +141,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
 
         if (errors.Any())
         {
-            string redirectGetUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb, $"/Vcs/RequestDetails?id={id}").ToString();
-            if (errors.Any())
-            {
-                redirectGetUrl += $"&errors={string.Join(',', errors)}";
-            }
-
-            return Redirect(redirectGetUrl);
+            return Redirect(RedirectGetUrl(id, errors));
         }
 
         if (newStatus == null)
@@ -156,8 +150,6 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         }
 
         await _referralClientService.UpdateReferralStatus(id, newStatus.Value, reason);
-
-        //todo: extract
 
         try
         {
@@ -178,6 +170,17 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
         var redirectAbsoluteUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb, $"/Vcs/{redirectTo}?id={id}");
 
         return Redirect(redirectAbsoluteUrl.ToString());
+    }
+
+    private string RedirectGetUrl(int id, List<ErrorId> errors)
+    {
+        string redirectGetUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb, $"/Vcs/RequestDetails?id={id}").ToString();
+        if (errors.Any())
+        {
+            redirectGetUrl += $"&errors={string.Join(',', errors)}";
+        }
+
+        return redirectGetUrl;
     }
 
     private async Task TrySendNotificationEmails(
