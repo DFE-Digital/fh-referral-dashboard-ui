@@ -87,7 +87,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
             // user has changed the id in the url to see a referral they shouldn't have access to
             if (ex.StatusCode == HttpStatusCode.Forbidden)
             {
-                return RedirectToPage("/Error/403");
+                return Redirect(_familyHubsUiOptions.Url(UrlKeys.ThisWeb, "/Error/403").ToString());
             }
             throw;
         }
@@ -160,7 +160,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
             // user has changed the id in the url to see a referral they shouldn't have access to
             if (ex.StatusCode == HttpStatusCode.Forbidden)
             {
-                return RedirectToPage("/Error/403");
+                return Redirect(_familyHubsUiOptions.Url(UrlKeys.ThisWeb, "/Error/403").ToString());
             }
             throw;
         }
