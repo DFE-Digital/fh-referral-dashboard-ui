@@ -19,7 +19,7 @@ public class VcsDashboardRow : IRow<ReferralDto>
     {
         get
         {
-            var requestDetailsUrl = new Uri(_vcsWebBaseUrl, $"/Vcs/RequestDetails?id={Item.Id}").ToString();
+            var requestDetailsUrl = $"{_vcsWebBaseUrl}Vcs/RequestDetails?id={Item.Id}";
             yield return new Cell($"<a href=\"{requestDetailsUrl}\">{HttpUtility.HtmlEncode(Item.RecipientDto.Name)}</a>");
             yield return new Cell(Item.Created?.ToString("dd MMM yyyy") ?? "");
             yield return new Cell(Item.Id.ToString("X6"));

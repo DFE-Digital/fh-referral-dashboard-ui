@@ -62,16 +62,18 @@ public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralD
             sort = SortOrder.descending;
         }
 
-        _columnHeaders = new ColumnHeaderFactory(_columnImmutables, "/Vcs/Dashboard", column.ToString(), sort)
+        Uri thisWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb);
+        string vcsDashboardUrl = $"{thisWebBaseUrl}Vcs/Dashboard";
+
+        _columnHeaders = new ColumnHeaderFactory(_columnImmutables, vcsDashboardUrl, column.ToString(), sort)
             .CreateAll();
 
         var user = HttpContext.GetFamilyHubsUser();
         var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
 
-        Uri thisWebBaseUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb);
         _rows = searchResults.Items.Select(r => new VcsDashboardRow(r, thisWebBaseUrl));
 
-        Pagination = new LargeSetLinkPagination<Column>("/Vcs/Dashboard", searchResults.TotalPages, currentPage.Value, column, sort);
+        Pagination = new LargeSetLinkPagination<Column>(vcsDashboardUrl, searchResults.TotalPages, currentPage.Value, column, sort);
     }
 
     private async Task<PaginatedList<ReferralDto>> GetConnections(

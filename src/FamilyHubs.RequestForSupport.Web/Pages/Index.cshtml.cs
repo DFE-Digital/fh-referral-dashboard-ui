@@ -1,13 +1,23 @@
-﻿using FamilyHubs.SharedKernel.Identity;
+﻿using FamilyHubs.RequestForSupport.Web.Models;
+using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages;
 
 [Authorize]
 public class IndexModel : PageModel
 {
+    private readonly FamilyHubsUiOptions _familyHubsUiOptions;
+
+    public IndexModel(IOptions<FamilyHubsUiOptions> familyHubsUiOptions)
+    {
+        _familyHubsUiOptions = familyHubsUiOptions.Value;
+    }
+
     public IActionResult OnGet()
     {
         var user = HttpContext.GetFamilyHubsUser();
@@ -21,6 +31,7 @@ public class IndexModel : PageModel
             _ => "/Error/403"
         };
 
-        return RedirectToPage(redirect);
+        var absoluteRedirect = _familyHubsUiOptions.Url(UrlKeys.ThisWeb, redirect);
+        return Redirect(absoluteRedirect.ToString());
     }
 }

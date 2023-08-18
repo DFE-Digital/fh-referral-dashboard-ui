@@ -17,15 +17,17 @@ public class RequestDetailsModel : PageModel, IFamilyHubsHeader
 {
     private readonly IReferralClientService _referralClientService;
     public ReferralDto Referral { get; set; } = default!;
-    public string ServiceUrl { get; }
+    private readonly FamilyHubsUiOptions _familyHubsUiOptions;
+    private readonly string _serviceUrl;
 
     public RequestDetailsModel(
         IReferralClientService referralClientService,
         IOptions<FamilyHubsUiOptions> familyHubsUiOptions)
     {
         _referralClientService = referralClientService;
-        ServiceUrl = familyHubsUiOptions.Value
-            .Url(UrlKeys.ConnectWeb, "ProfessionalReferral/LocalOfferDetail?serviceid=").ToString();
+        _familyHubsUiOptions = familyHubsUiOptions.Value;
+        _serviceUrl = _familyHubsUiOptions.Url(UrlKeys.ConnectWeb,
+            "ProfessionalReferral/LocalOfferDetail?serviceid=").ToString();
     }
 
     public async Task<IActionResult> OnGet(int id)
@@ -39,7 +41,7 @@ public class RequestDetailsModel : PageModel, IFamilyHubsHeader
             // user has changed the id in the url to see a referral they shouldn't have access to
             if (ex.StatusCode == HttpStatusCode.Forbidden)
             {
-                return RedirectToPage("/Error/403");
+                return Redirect(_familyHubsUiOptions.Url(UrlKeys.ThisWeb, "/Error/403").ToString());
             }
             throw;
         }
@@ -48,6 +50,6 @@ public class RequestDetailsModel : PageModel, IFamilyHubsHeader
 
     public string GetReferralServiceUrl(long serviceId)
     {
-        return $"{ServiceUrl}{serviceId}";
+        return $"{_serviceUrl}{serviceId}";
     }
 }
