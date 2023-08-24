@@ -42,8 +42,8 @@ public static class StartupExtensions
         //services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
 
-        services.AddTransient<IKeyProvider, KeyProvider>();
-        services.AddTransient<ICrypto, Crypto>();
+        services.AddSingleton<IKeyProvider, KeyProvider>();
+        services.AddSingleton<ICrypto, Crypto>();
 
         services.AddAndConfigureGovUkAuthentication(configuration);
 
