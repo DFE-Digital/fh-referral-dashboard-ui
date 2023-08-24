@@ -1,4 +1,4 @@
-﻿@model FamilyHubs.ReferralService.Shared.Dto.UserAccountDto
+﻿@model FamilyHubs.ReferralService.Shared.Dto.ReferralDto
 
 <div class="govuk-grid-row govuk-!-margin-top-2">
     <div class="govuk-grid-column-two-thirds">
@@ -14,7 +14,7 @@
                     Name
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    @Model.Name
+                    @Model.ReferralUserAccountDto.Name
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -22,7 +22,7 @@
                     Email
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    <a href="mailto:@(Model.EmailAddress)">@Model.EmailAddress</a>
+                    <a href="mailto:@(Model.ReferralUserAccountDto.EmailAddress)">@Model.ReferralUserAccountDto.EmailAddress</a>
                 </dd>
             </div>
             <div class="govuk-summary-list__row">
@@ -30,7 +30,7 @@
                     Phone
                 </dt>
                 <dd class="govuk-summary-list__value">
-                    <a href="tel:@(Model.PhoneNumber)">@Model.PhoneNumber</a>
+                    <a href="tel:@(Model.ReferrerTelephone)">@Model.ReferrerTelephone</a>
                 </dd>
             </div>
         </dl>
