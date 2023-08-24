@@ -59,7 +59,7 @@
     </div>
 </div>
 
-<partial name="_ProfessionalContactDetails" for="@Model.Referral.ReferralUserAccountDto" />
+<partial name="_ProfessionalContactDetails" for="@Model.Referral" />
 
 @if ((ReferralStatus)Model.Referral.Status.Id is ReferralStatus.New or ReferralStatus.Opened)
 {
