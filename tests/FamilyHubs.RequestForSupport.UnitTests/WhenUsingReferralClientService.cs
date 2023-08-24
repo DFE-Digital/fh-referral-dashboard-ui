@@ -1,21 +1,12 @@
 ﻿using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
-using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 using FamilyHubs.SharedKernel.Security;
 using FluentAssertions;
-using FluentAssertions.Execution;
-using Microsoft.Identity.Client;
 using Moq;
 using Moq.Protected;
-using System;
-using System.Collections.Generic;
-using System.Drawing.Printing;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace FamilyHubs.RequestForSupport.UnitTests;
 
@@ -24,7 +15,9 @@ public class WhenUsingReferralClientService
     private readonly Mock<ICrypto> _cryptoMock;
     public WhenUsingReferralClientService()
     {
-        _cryptoMock = new Mock<ICrypto>();  
+        _cryptoMock = new Mock<ICrypto>();
+        _cryptoMock.Setup(x => x.DecryptData(It.IsAny<string>())).ReturnsAsync((string input) => input);
+        _cryptoMock.Setup(x => x.EncryptData(It.IsAny<string>())).ReturnsAsync((string input) => input);
     }
 
     [Fact]
@@ -44,8 +37,8 @@ public class WhenUsingReferralClientService
         var result = await referralClientService.GetRequestsByLaProfessional(accountId, null, null, 1, 10);
 
         // Assert
-        result.Should().BeEquivalentTo(expectedList, options => options.Excluding(x => x.Items[0].ReasonForSupport).Excluding(x => x.Items[0].EngageWithFamily));
-        _cryptoMock.Verify(c => c.DecryptData(It.IsAny<string>()), Times.Exactly(2));
+        result.Should().BeEquivalentTo(expectedList);
+        _cryptoMock.Verify(c => c.DecryptData(It.IsAny<string>()), Times.Exactly(11));
     }
 
     [Fact]
@@ -65,8 +58,8 @@ public class WhenUsingReferralClientService
         var result = await referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, null, null, 1, 10);
 
         // Assert
-        result.Should().BeEquivalentTo(expectedList, options => options.Excluding(x => x.Items[0].ReasonForSupport).Excluding(x => x.Items[0].EngageWithFamily));
-        _cryptoMock.Verify(c => c.DecryptData(It.IsAny<string>()), Times.Exactly(2));
+        result.Should().BeEquivalentTo(expectedList);
+        _cryptoMock.Verify(c => c.DecryptData(It.IsAny<string>()), Times.Exactly(11));
     }
 
     [Fact]
@@ -86,7 +79,7 @@ public class WhenUsingReferralClientService
 
         // Assert
         result.Should().BeEquivalentTo(expectedReferral, options => options.Excluding(x => x.ReasonForSupport).Excluding(x => x.EngageWithFamily));
-        _cryptoMock.Verify(c => c.DecryptData(It.IsAny<string>()), Times.Exactly(2));
+        _cryptoMock.Verify(c => c.DecryptData(It.IsAny<string>()), Times.Exactly(11));
     }
 
 
