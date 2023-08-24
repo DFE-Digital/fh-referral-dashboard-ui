@@ -58,10 +58,9 @@ public class ReferralClientService : ApiService, IReferralClientService
                 throw new ReferralClientServiceException(response, "null");
             }
 
-            foreach(var item in referrals.Items) 
+            for(int i = 0; i < referrals.Items.Count; i++)
             {
-                item.ReasonForSupport = await _crypto.DecryptData(item.ReasonForSupport);
-                item.EngageWithFamily = await _crypto.DecryptData(item.EngageWithFamily);
+                referrals.Items[i] = await referrals.Items[i].DecryptReferralAsync(_crypto);
             }
 
             return referrals;
@@ -121,10 +120,8 @@ public class ReferralClientService : ApiService, IReferralClientService
             throw new ReferralClientServiceException(response, "null");
         }
 
-        referral.ReasonForSupport = await _crypto.DecryptData(referral.ReasonForSupport);
-        referral.EngageWithFamily = await _crypto.DecryptData(referral.EngageWithFamily);
-
-        return referral;
+        return await referral.DecryptReferralAsync(_crypto);
+        
     }
 
     public async Task<string> UpdateReferralStatus(long referralId, ReferralStatus referralStatus, string? reason = null)
