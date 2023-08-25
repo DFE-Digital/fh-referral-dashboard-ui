@@ -163,7 +163,7 @@ public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
             throw;
         }
 
-        await TrySendNotificationEmails(Referral.ReferralUserAccountDto.EmailAddress, newStatus, Referral.ReferralServiceDto.Name, id);
+        await TrySendNotificationEmails(Referral.ReferralUserAccountDto.EmailAddress, newStatus, Referral.ReferralServiceDto.Name ?? "", id);
 
         var redirectAbsoluteUrl = _familyHubsUiOptions.Url(UrlKeys.ThisWeb, $"/Vcs/{redirectTo}?id={id}");
 
