@@ -1,19 +1,22 @@
 ﻿using FamilyHubs.SharedKernel.Identity;
-using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
+using FamilyHubs.SharedKernel.Razor.Header;
+using FamilyHubs.SharedKernel.Razor.Links;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Shared;
 
 public class HeaderPageModel : PageModel, IFamilyHubsHeader
 {
-    LinkStatus IFamilyHubsHeader.GetStatus(FhLinkOptions link)
+    LinkStatus IFamilyHubsHeader.GetStatus(IFhRenderLink link)
     {
         //todo: ordering
         return link.Text == "Requests sent" ? LinkStatus.Active : LinkStatus.Visible;
     }
 
-    IEnumerable<FhLinkOptions> IFamilyHubsHeader.NavigationLinks(FhLinkOptions[] navigationLinks)
+    IEnumerable<IFhRenderLink> IFamilyHubsHeader.NavigationLinks(
+        FhLinkOptions[] navigationLinks,
+        IFamilyHubsUiOptions familyHubsUiOptions)
     {
         string role = HttpContext.GetRole();
         //todo: new copy ctor for FhLinkOptions?

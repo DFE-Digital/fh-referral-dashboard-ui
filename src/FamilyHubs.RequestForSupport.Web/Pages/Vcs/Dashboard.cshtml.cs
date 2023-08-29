@@ -7,15 +7,16 @@ using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.RequestForSupport.Web.VcsDashboard;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
-using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using FamilyHubs.RequestForSupport.Web.Security;
 using FamilyHubs.RequestForSupport.Web.Models;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
+using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
+//todo: new base model for header switcheroo
 //todo: make back button remember dashboard state?
 //todo: most of this can go in a base class
 //todo: check handling of 401 (no access to service)

@@ -7,8 +7,8 @@ using FamilyHubs.RequestForSupport.Web.Models;
 using FamilyHubs.RequestForSupport.Web.Security;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
-using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
+using FamilyHubs.SharedKernel.Razor.Header;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 
+//todo: new base model for header switcheroo
 //todo: make back button remember dashboard state?
 //todo: check AccountStatus on claim? is it done auto?
 //todo: add url for 401 (no access to service)

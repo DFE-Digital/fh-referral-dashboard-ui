@@ -7,8 +7,8 @@ using FamilyHubs.RequestForSupport.Web.Errors;
 using FamilyHubs.RequestForSupport.Web.Models;
 using FamilyHubs.RequestForSupport.Web.Security;
 using FamilyHubs.SharedKernel.Razor.Errors;
-using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
+using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -34,6 +34,7 @@ public enum NotificationType
     ProfessionalDeclinedRequest
 }
 
+//todo: new base model for header switcheroo
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
 public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
 {
