@@ -1,13 +1,11 @@
-﻿using FamilyHubs.RequestForSupport.Web.Security;
-using FamilyHubs.SharedKernel.Razor.Header;
+﻿using FamilyHubs.RequestForSupport.Web.Pages.Shared;
+using FamilyHubs.RequestForSupport.Web.Security;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
-//todo: new base model for header switcheroo
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
-public class GetRequestIdModel : PageModel, IFamilyHubsHeader
+public class GetRequestIdModel : HeaderPageModel
 {
     public int? RequestId { get; private set; }
 

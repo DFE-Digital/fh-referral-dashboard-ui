@@ -4,24 +4,21 @@ using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.LaDashboard;
 using FamilyHubs.RequestForSupport.Web.Models;
+using FamilyHubs.RequestForSupport.Web.Pages.Shared;
 using FamilyHubs.RequestForSupport.Web.Security;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
-using FamilyHubs.SharedKernel.Razor.Header;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 
-//todo: new base model for header switcheroo
 //todo: make back button remember dashboard state?
 //todo: check AccountStatus on claim? is it done auto?
-//todo: add url for 401 (no access to service)
 [Authorize(Roles = Roles.LaProfessionalOrDualRole)]
-public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
+public class DashboardModel : HeaderPageModel, IDashboard<ReferralDto>
 {
     private static ColumnImmutable[] _columnImmutables =
     {

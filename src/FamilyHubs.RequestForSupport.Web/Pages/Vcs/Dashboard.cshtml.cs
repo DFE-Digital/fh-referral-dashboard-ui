@@ -1,5 +1,4 @@
 using FamilyHubs.RequestForSupport.Core.ApiClients;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -11,17 +10,15 @@ using FamilyHubs.SharedKernel.Razor.Pagination;
 using FamilyHubs.RequestForSupport.Web.Security;
 using FamilyHubs.RequestForSupport.Web.Models;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
-using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.Extensions.Options;
+using FamilyHubs.RequestForSupport.Web.Pages.Shared;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 
-//todo: new base model for header switcheroo
 //todo: make back button remember dashboard state?
 //todo: most of this can go in a base class
-//todo: check handling of 401 (no access to service)
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
-public class DashboardModel : PageModel, IFamilyHubsHeader, IDashboard<ReferralDto>
+public class DashboardModel : HeaderPageModel, IDashboard<ReferralDto>
 {
     private static ColumnImmutable[] _columnImmutables = 
     {

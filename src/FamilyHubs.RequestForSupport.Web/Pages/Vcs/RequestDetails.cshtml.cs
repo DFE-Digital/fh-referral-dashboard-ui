@@ -5,13 +5,12 @@ using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Errors;
 using FamilyHubs.RequestForSupport.Web.Models;
+using FamilyHubs.RequestForSupport.Web.Pages.Shared;
 using FamilyHubs.RequestForSupport.Web.Security;
 using FamilyHubs.SharedKernel.Razor.Errors;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
-using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.Vcs;
@@ -34,9 +33,8 @@ public enum NotificationType
     ProfessionalDeclinedRequest
 }
 
-//todo: new base model for header switcheroo
 [Authorize(Roles = Roles.VcsProfessionalOrDualRole)]
-public class VcsRequestDetailsPageModel : PageModel, IFamilyHubsHeader
+public class VcsRequestDetailsPageModel : HeaderPageModel
 {
     private readonly IReferralClientService _referralClientService;
     private readonly INotifications _notifications;

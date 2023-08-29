@@ -8,19 +8,13 @@ namespace FamilyHubs.RequestForSupport.Web.Pages.Shared;
 
 public class HeaderPageModel : PageModel, IFamilyHubsHeader
 {
-    LinkStatus IFamilyHubsHeader.GetStatus(IFhRenderLink link)
-    {
-        //todo: ordering
-        return link.Text == "Requests sent" ? LinkStatus.Active : LinkStatus.Visible;
-    }
-
+    //todo: we could add the status to IFhRenderLink and let the consumer use either method
     IEnumerable<IFhRenderLink> IFamilyHubsHeader.NavigationLinks(
         FhLinkOptions[] navigationLinks,
         IFamilyHubsUiOptions familyHubsUiOptions)
     {
         string role = HttpContext.GetRole();
-        //todo: new copy ctor for FhLinkOptions?
-        //todo: also is post configure, so perhaps introduce interface (+ class) for that
+
         return role is RoleTypes.VcsProfessional or RoleTypes.VcsDualRole
             ? navigationLinks.Select(nl => nl.Text == "Requests sent"
                 ? (IFhRenderLink)new FhRenderLink("My requests")
@@ -34,5 +28,10 @@ public class HeaderPageModel : PageModel, IFamilyHubsHeader
         //return role is RoleTypes.VcsProfessional or RoleTypes.VcsDualRole
         //    ? familyHubsUiOptions.GetAlternative("VcsHeader").Header.NavigationLinks
         //    : navigationLinks;
+    }
+
+    LinkStatus IFamilyHubsHeader.GetStatus(IFhRenderLink link)
+    {
+        return link.Text is "Requests sent" or "My requests" ? LinkStatus.Active : LinkStatus.Visible;
     }
 }
