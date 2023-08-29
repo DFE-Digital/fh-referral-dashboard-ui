@@ -23,9 +23,8 @@ public class HeaderPageModel : PageModel, IFamilyHubsHeader
         //todo: also is post configure, so perhaps introduce interface (+ class) for that
         return role is RoleTypes.VcsProfessional or RoleTypes.VcsDualRole
             ? navigationLinks.Select(nl => nl.Text == "Requests sent"
-                ? new FhLinkOptions
+                ? (IFhRenderLink)new FhRenderLink("My requests")
                 {
-                    Text = "My requests",
                     Url = nl.Url,
                     OpenInNewTab = nl.OpenInNewTab
                 } : nl)
