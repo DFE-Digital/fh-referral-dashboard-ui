@@ -1,19 +1,18 @@
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Security;
-using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Delegators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net;
 using FamilyHubs.RequestForSupport.Web.Models;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
 using Microsoft.Extensions.Options;
+using FamilyHubs.RequestForSupport.Web.Pages.Shared;
 
 namespace FamilyHubs.RequestForSupport.Web.Pages.La;
 
 [Authorize(Roles = Roles.LaProfessionalOrDualRole)]
-public class RequestDetailsModel : PageModel, IFamilyHubsHeader
+public class RequestDetailsModel : HeaderPageModel
 {
     private readonly IReferralClientService _referralClientService;
     public ReferralDto Referral { get; set; } = default!;
