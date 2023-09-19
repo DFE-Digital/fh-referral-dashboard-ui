@@ -11,14 +11,7 @@ using System.Text.Json;
 namespace FamilyHubs.RequestForSupport.UnitTests;
 
 public class WhenUsingReferralClientService
-{
-    private readonly Mock<ICrypto> _cryptoMock;
-    public WhenUsingReferralClientService()
-    {
-        _cryptoMock = new Mock<ICrypto>();
-        _cryptoMock.Setup(x => x.DecryptData(It.IsAny<string>())).ReturnsAsync((string input) => input);
-        _cryptoMock.Setup(x => x.EncryptData(It.IsAny<string>())).ReturnsAsync((string input) => input);
-    }
+{ 
 
     [Fact]
     public async Task ThenGetRequestsByLaProfessional()
@@ -31,14 +24,13 @@ public class WhenUsingReferralClientService
         httpClient.DefaultRequestHeaders.Clear();
         httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer token");
         httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-        ReferralClientService referralClientService = new ReferralClientService(httpClient, _cryptoMock.Object);
+        ReferralClientService referralClientService = new ReferralClientService(httpClient);
 
         // Act
         var result = await referralClientService.GetRequestsByLaProfessional(accountId, null, null, 1, 10);
 
         // Assert
         result.Should().BeEquivalentTo(expectedList);
-        _cryptoMock.Verify(c => c.DecryptData(It.IsAny<string>()), Times.Exactly(11));
     }
 
     [Fact]
@@ -52,14 +44,13 @@ public class WhenUsingReferralClientService
         httpClient.DefaultRequestHeaders.Clear();
         httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer token");
         httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-        ReferralClientService referralClientService = new ReferralClientService(httpClient, _cryptoMock.Object);
+        ReferralClientService referralClientService = new ReferralClientService(httpClient);
 
         // Act
         var result = await referralClientService.GetRequestsForConnectionByOrganisationId(organisationId, null, null, 1, 10);
 
         // Assert
         result.Should().BeEquivalentTo(expectedList);
-        _cryptoMock.Verify(c => c.DecryptData(It.IsAny<string>()), Times.Exactly(11));
     }
 
     [Fact]
@@ -72,14 +63,13 @@ public class WhenUsingReferralClientService
         httpClient.DefaultRequestHeaders.Clear();
         httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer token");
         httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-        ReferralClientService referralClientService = new ReferralClientService(httpClient, _cryptoMock.Object);
+        ReferralClientService referralClientService = new ReferralClientService(httpClient);
 
         // Act
         var result = await referralClientService.GetReferralById(referralId);
 
         // Assert
         result.Should().BeEquivalentTo(expectedReferral, options => options.Excluding(x => x.ReasonForSupport).Excluding(x => x.EngageWithFamily));
-        _cryptoMock.Verify(c => c.DecryptData(It.IsAny<string>()), Times.Exactly(11));
     }
 
 
@@ -94,7 +84,7 @@ public class WhenUsingReferralClientService
         httpClient.DefaultRequestHeaders.Clear();
         httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer token");
         httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-        ReferralClientService referralClientService = new ReferralClientService(httpClient, _cryptoMock.Object);
+        ReferralClientService referralClientService = new ReferralClientService(httpClient);
 
         // Act
         var result = await referralClientService.UpdateReferralStatus(referralId, expectedReferralStatus);
