@@ -69,8 +69,8 @@
     <form method="post" novalidate action="@Html.FamilyHubUrl(UrlKeys.ThisWeb, $"/Vcs/RequestDetails?id={Model.Referral.Id}")">
         @Html.AntiForgeryToken()
 
-        <div class="govuk-form-group @selectAResponseError?.FormGroupClass">
-            <fieldset class="govuk-fieldset" role="group" aria-describedby="select-option @selectAResponseError?.InputErrorMessageParaId">
+        <div class="govuk-form-group @(selectAResponseError != null ? "govuk-form-group--error" : "")">
+            <fieldset class="govuk-fieldset" role="group" aria-describedby="select-option @(selectAResponseError != null ? "option-error" : "")">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                     <h2 class="govuk-fieldset__heading">
                         Your response
@@ -79,7 +79,12 @@
                 <div id="select-option" class="govuk-hint">
                     Select one option.
                 </div>
-                <partial name="_ErrorMessage" model="selectAResponseError" />
+                @if (selectAResponseError != null)
+                {
+                    <p id="option-error" class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> @selectAResponseError.ErrorMessage
+                    </p>
+                }
 
                 <div class="govuk-radios" data-module="govuk-radios">
                     <div class="govuk-radios__item">
@@ -98,7 +103,7 @@
                     @* not strictly necessary to set govuk-radios__conditional--hidden, but will stop a flash on slow user agents *@
                     <div class="govuk-radios__conditional @(declineReasonError != null ? "" : "govuk-radios__conditional--hidden")" id="conditional-decline-reason">
                         <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
-                            <div class="govuk-form-group @declineReasonError?.FormGroupClass">
+                            <div class="govuk-form-group @(declineReasonError != null ? "govuk-form-group--error": "")">
                                 <h3 class="govuk-label-wrapper">
                                     <label class="govuk-label govuk-label--s" for="decline-reason">
                                         Reason for declining
@@ -107,13 +112,13 @@
                                 <div id="decline-reason-hint" class="govuk-hint">
                                     You will no longer have access to this request.
                                 </div>
-                                @{
-                                    Error? weirdBehaviourWorkaround = declineReasonError;
+                                @if (declineReasonError != null)
+                                {
+                                    <p id="decline-reason-error" class="govuk-error-message">
+                                        <span class="govuk-visually-hidden">Error:</span> @declineReasonError.ErrorMessage
+                                    </p>
                                 }
-
-                                <partial name="_ErrorMessage" model="declineReasonError" />
-
-                                <textarea class="govuk-textarea govuk-js-character-count @weirdBehaviourWorkaround?.TextAreaClass" asp-for="ReasonForRejection" id="decline-reason" rows="5" aria-describedby="decline-reason-hint decline-reason-info @declineReasonError?.InputErrorMessageParaId"></textarea>
+                                <textarea class="govuk-textarea govuk-js-character-count @(declineReasonError != null ? "govuk-textarea--error": "")" asp-for="ReasonForRejection" id="decline-reason" rows="5" aria-describedby="decline-reason-hint decline-reason-info @(declineReasonError != null ? "decline-reason-error": "")"></textarea>
                                 <div id="decline-reason-info" class="govuk-hint govuk-character-count__message">
                                     You can enter up to 500 characters
                                 </div>
