@@ -8,6 +8,13 @@ namespace FamilyHubs.RequestForSupport.Web.Pages.Shared;
 
 public class HeaderPageModel : PageModel, IFamilyHubsHeader
 {
+    public bool ShowActionLinks => IsAuthenticatedAndTermsAccepted;
+    public bool ShowNavigationMenu => IsAuthenticatedAndTermsAccepted;
+
+    private bool IsAuthenticatedAndTermsAccepted =>
+        User.Identity?.IsAuthenticated == true
+        && HttpContext.TermsAndConditionsAccepted();
+
     IEnumerable<IFhRenderLink> IFamilyHubsHeader.NavigationLinks(
         FhLinkOptions[] navigationLinks,
         IFamilyHubsUiOptions familyHubsUiOptions)
