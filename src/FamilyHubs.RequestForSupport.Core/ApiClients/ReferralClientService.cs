@@ -1,7 +1,6 @@
 ﻿using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.ReferralService.Shared.Models;
-using FamilyHubs.SharedKernel.Security;
 using System.Text.Json;
 
 namespace FamilyHubs.RequestForSupport.Core.ApiClients;
@@ -9,10 +8,8 @@ namespace FamilyHubs.RequestForSupport.Core.ApiClients;
 //todo: construct Uri's better
 public class ReferralClientService : ApiService, IReferralClientService
 {
-    public readonly ICrypto _crypto;
-    public ReferralClientService(HttpClient client, ICrypto crypto) : base(client)
+    public ReferralClientService(HttpClient client) : base(client)
     {
-        _crypto = crypto;
     }
 
     private async Task<PaginatedList<ReferralDto>> GetRequests(
@@ -56,11 +53,6 @@ public class ReferralClientService : ApiService, IReferralClientService
                 // unlikely, but possibly (pass new MemoryStream(Encoding.UTF8.GetBytes("null")) to see it actually return null)
                 // note we hard-code passing "null", rather than messing about trying to rewind the stream, as this is such a corner case and we want to let the deserializer take advantage of the async stream (in the happy case)
                 throw new ReferralClientServiceException(response, "null");
-            }
-
-            for(int i = 0; i < referrals.Items.Count; i++)
-            {
-                referrals.Items[i] = await referrals.Items[i].DecryptReferralAsync(_crypto);
             }
 
             return referrals;
@@ -120,7 +112,7 @@ public class ReferralClientService : ApiService, IReferralClientService
             throw new ReferralClientServiceException(response, "null");
         }
 
-        return await referral.DecryptReferralAsync(_crypto);
+        return referral;
         
     }
 
