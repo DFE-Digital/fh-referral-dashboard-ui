@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FamilyHubs.RequestForSupport.Core\FamilyHubs.RequestForSupport.Core.csproj" />
+    <ProjectReference Include="..\FamilyHubs.RequestForSupport.Infrastructure\FamilyHubs.RequestForSupport.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

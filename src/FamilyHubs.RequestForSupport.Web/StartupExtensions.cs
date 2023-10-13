@@ -4,12 +4,12 @@ using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
 using FamilyHubs.SharedKernel.Identity;
-using FamilyHubs.SharedKernel.Security;
 using FamilyHubs.SharedKernel.DataProtection;
 using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
+using FamilyHubs.RequestForSupport.Infrastructure.Health;
 
 namespace FamilyHubs.RequestForSupport.Web;
 
@@ -60,6 +60,8 @@ public static class StartupExtensions
 #if hsts_localhost
         services.AddHsts(o => o.ExcludedHosts.Clear());
 #endif
+
+        services.AddSiteHealthChecks(configuration);
 
         services.AddFamilyHubs(configuration);
     }
@@ -117,12 +119,7 @@ public static class StartupExtensions
 
         app.MapRazorPages();
 
-        //todo: add health checks
-        //app.MapHealthChecks("/health", new HealthCheckOptions
-        //{
-        //    Predicate = _ => true,
-        //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-        //});
+        app.MapSiteHealthChecks();
 
         return app.Services;
     }
