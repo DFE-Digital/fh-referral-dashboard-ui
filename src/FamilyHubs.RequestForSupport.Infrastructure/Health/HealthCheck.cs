@@ -74,14 +74,24 @@ public static class HealthCheck
 
         // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
         var healthCheckBuilder = services.AddHealthChecks()
-            .AddIdentityServer(new Uri(oneLoginUrl!), name: "One Login", failureStatus: HealthStatus.Degraded, tags: new[] { "ExternalAPI" })
+            .AddIdentityServer(new Uri(oneLoginUrl!), name: "One Login", failureStatus: HealthStatus.Degraded, tags: new[] { UrlType.ExternalApi.ToString() })
             .AddApi("Feedback Site", "FamilyHubsUi:FeedbackUrl", config, UrlType.ExternalSite)
             .AddApi("Referral API", "ReferralApiUrl", config)
-            .AddApi("Notification API", "Notification:Endpoint", config)
+            //.AddApi("Notification API", "Notification:Endpoint", config)
             .AddApi("Idams API", "GovUkOidcConfiguration:IdamsApiBaseUrl", config)
             .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] { "Database" })
             //todo: tag as AKV, name as Data Protection Key?
             .AddAzureKeyVault(new Uri(keyVaultUrl), keyVaultCredentials, s => s.AddKey(keyName), name: "Azure Key Vault", failureStatus: HealthStatus.Degraded, tags: new[] { "Infrastructure" });
+
+        string? notificationApiUrl = config.GetValue<string>("Notification:Endpoint");
+        if (!string.IsNullOrEmpty(notificationApiUrl))
+        {
+            // special case as Url contains path
+            //todo: change notifications client to use host and append path
+            notificationApiUrl = notificationApiUrl.Replace("/api/notify", "/api/info");
+            healthCheckBuilder.AddUrlGroup(new Uri(notificationApiUrl), "Notification API", HealthStatus.Degraded,
+                new[] { UrlType.InternalApi.ToString() });
+        }
 
         // not usually set running locally
         string? aiInstrumentationKey = config.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY");
