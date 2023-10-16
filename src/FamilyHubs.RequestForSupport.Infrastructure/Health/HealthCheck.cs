@@ -77,7 +77,6 @@ public static class HealthCheck
             .AddIdentityServer(new Uri(oneLoginUrl!), name: "One Login", failureStatus: HealthStatus.Degraded, tags: new[] { UrlType.ExternalApi.ToString() })
             .AddApi("Feedback Site", "FamilyHubsUi:FeedbackUrl", config, UrlType.ExternalSite)
             .AddApi("Referral API", "ReferralApiUrl", config)
-            //.AddApi("Notification API", "Notification:Endpoint", config)
             .AddApi("Idams API", "GovUkOidcConfiguration:IdamsApiBaseUrl", config)
             .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] { "Database" })
             //todo: tag as AKV, name as Data Protection Key?
