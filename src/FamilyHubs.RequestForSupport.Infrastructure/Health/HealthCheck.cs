@@ -38,7 +38,7 @@ public static class HealthCheck
             if (urlType == UrlType.InternalApi)
             {
                 //todo: add "/health" endpoints to all APIs
-                apiUrl += "/api/info";
+                apiUrl = apiUrl.TrimEnd('/') + "/api/info";
             }
 
             // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
