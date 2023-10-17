@@ -53,9 +53,6 @@ public static class HealthCheck
         this IServiceCollection services,
         IConfiguration config)
     {
-        var oneLoginUrl = config.GetValue<string>("GovUkOidcConfiguration:Oidc:BaseUrl");
-        var sqlServerCacheConnectionString = config.GetConnectionString("SharedKernelConnection");
-
         var keyVaultKey = config.GetValue<string>("DataProtection:KeyIdentifier");
         int keysIndex = keyVaultKey!.IndexOf("/keys/");
         string keyVaultUrl = keyVaultKey[..keysIndex];
@@ -72,14 +69,11 @@ public static class HealthCheck
             config.GetValue<string>("DataProtection:ClientId"),
             config.GetValue<string>("DataProtection:ClientSecret"));
 
+        var oneLoginUrl = config.GetValue<string>("GovUkOidcConfiguration:Oidc:BaseUrl");
+
         // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
-        var healthCheckBuilder = services.AddHealthChecks()
+        var healthCheckBuilder = services.AddFamilyHubsHealthChecks(config)
             .AddIdentityServer(new Uri(oneLoginUrl!), name: "One Login", failureStatus: HealthStatus.Degraded, tags: new[] { UrlType.ExternalApi.ToString() })
-            .AddApi("Feedback Site", "FamilyHubsUi:FeedbackUrl", config, UrlType.ExternalSite)
-            .AddApi("Referral API", "ReferralApiUrl", config)
-            .AddApi("Idams API", "GovUkOidcConfiguration:IdamsApiBaseUrl", config)
-            .AddSqlServer(sqlServerCacheConnectionString!, failureStatus: HealthStatus.Degraded, tags: new[] { "Database" })
-            //todo: tag as AKV, name as Data Protection Key?
             .AddAzureKeyVault(new Uri(keyVaultUrl), keyVaultCredentials, s => s.AddKey(keyName), name: "Azure Key Vault", failureStatus: HealthStatus.Degraded, tags: new[] { "Infrastructure" });
 
         string? notificationApiUrl = config.GetValue<string>("Notification:Endpoint");
@@ -92,25 +86,6 @@ public static class HealthCheck
                 new[] { UrlType.InternalApi.ToString() });
         }
 
-        // not usually set running locally
-        string? aiInstrumentationKey = config.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY");
-        if (!string.IsNullOrEmpty(aiInstrumentationKey))
-        {
-            //todo: check in dev env
-            healthCheckBuilder.AddAzureApplicationInsights(aiInstrumentationKey, "App Insights", HealthStatus.Degraded, new[] { "Infrastructure" });
-        }
-
         return services;
-    }
-
-    public static WebApplication MapSiteHealthChecks(this WebApplication app)
-    {
-        app.MapHealthChecks("/health", new HealthCheckOptions
-        {
-            Predicate = _ => true,
-            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-        });
-
-        return app;
     }
 }
