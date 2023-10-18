@@ -5,9 +5,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <NoWarn>S1135</NoWarn>
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="5.6.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.AzureKeyVault" Version="7.0.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.OpenIdConnectServer" Version="7.0.0" />
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.10.0.77988">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

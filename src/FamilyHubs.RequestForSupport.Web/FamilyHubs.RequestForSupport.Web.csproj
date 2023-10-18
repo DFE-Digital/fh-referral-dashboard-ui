@@ -15,7 +15,6 @@
 
   <ItemGroup>
 	<PackageReference Include="FamilyHubs.Notification.Api.Client" Version="1.1.1" />
-	<PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="5.2.0" />
 	<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
 	<!--<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />-->
 	<PackageReference Include="Serilog" Version="3.0.1" />
@@ -35,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FamilyHubs.RequestForSupport.Core\FamilyHubs.RequestForSupport.Core.csproj" />
+    <ProjectReference Include="..\FamilyHubs.RequestForSupport.Infrastructure\FamilyHubs.RequestForSupport.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
