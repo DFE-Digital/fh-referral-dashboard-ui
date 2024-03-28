@@ -7,7 +7,7 @@ using FamilyHubs.RequestForSupport.Web.Errors;
 using FamilyHubs.RequestForSupport.Web.Models;
 using FamilyHubs.RequestForSupport.Web.Pages.Shared;
 using FamilyHubs.RequestForSupport.Web.Security;
-using FamilyHubs.SharedKernel.Razor.Errors;
+using FamilyHubs.SharedKernel.Razor.ErrorNext;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,7 +49,7 @@ public class VcsRequestDetailsPageModel : HeaderPageModel
     [BindProperty]
     public AcceptDecline? AcceptOrDecline { get; set; }
 
-    public IErrorState ErrorState { get; private set; }
+    public IErrorState Errors { get; private set; }
 
     public VcsRequestDetailsPageModel(
         IReferralClientService referralClientService,
@@ -64,12 +64,12 @@ public class VcsRequestDetailsPageModel : HeaderPageModel
         _familyHubsUiOptions = familyHubsUiOptions.Value;
         _logger = logger;
         //todo: do something so doesn't have to be fully qualified
-        ErrorState = SharedKernel.Razor.Errors.ErrorState.Empty;
+        Errors = ErrorState.Empty;
     }
 
     public async Task<IActionResult> OnGet(int id, IEnumerable<ErrorId> errors)
     {
-        ErrorState = SharedKernel.Razor.Errors.ErrorState.Create(PossibleErrors.All, errors);
+        Errors = ErrorState.Create(PossibleErrors.All, errors.ToArray());
 
         // if the user enters a reason for declining that's too long, then refreshes the page with the corresponding error message on, they'll lose their reason. quite an edge case though, and the site will still work, they'll just have to enter a shorter reason from scratch
         ReasonForRejection  = TempData["ReasonForDeclining"] as string;

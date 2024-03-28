@@ -1,17 +1,27 @@
 ﻿@page
 @using FamilyHubs.RequestForSupport.Core.ApiClients
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Runtime.CompilerServices
 @model FamilyHubs.RequestForSupport.Web.Pages.Vcs.VcsRequestDetailsPageModel
 
 @{
     string pageName = $"Request {Model.Referral.Id:X6}";
     ViewData["Title"] = pageName;
+    
+    Model.Errors.ErrorIdToHtmlElementId = errorId => errorId switch
+    {
+        (int)ErrorId.SelectAResponse => "accept-request",
+        (int)ErrorId.EnterReasonForDeclining => "decline-reason",
+        (int)ErrorId.ReasonForDecliningTooLong => "decline-reason",
+        _ => throw new SwitchExpressionException(errorId)
+    };
 }
 
 @section Back {
     <a href="@Html.FamilyHubUrl(UrlKeys.ThisWeb, "/Vcs/Dashboard")" class="govuk-back-link">Back</a>
 }
 
-<partial name="Shared/_ErrorSummary" for="@Model.ErrorState" />
+<partial name="_ErrorSummaryNext" for="@Model.Errors" />
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -63,8 +73,8 @@
 
 @if ((ReferralStatus)Model.Referral.Status.Id is ReferralStatus.New or ReferralStatus.Opened)
 {
-    Error? selectAResponseError = Model.ErrorState.GetErrorIfTriggered((int)ErrorId.SelectAResponse);
-    Error? declineReasonError = Model.ErrorState.GetErrorIfTriggered((int)ErrorId.EnterReasonForDeclining, (int)ErrorId.ReasonForDecliningTooLong);
+    Error? selectAResponseError = Model.Errors.GetErrorIfTriggered((int)ErrorId.SelectAResponse);
+    Error? declineReasonError = Model.Errors.GetErrorIfTriggered((int)ErrorId.EnterReasonForDeclining, (int)ErrorId.ReasonForDecliningTooLong);
 
     <form method="post" novalidate action="@Html.FamilyHubUrl(UrlKeys.ThisWeb, $"/Vcs/RequestDetails?id={Model.Referral.Id}")">
         @Html.AntiForgeryToken()
@@ -82,7 +92,7 @@
                 @if (selectAResponseError != null)
                 {
                     <p id="option-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> @selectAResponseError.ErrorMessage
+                        <span class="govuk-visually-hidden">Error:</span> @selectAResponseError.Message
                     </p>
                 }
 
@@ -115,7 +125,7 @@
                                 @if (declineReasonError != null)
                                 {
                                     <p id="decline-reason-error" class="govuk-error-message">
-                                        <span class="govuk-visually-hidden">Error:</span> @declineReasonError.ErrorMessage
+                                        <span class="govuk-visually-hidden">Error:</span> @declineReasonError.Message
                                     </p>
                                 }
                                 <textarea class="govuk-textarea govuk-js-character-count @(declineReasonError != null ? "govuk-textarea--error": "")" asp-for="ReasonForRejection" id="decline-reason" rows="5" aria-describedby="decline-reason-hint decline-reason-info @(declineReasonError != null ? "decline-reason-error": "")"></textarea>
