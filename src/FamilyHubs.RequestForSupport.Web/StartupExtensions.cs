@@ -10,6 +10,7 @@ using Serilog;
 using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.RequestForSupport.Infrastructure.Health;
+using FamilyHubs.SharedKernel.Razor.Health;
 
 namespace FamilyHubs.RequestForSupport.Web;
 
@@ -119,7 +120,7 @@ public static class StartupExtensions
 
         app.MapRazorPages();
 
-        app.MapFamilyHubsHealthChecks();
+        app.MapFamilyHubsHealthChecks(typeof(StartupExtensions).Assembly);
 
         return app.Services;
     }
